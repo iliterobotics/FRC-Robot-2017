@@ -1,6 +1,6 @@
 # This is the 2017 Robot Code Development Branch
 
-#Deploying code to the RoboRIO
+##Deploying Code to the RoboRIO
 
 1. Install the 2017 FRC Update Suite from here:
 <http://www.ni.com/download/first-robotics-software-2015/5112/en/>
