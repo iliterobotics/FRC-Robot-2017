@@ -8,7 +8,9 @@ import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.Module;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends SampleRobot {
 	
@@ -27,13 +29,13 @@ public class Robot extends SampleRobot {
 	}
 
 	public void robotInit(){
-		
+		DriverStation.reportError("Hello, World!", false);
 	}
 	
 	public void autonomous()
 	{
 		setRunningModules();
-		while(isAutonomous()){
+		while(isAutonomous() && isEnabled()){
 			updateModules();
 			pause();
 		}
@@ -42,7 +44,7 @@ public class Robot extends SampleRobot {
 	public void operatorControl()
 	{
 		setRunningModules(driverControl, driveTrain);
-		while(isOperatorControl()){
+		while(isOperatorControl() && isEnabled()){
 			updateModules();
 			pause();
 		}
@@ -69,9 +71,6 @@ public class Robot extends SampleRobot {
 	}
 	
 	private void pause(){
-		try {
-			Thread.sleep(UPDATE_PERIOD);
-		} catch (InterruptedException e) {
-		}
+		Timer.delay(0.005);
 	}
 }

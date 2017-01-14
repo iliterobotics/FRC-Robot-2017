@@ -3,7 +3,9 @@ package org.usfirst.frc.team1885.robot.modules;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Joystick.AxisType;
 
 public class DriverControl implements Module{
 
@@ -33,6 +35,7 @@ public class DriverControl implements Module{
 	}
 
 	public void update() {
+		driveTrain.setSpeeds(-(float)joyStickMap.get(ControllerType.LEFT_STICK).getAxis(AxisType.kY), (float)joyStickMap.get(ControllerType.RIGHT_STICK).getAxis(AxisType.kY));
 	}
 
 }
