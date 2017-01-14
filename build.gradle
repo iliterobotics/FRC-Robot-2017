@@ -1,14 +1,30 @@
 plugins {
 	id "java" 
 	id "eclipse" 
+	id "jaci.openrio.gradle.GradleRIO" version "2017.0.5" apply false
 }
 
 subprojects { 
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
+	apply plugin: 'jaci.openrio.gradle.GradleRIO'
+
+	repositories {
+		jcenter()
+	}
+
+	test { 
+		useTestNG()	
+	}
+
+	dependencies { 
+		compile wpilib()
+		testCompile "org.mockito:mockito-core:1.+"
+
+	}	
 }
 
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.2.1'
-    }
+}
