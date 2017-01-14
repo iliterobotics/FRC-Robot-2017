@@ -20,7 +20,8 @@ Open your terminal and navigate to your project directory, then build and deploy
 
 5. Deploying to the RoboRIO through the Eclipse GUI 
 Open the Gradle Task View by going to Window > Show View > Other... > Gradle > Gradle Tasks
-Scroll to `deploy` and double-click
+
+  Scroll to `deploy` and double-click
 
 
 
