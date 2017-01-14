@@ -5,7 +5,7 @@
 1. Install the 2017 FRC Update Suite from here:
 <http://www.ni.com/download/first-robotics-software-2015/5112/en/>
 
-This installs the mDNS handler needed for the computer to communicate with the RoboRIO.
+  This installs the mDNS handler needed for the computer to communicate with the RoboRIO.
 
 2. Setting up Eclipse
 Instructions for installing Eclipse and the necessary plugins can be found here:
