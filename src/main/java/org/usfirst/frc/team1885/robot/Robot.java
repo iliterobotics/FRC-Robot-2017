@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.Module;
+import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
+import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
+import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlTank;
+import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlTankController;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
@@ -25,7 +28,7 @@ public class Robot extends SampleRobot {
 		runningModules = new ArrayList<>();
 		
 		driveTrain = new DriveTrain();
-		driverControl = new DriverControl(driveTrain);
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
 	}
 
 	public void robotInit(){

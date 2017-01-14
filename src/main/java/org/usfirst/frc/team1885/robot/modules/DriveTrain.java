@@ -14,12 +14,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class DriveTrain implements Module{
 
-	private static final float MAX_POWER_DIFF = 0.01f;
+	private static final double MAX_POWER_DIFF = 0.01f;
 	
-	private float desiredLeftPower;
-	private float desiredRightPower;
-	private float actualLeftPower;
-	private float actualRightPower;
+	private double desiredLeftPower;
+	private double desiredRightPower;
+	private double actualLeftPower;
+	private double actualRightPower;
 	
 	private DriveMode currentMode;
 	
@@ -27,11 +27,13 @@ public class DriveTrain implements Module{
 		DRIVER_CONTROL_HIGH, DRIVER_CONTROL_LOW;
 	}
 	private enum MotorType{
-		LEFT_MOTOR(1, 3), RIGHT_MOTOR(2, 4);
+		LEFT_MOTOR(-1, 1, 3), RIGHT_MOTOR(1, 2, 4);
 		
 		final int talonIds[];
+		final double modifier;
 		
-		MotorType(int ... talonIds){
+		MotorType(double modifier, int ... talonIds){
+			this.modifier = modifier;
 			this.talonIds = talonIds;
 		}
 	}
@@ -67,18 +69,14 @@ public class DriveTrain implements Module{
 		motorMap = new HashMap<>();
 	}
 	
-	public void setSpeeds(float left, float right){
+	public void setSpeeds(double left, double right){
 		desiredLeftPower = left;
 		desiredRightPower = right;
 	}
 	
-	private void setMotors(float left, float right){
-		DriverStation.reportError(String.format("Left:%f, Right%f", left, right), false);
-		for(CANTalon canTalon : motorMap.get(MotorType.LEFT_MOTOR)){
-			canTalon.set(left);
-		}
-		for(CANTalon canTalon : motorMap.get(MotorType.RIGHT_MOTOR)){
-			canTalon.set(right);			
+	private void setMotor(MotorType type, double value){
+		for(CANTalon talon: motorMap.get(type)){
+			talon.set(value * type.modifier);
 		}
 	}
 	
@@ -113,7 +111,8 @@ public class DriveTrain implements Module{
 //				}
 				actualRightPower = desiredRightPower;
 				
-				setMotors(actualLeftPower, actualRightPower);
+				setMotor(MotorType.LEFT_MOTOR, actualLeftPower);
+				setMotor(MotorType.RIGHT_MOTOR, actualRightPower);
 				break;
 		}
 	}
