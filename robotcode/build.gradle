@@ -13,6 +13,7 @@ frc {
 dependencies {
     compile wpilib()
     compile talonSrx()
+    compile project(":visioncode")
 }
 
 def robotManifest = {
