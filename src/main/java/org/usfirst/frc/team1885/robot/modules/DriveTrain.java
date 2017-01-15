@@ -52,6 +52,8 @@ public class DriveTrain implements Module{
 		for(MotorType type : MotorType.values()){
 			CANTalon talon = new CANTalon(type.talonId);
 			talon.setEncPosition(0);
+			talon.setP(0.5);
+			DriverStation.reportError(String.format("(%f, %f, %f)", talon.getP(), talon.getI(), talon.getD()), false);
 			for(int followerId : type.followerIds){
 				CANTalon follower = new CANTalon(followerId);
 				follower.setControlMode(TalonControlMode.Follower.value);
@@ -73,7 +75,7 @@ public class DriveTrain implements Module{
 			setMotorMode(TalonControlMode.PercentVbus);
 			break;
 		case TICK_VEL:
-			setMotorMode(TalonControlMode.Speed);
+			setMotorMode(TalonControlMode.PercentVbus);
 		}
 	}
 	
