@@ -4,6 +4,8 @@ import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
 
+	private static final int REDUCER = 2;
+	
 	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain) {
 		super(driveTrain);
 	}
@@ -14,6 +16,8 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 		double turn = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_RIGHT_X);
 		
 		double leftInput, rightInput;
+		
+		if(getController(ControllerType.CONTROLLER).getRawButton(5)) turn /= REDUCER;
 		
 		leftInput =  throttle - turn;
 		rightInput = throttle + turn;

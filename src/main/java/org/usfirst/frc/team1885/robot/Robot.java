@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraight;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
@@ -38,7 +39,9 @@ public class Robot extends SampleRobot {
 	
 	public void autonomous()
 	{
-		setRunningModules();
+		setRunningModules(driveTrain);
+		autonomousCommands.clear();
+		autonomousCommands.add(new DriveStraight(driveTrain));
 		AutonomousCommand currentCommand = autonomousCommands.peek();
 		if(currentCommand != null){
 			currentCommand.init();

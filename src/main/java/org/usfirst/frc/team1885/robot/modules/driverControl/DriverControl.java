@@ -55,7 +55,7 @@ public abstract class DriverControl implements Module {
 		if(Math.abs(right) < DEADZONE){
 			right = 0;
 		}
-		driveTrain.setSpeeds(left, right);
+		driveTrain.setMotors(left, right);
 	}
 	
 	public Joystick getController(ControllerType type){
