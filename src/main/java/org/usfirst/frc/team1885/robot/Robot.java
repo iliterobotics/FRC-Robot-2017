@@ -2,16 +2,16 @@
 package org.usfirst.frc.team1885.robot;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
+import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
-import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlTank;
-import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlTankController;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -22,23 +22,35 @@ public class Robot extends SampleRobot {
 	private DriveTrain driveTrain;
 	private DriverControl driverControl;
 	
+	private Queue<AutonomousCommand> autonomousCommands;
 	private List<Module> runningModules;
 	
 	public Robot(){
 		runningModules = new ArrayList<>();
+		autonomousCommands = new LinkedList<>();
 		
 		driveTrain = new DriveTrain();
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
 	}
 
 	public void robotInit(){
-		DriverStation.reportError("Hello, World!", false);
 	}
 	
 	public void autonomous()
 	{
 		setRunningModules();
+		AutonomousCommand currentCommand = autonomousCommands.peek();
+		if(currentCommand != null){
+			currentCommand.init();
+		}
 		while(isAutonomous() && isEnabled()){
+			currentCommand = autonomousCommands.peek();
+			if(currentCommand != null){
+				if(currentCommand.update()){
+					autonomousCommands.poll();
+					autonomousCommands.peek().init();
+				}
+			}
 			updateModules();
 			pause();
 		}

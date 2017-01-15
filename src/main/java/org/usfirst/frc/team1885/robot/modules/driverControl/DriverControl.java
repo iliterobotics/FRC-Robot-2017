@@ -11,6 +11,13 @@ import edu.wpi.first.wpilibj.Joystick;
 public abstract class DriverControl implements Module {
 	
 	public static final double DEADZONE = 0.01;
+	public static final int GAMEPAD_LEFT_X = 0;
+	public static final int GAMEPAD_LEFT_Y = 1;
+	public static final int GAMEPAD_LEFT_TRIGGER = 2;
+	public static final int GAMEPAD_RIGHT_TRIGGER = 3;
+	public static final int GAMEPAD_RIGHT_X = 4;
+	public static final int GAMEPAD_RIGHT_Y = 5;
+	
 
 	private Map<ControllerType, Joystick> controllerMap;
 

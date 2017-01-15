@@ -24,10 +24,10 @@ public class DriveTrain implements Module{
 	private DriveMode currentMode;
 	
 	public enum DriveMode{
-		DRIVER_CONTROL_HIGH, DRIVER_CONTROL_LOW;
+		DRIVER_CONTROL_HIGH, DRIVER_CONTROL_LOW, TICK_VEL;
 	}
 	private enum MotorType{
-		LEFT_MOTOR(-1, 1, 3), RIGHT_MOTOR(1, 2, 4);
+		LEFT_MOTOR(1, 1, 3), RIGHT_MOTOR(-1, 2, 4);
 		
 		final int talonIds[];
 		final double modifier;
@@ -60,8 +60,10 @@ public class DriveTrain implements Module{
 			desiredLeftPower = 0;
 			actualRightPower = 0;
 			desiredRightPower = 0;
-			setMotorMode(TalonControlMode.Speed);
+			setMotorMode(TalonControlMode.PercentVbus);
 			break;
+		case TICK_VEL:
+//			setMotorMode(TalonControlMode.)
 		}
 	}
 	

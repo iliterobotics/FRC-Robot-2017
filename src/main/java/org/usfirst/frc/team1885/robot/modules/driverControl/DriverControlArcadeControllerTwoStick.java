@@ -10,8 +10,8 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 
 	@Override
 	public void update() {
-		double throttle = getController(ControllerType.CONTROLLER).getRawAxis(1);
-		double turn = getController(ControllerType.CONTROLLER).getRawAxis(4);
+		double throttle = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_LEFT_Y);
+		double turn = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_RIGHT_X);
 		
 		double leftInput, rightInput;
 		
