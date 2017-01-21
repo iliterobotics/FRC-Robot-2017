@@ -1,4 +1,4 @@
-# This is the 2017 Robot Code Development Branch
+# ILITE Robotics 2017 FRC Robot Code Development Branch
 
 ##Deploying Code to the RoboRIO
 
