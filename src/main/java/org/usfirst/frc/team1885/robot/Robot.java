@@ -50,13 +50,8 @@ public class Robot extends SampleRobot {
 	{
 		setRunningModules(driveTrain);
 		autonomousCommands.clear();
-<<<<<<< HEAD
-//		autonomousCommands.add(new DriveStraight(driveTrain));
-		autonomousCommands.add(new TurnDegree(driveTrain, navx, -90));
-=======
 //		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
 		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90, TurnDegree.SPIN_LEFT));
->>>>>>> 3becf67... Merged branch feature/drive-straight into master
 		AutonomousCommand currentCommand = autonomousCommands.peek();
 		if(currentCommand != null){
 			currentCommand.init();
