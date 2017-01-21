@@ -45,6 +45,7 @@ public class DriveTrain implements Module{
 
 	public DriveTrain(){
 		motorMap = new HashMap<>();
+		setMode(DriveMode.DRIVER_CONTROL_LOW);
 	}
 	
 	@Override
