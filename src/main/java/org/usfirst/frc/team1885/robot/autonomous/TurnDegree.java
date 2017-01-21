@@ -8,42 +8,35 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class TurnDegree extends AutonomousCommand {
-	public static final int SPIN_LEFT = -1;
-	public static final int SPIN_RIGHT = 1;
-	private static final double power = 0.5;
-	
 	private DriveTrain driveTrain;
 	private AHRS navx;
 	
-	private double initialYaw;
 	private double targetYaw;
-	private int spinDirection;
+	private int turnDirection;
 	
-	public TurnDegree(DriveTrain driveTrain, AHRS navx, double targetYaw, int spinDirection) {
+	public TurnDegree(DriveTrain driveTrain, AHRS navx, double targetYaw) {
 		this.driveTrain = driveTrain;
 		this.navx = navx;
-		this.targetYaw = targetYaw * spinDirection;
-		this.spinDirection = spinDirection;
+		this.targetYaw = targetYaw;
 	}
 	
 	@Override
 	public void init() {
-		initialYaw = navx.getYaw();
 		driveTrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
 	}
 
 	@Override
 	public boolean update() {
 		double leftDrive;
-		double rightDrive;
-		DriverStation.reportError(String.format("Yaw: %f", navx.getYaw()), false);
-		if(navx.getYaw() < targetYaw) {
-			leftDrive = spinDirection == SPIN_LEFT ? -power : power;
-			rightDrive = spinDirection == SPIN_RIGHT ? -power : power;
+		double rightDrive;		
+		if(Math.abs(navx.getYaw()) < targetYaw) {
+			leftDrive = turnDirection < 0 ? -(navx.getYaw()/targetYaw) : (navx.getYaw()/targetYaw);
+			rightDrive = turnDirection > 0 ? -(navx.getYaw()/targetYaw) : (navx.getYaw()/targetYaw);
 		}	
 		else {
-			leftDrive = rightDrive = 0;
+			leftDrive = rightDrive = 0.0;
 		}
+		DriverStation.reportError(String.format("Left: %f Right: %f", leftDrive, rightDrive), false);
 		driveTrain.setMotors(leftDrive, rightDrive);
 		return false;
 	}

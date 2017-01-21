@@ -7,13 +7,16 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
-import org.usfirst.frc.team1885.robot.autonomous.DriveStraight;
+import org.usfirst.frc.team1885.robot.autonomous.TurnDegree;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.SampleRobot;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends SampleRobot {
@@ -22,6 +25,7 @@ public class Robot extends SampleRobot {
 
 	private DriveTrain driveTrain;
 	private DriverControl driverControl;
+	private AHRS navx;
 	
 	private Queue<AutonomousCommand> autonomousCommands;
 	private List<Module> runningModules;
@@ -32,6 +36,7 @@ public class Robot extends SampleRobot {
 		
 		driveTrain = new DriveTrain();
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
+		navx = new AHRS(SerialPort.Port.kMXP);
 	}
 
 	public void robotInit(){
@@ -41,7 +46,8 @@ public class Robot extends SampleRobot {
 	{
 		setRunningModules(driveTrain);
 		autonomousCommands.clear();
-		autonomousCommands.add(new DriveStraight(driveTrain));
+//		autonomousCommands.add(new DriveStraight(driveTrain));
+		autonomousCommands.add(new TurnDegree(driveTrain, navx, -90));
 		AutonomousCommand currentCommand = autonomousCommands.peek();
 		if(currentCommand != null){
 			currentCommand.init();
