@@ -7,14 +7,17 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraightNavX;
 import org.usfirst.frc.team1885.robot.autonomous.TurnDegree;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.Module;
+import org.usfirst.frc.team1885.robot.modules.TestClamp;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
@@ -40,14 +43,20 @@ public class Robot extends SampleRobot {
 	}
 
 	public void robotInit(){
+		navx.resetDisplacement();
 	}
 	
 	public void autonomous()
 	{
 		setRunningModules(driveTrain);
 		autonomousCommands.clear();
+<<<<<<< HEAD
 //		autonomousCommands.add(new DriveStraight(driveTrain));
 		autonomousCommands.add(new TurnDegree(driveTrain, navx, -90));
+=======
+//		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
+		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90, TurnDegree.SPIN_LEFT));
+>>>>>>> 3becf67... Merged branch feature/drive-straight into master
 		AutonomousCommand currentCommand = autonomousCommands.peek();
 		if(currentCommand != null){
 			currentCommand.init();
@@ -69,6 +78,15 @@ public class Robot extends SampleRobot {
 	{
 		setRunningModules(driverControl, driveTrain);
 		while(isOperatorControl() && isEnabled()){
+			updateModules();
+			pause();
+		}
+	}
+	
+	public void test(){
+		TestClamp testClamp = new TestClamp();
+		setRunningModules(testClamp);
+		while(isTest() && isEnabled()){
 			updateModules();
 			pause();
 		}
