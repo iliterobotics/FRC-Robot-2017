@@ -51,7 +51,7 @@ public class Robot extends SampleRobot {
 		setRunningModules(driveTrain);
 		autonomousCommands.clear();
 //		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
-		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90, TurnDegree.SPIN_LEFT));
+		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90));
 		AutonomousCommand currentCommand = autonomousCommands.peek();
 		if(currentCommand != null){
 			currentCommand.init();
