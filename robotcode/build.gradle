@@ -1,0 +1,32 @@
+frc {
+    team = "1885"
+    robotClass = "org.usfirst.frc.team1885.robot.Robot"
+}
+
+dependencies {
+    compile talonSrx()
+    compile project(":visioncode")
+}
+
+def robotManifest = {
+  attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
+  attributes 'Robot-Class': frc.robotClass
+}
+
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest robotManifest
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.2.1'
+}
+
+task printCollections { 
+
+	doLast { 
+		configurations.compile.collect{println "${it} is directory: ${it.isDirectory()}"}
+		
+	
+	}
+}

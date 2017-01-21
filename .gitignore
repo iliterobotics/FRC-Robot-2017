@@ -16,5 +16,6 @@ hs_err_pid*
 .project
 .settings/*
 .gradle/*
+**/.settings/**
 /build/
 /bin/
