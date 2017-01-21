@@ -13,6 +13,7 @@ frc {
 dependencies {
     compile wpilib()
     compile talonSrx()
+    compile files('./res/navx_frc.jar')
 }
 
 def robotManifest = {

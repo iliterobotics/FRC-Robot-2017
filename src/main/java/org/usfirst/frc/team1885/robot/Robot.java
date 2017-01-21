@@ -7,13 +7,19 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
-import org.usfirst.frc.team1885.robot.autonomous.DriveStraight;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraightNavX;
+import org.usfirst.frc.team1885.robot.autonomous.TurnDegree;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.Module;
+import org.usfirst.frc.team1885.robot.modules.TestClamp;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends SampleRobot {
@@ -22,6 +28,7 @@ public class Robot extends SampleRobot {
 
 	private DriveTrain driveTrain;
 	private DriverControl driverControl;
+	private AHRS navx;
 	
 	private Queue<AutonomousCommand> autonomousCommands;
 	private List<Module> runningModules;
@@ -32,16 +39,19 @@ public class Robot extends SampleRobot {
 		
 		driveTrain = new DriveTrain();
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
+		navx = new AHRS(SerialPort.Port.kMXP);
 	}
 
 	public void robotInit(){
+		navx.resetDisplacement();
 	}
 	
 	public void autonomous()
 	{
 		setRunningModules(driveTrain);
 		autonomousCommands.clear();
-		autonomousCommands.add(new DriveStraight(driveTrain));
+//		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
+		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90, TurnDegree.SPIN_LEFT));
 		AutonomousCommand currentCommand = autonomousCommands.peek();
 		if(currentCommand != null){
 			currentCommand.init();
@@ -63,6 +73,15 @@ public class Robot extends SampleRobot {
 	{
 		setRunningModules(driverControl, driveTrain);
 		while(isOperatorControl() && isEnabled()){
+			updateModules();
+			pause();
+		}
+	}
+	
+	public void test(){
+		TestClamp testClamp = new TestClamp();
+		setRunningModules(testClamp);
+		while(isTest() && isEnabled()){
 			updateModules();
 			pause();
 		}
