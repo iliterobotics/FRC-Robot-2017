@@ -2,10 +2,10 @@ plugins {
     id "java"
     id "eclipse"
     id "idea"
-    id "jaci.openrio.gradle.GradleRIO" version "2017.1.0"
+    id "jaci.openrio.gradle.GradleRIO" version "2017.1.0" apply false
 }
 
-project(':robotcode') { 
+project(':robotcode') {
 
    apply plugin: 'jaci.openrio.gradle.GradleRIO'
    apply plugin: 'eclipse'
@@ -15,26 +15,25 @@ project(':robotcode') {
        team = "1885"
        robotClass = "org.usfirst.frc.team1885.robot.Robot"
    }
-   
+
    dependencies {
        compile wpilib()
        compile talonSrx()
        compile files('res/navx_frc.jar')
    }
-   
+
    def robotManifest = {
      attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
      attributes 'Robot-Class': frc.robotClass
    }
-   
+
    jar {
        from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
        manifest robotManifest
    }
-   
+
    task wrapper(type: Wrapper) {
        gradleVersion = '3.2.1'
    }
 
 }
-
