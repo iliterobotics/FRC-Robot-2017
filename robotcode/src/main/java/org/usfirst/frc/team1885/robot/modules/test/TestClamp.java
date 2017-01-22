@@ -1,4 +1,6 @@
-package org.usfirst.frc.team1885.robot.modules;
+package org.usfirst.frc.team1885.robot.modules.test;
+
+import org.usfirst.frc.team1885.robot.modules.Module;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
