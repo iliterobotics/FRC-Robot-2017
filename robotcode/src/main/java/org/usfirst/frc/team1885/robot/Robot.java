@@ -73,7 +73,7 @@ public class Robot extends SampleRobot {
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, driveTrain);
+		setRunningModules(driverControl, driveTrain, gearManipulator);
 		while(isOperatorControl() && isEnabled()){
 			updateModules();
 			pause();
