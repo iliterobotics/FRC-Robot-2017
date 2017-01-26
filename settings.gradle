@@ -1,2 +1,1 @@
-<<<<<<< HEAD
-include 'robotcode', 'commscode', 'robotcode', 'visioncode'
+include 'robotcode', 'commscode', 'robotcode', 'visioncode', 'OpenCV-Library-2.4.11'

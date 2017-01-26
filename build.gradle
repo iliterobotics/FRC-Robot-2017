@@ -55,4 +55,22 @@ project(':commscode'){
 project(':visioncode') { 
    apply plugin: 'eclipse'
    apply plugin: 'java'
+   dependencies { 
+	project(':OpenCV-Library-2.4.11')
+
+   }
+
+}
+
+project(':OpenCV-Library-2.4.11') { 
+   apply plugin: 'java'
+   apply plugin: 'eclipse'
+
+   sourceSets {
+       main {
+               java {
+	                   srcDirs = ["src"]
+			           }
+	       }
+       }
 }
