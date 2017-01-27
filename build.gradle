@@ -37,3 +37,8 @@ project(':robotcode') {
    }
 
 }
+
+project(':commscode'){
+  apply plugin: 'eclipse'
+  apply plugin: 'java'
+}
