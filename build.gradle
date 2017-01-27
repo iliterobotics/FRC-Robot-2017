@@ -62,7 +62,7 @@ project(':visioncode') {
 
 }
 
-project(':OpenCV-Library-2.4.11') { 
+project(':OpenCV') { 
    apply plugin: 'java'
 
    sourceSets {
