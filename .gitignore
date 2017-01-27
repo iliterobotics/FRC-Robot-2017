@@ -18,8 +18,11 @@ robotcode/build/*
 hs_err_pid*
 .classpath
 .project
-<<<<<<< HEAD
 **/*.settings/*
 .gradle/*
 **/build/**
 /build/
+<<<<<<< HEAD
+/bin/
+/.gradle/
+**/.idea/**
