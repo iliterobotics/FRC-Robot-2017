@@ -6,7 +6,6 @@ import org.usfirst.frc.team1885.robot.modules.DriveTrain.DriveMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SerialPort;
 
 public class DriveStraightNavX extends AutonomousCommand{
 	

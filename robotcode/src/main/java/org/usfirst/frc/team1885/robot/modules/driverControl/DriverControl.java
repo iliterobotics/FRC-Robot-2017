@@ -3,10 +3,10 @@ package org.usfirst.frc.team1885.robot.modules.driverControl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.usfirst.frc.team1885.robot.common.interfaces.IJoystick;
+import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.Module;
-
-import edu.wpi.first.wpilibj.Joystick;
 
 public abstract class DriverControl implements Module {
 	
@@ -19,9 +19,10 @@ public abstract class DriverControl implements Module {
 	public static final int GAMEPAD_RIGHT_Y = 5;
 	
 
-	private Map<ControllerType, Joystick> controllerMap;
+	private Map<ControllerType, IJoystick> controllerMap;
 
 	private final DriveTrain driveTrain;
+	private IJoystickFactory joystickFactory;
 
 	public enum ControllerType {
 		LEFT_STICK(0), RIGHT_STICK(1), CONTROLLER(2);
@@ -33,14 +34,16 @@ public abstract class DriverControl implements Module {
 		}
 	}
 
-	public DriverControl(DriveTrain driveTrain) {
+	public DriverControl(DriveTrain driveTrain, IJoystickFactory created) {
 		this.driveTrain = driveTrain;
-		controllerMap = new HashMap<ControllerType, Joystick>();
+		this.joystickFactory = created;
+		controllerMap = new HashMap<ControllerType, IJoystick>();
 	}
 
 	public void initialize() {
 		for (ControllerType type : ControllerType.values()) {
-			controllerMap.put(type, new Joystick(type.controllerId));
+			controllerMap.put(type, joystickFactory.createJoystick(type.controllerId));
+					
 		}
 		driveTrain.setMode(DriveTrain.DriveMode.DRIVER_CONTROL_LOW);
 	}
@@ -58,7 +61,7 @@ public abstract class DriverControl implements Module {
 		driveTrain.setMotors(left, right);
 	}
 	
-	public Joystick getController(ControllerType type){
+	public IJoystick getController(ControllerType type){
 		return controllerMap.get(type);
 	}
 }
