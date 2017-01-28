@@ -27,8 +27,8 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl impleme
 		this(driveTrain, new DefaultJoystickFactory());
 	}
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain) {
-		super(driveTrain);
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, IJoystickFactory joystickFactory) {
+		super(driveTrain, joystickFactory);
 		
 		turnController = new PIDController(kP, kI, kD, kF, navx, this);
 		turnController.setInputRange(-180.0f, 180.0f);
@@ -37,8 +37,6 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl impleme
 		turnController.setContinuous(true);
 		
 		LiveWindow.addActuator("Drive System", "Rotate Controller", turnController);
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, IJoystickFactory joystickFactory) {
-		super(driveTrain, joystickFactory);
 	}
 
 	@Override

@@ -11,13 +11,10 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 
-public class DriverControlArcadeOneStick extends DriverControl{
 public class DriverControlArcadeOneStick extends DriverControl {
 	
 	public DriverControlArcadeOneStick(DriveTrain driveTrain) {
-		super(driveTrain);
-		
-		this(driveTrain, new DefaultJoystickFactory());
+		super(driveTrain, new DefaultJoystickFactory());		
 	}
 	
 	public DriverControlArcadeOneStick(DriveTrain driveTrain, IJoystickFactory joystickFact) {
