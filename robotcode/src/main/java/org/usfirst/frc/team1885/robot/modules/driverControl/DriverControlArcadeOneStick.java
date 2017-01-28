@@ -5,8 +5,6 @@ import org.usfirst.frc.team1885.robot.common.interfaces.EJoystickAxis;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 
-import edu.wpi.first.wpilibj.Joystick.AxisType;
-
 public class DriverControlArcadeOneStick extends DriverControl {
 	
 	public DriverControlArcadeOneStick(DriveTrain driveTrain) {

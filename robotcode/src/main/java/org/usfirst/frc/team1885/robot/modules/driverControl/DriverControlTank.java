@@ -1,29 +1,31 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
+import org.usfirst.frc.team1885.robot.common.impl.DefaultDriverStation;
 import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
 import org.usfirst.frc.team1885.robot.common.interfaces.EJoystickAxis;
+import org.usfirst.frc.team1885.robot.common.interfaces.IDriverStation;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-
-import edu.wpi.first.wpilibj.DriverStation;
 
 public class DriverControlTank extends DriverControl{
 	
 	private static final double SCALING_EXP = 2;
+	private IDriverStation driveStation;
 	
 	public DriverControlTank(DriveTrain driveTrain) {
-		this(driveTrain, new DefaultJoystickFactory());
+		this(driveTrain, new DefaultJoystickFactory(), new DefaultDriverStation());
 	}
 
-	public DriverControlTank(DriveTrain driveTrain, IJoystickFactory factory) {
+	public DriverControlTank(DriveTrain driveTrain, IJoystickFactory factory, IDriverStation driveStation) {
 		super(driveTrain, factory);
+		this.driveStation = driveStation;
 	}
 
 	public void update() {
 		double leftInput = getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kY);
 		double rightInput = getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kY);
 
-		DriverStation.reportError(String.format("oL:%f oR:%f", leftInput, rightInput), false);
+		driveStation.reportError(String.format("oL:%f oR:%f", leftInput, rightInput), false);
 		
 		//See if sticks are close enough together to be considered the same
 		if(Math.abs(leftInput - rightInput) < DEADZONE ){
@@ -36,7 +38,7 @@ public class DriverControlTank extends DriverControl{
 		int rightScaler = leftInput > 0?1:-1;
 		leftInput = Math.pow(leftInput, SCALING_EXP) * rightScaler;
 		
-		DriverStation.reportError(String.format("fL:%f fR:%f", leftInput, rightInput), false);
+		driveStation.reportError(String.format("fL:%f fR:%f", leftInput, rightInput), false);
 
 		setSpeeds(leftInput, rightInput);
 	}
