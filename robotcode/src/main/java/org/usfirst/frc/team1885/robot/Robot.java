@@ -9,8 +9,10 @@ import java.util.Queue;
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
 import org.usfirst.frc.team1885.robot.autonomous.TurnDegree;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
+import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
+import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl.ControllerType;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 import org.usfirst.frc.team1885.robot.modules.test.TestClamp;
 
@@ -27,6 +29,7 @@ public class Robot extends SampleRobot {
 	private DriveTrain driveTrain;
 	private DriverControl driverControl;
 	private AHRS navx;
+	private GearManipulator gearManipulator;
 	
 	private Queue<AutonomousCommand> autonomousCommands;
 	private List<Module> runningModules;
@@ -47,7 +50,7 @@ public class Robot extends SampleRobot {
 	
 	public void autonomous()
 	{
-		setRunningModules(driveTrain);
+		setRunningModules(driveTrain, gearManipulator);
 		autonomousCommands.clear();
 //		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
 		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90));
@@ -70,7 +73,7 @@ public class Robot extends SampleRobot {
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, driveTrain);
+		setRunningModules(driverControl, driveTrain, gearManipulator);
 		while(isOperatorControl() && isEnabled()){
 			updateModules();
 			pause();

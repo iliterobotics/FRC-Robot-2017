@@ -6,9 +6,6 @@
 # Package Files #
 *.war
 *.ear
-*.jar
-
-gradle/*
 
 !robotcode/res/*
 robotcode/.settings/*
@@ -18,8 +15,11 @@ robotcode/build/*
 hs_err_pid*
 .classpath
 .project
-*.settings/*
+**/*.settings/*
 .gradle/*
+**/build/**
 /build/
+<<<<<<< HEAD
 /bin/
 /.gradle/
+**/.idea/**

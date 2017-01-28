@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
+import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
+import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
@@ -20,6 +22,10 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl impleme
 	public static final double kToleranceDegrees = 2.0f;
 	
 	private static final int REDUCER = 2;
+
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain) { 
+		this(driveTrain, new DefaultJoystickFactory());
+	}
 	
 	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain) {
 		super(driveTrain);
@@ -31,6 +37,8 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl impleme
 		turnController.setContinuous(true);
 		
 		LiveWindow.addActuator("Drive System", "Rotate Controller", turnController);
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, IJoystickFactory joystickFactory) {
+		super(driveTrain, joystickFactory);
 	}
 
 	@Override
