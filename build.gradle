@@ -25,6 +25,9 @@ project(':robotcode') {
        compile wpilib()
        compile talonSrx()
        compile files('res/navx_frc.jar')
+       compile group: 'com.google.guava', name: 'guava', version: '19.0' 
+
+
 
        testCompile( 'junit:junit:4.12', 'org.codehaus.groovy:groovy-all:2.4.4', 'org.spockframework:spock-core:1.0-groovy-2.4')
    }

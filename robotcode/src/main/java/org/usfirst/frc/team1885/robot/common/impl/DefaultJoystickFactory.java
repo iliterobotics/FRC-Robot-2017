@@ -1,4 +1,8 @@
-package org.usfirst.frc.team1885.robot.interfaces.controller;
+package org.usfirst.frc.team1885.robot.common.impl;
+
+import org.usfirst.frc.team1885.robot.common.interfaces.EJoystickAxis;
+import org.usfirst.frc.team1885.robot.common.interfaces.IJoystick;
+import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.AxisType;

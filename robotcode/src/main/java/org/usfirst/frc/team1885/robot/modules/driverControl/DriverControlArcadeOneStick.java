@@ -1,8 +1,8 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
-import org.usfirst.frc.team1885.robot.interfaces.controller.DefaultJoystickFactory;
-import org.usfirst.frc.team1885.robot.interfaces.controller.EJoystickAxis;
-import org.usfirst.frc.team1885.robot.interfaces.controller.IJoystickFactory;
+import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
+import org.usfirst.frc.team1885.robot.common.interfaces.EJoystickAxis;
+import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 
 import edu.wpi.first.wpilibj.Joystick.AxisType;

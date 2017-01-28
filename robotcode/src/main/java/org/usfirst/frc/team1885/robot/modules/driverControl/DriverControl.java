@@ -3,8 +3,8 @@ package org.usfirst.frc.team1885.robot.modules.driverControl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc.team1885.robot.interfaces.controller.IJoystick;
-import org.usfirst.frc.team1885.robot.interfaces.controller.IJoystickFactory;
+import org.usfirst.frc.team1885.robot.common.interfaces.IJoystick;
+import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.Module;
 
