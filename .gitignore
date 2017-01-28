@@ -6,9 +6,6 @@
 # Package Files #
 *.war
 *.ear
-*.jar
-
-gradle/*
 
 !robotcode/res/*
 robotcode/.settings/*
