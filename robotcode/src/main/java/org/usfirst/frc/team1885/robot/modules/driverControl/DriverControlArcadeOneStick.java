@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
+import org.usfirst.frc.team1885.robot.interfaces.controller.DefaultJoystickFactory;
+import org.usfirst.frc.team1885.robot.interfaces.controller.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 
 import edu.wpi.first.wpilibj.Joystick.AxisType;
@@ -7,7 +9,11 @@ import edu.wpi.first.wpilibj.Joystick.AxisType;
 public class DriverControlArcadeOneStick extends DriverControl {
 	
 	public DriverControlArcadeOneStick(DriveTrain driveTrain) {
-		super(driveTrain);
+		this(driveTrain, new DefaultJoystickFactory());
+	}
+	
+	public DriverControlArcadeOneStick(DriveTrain driveTrain, IJoystickFactory joystickFact) {
+		super(driveTrain, joystickFact);
 	}
 
 	public void update() {

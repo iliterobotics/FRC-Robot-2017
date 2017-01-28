@@ -1,13 +1,19 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
+import org.usfirst.frc.team1885.robot.interfaces.controller.DefaultJoystickFactory;
+import org.usfirst.frc.team1885.robot.interfaces.controller.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
 
 	private static final int REDUCER = 2;
+
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain) { 
+		this(driveTrain, new DefaultJoystickFactory());
+	}
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain) {
-		super(driveTrain);
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, IJoystickFactory joystickFactory) {
+		super(driveTrain, joystickFactory);
 	}
 
 	@Override

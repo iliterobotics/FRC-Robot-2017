@@ -1,13 +1,17 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
+import org.usfirst.frc.team1885.robot.interfaces.controller.DefaultJoystickFactory;
+import org.usfirst.frc.team1885.robot.interfaces.controller.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 
 public class DriverControlTankController extends DriverControl{
 
 	private static final double SCALING_EXP = 2;
-
 	public DriverControlTankController(DriveTrain driveTrain) {
-		super(driveTrain);
+		this(driveTrain, new DefaultJoystickFactory());
+	}
+	public DriverControlTankController(DriveTrain driveTrain, IJoystickFactory joystickFact) {
+		super(driveTrain, joystickFact);
 	}
 
 	public void update() {

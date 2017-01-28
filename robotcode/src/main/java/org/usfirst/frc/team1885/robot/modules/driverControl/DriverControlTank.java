@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
+import org.usfirst.frc.team1885.robot.interfaces.controller.DefaultJoystickFactory;
+import org.usfirst.frc.team1885.robot.interfaces.controller.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -8,9 +10,13 @@ import edu.wpi.first.wpilibj.Joystick.AxisType;
 public class DriverControlTank extends DriverControl{
 	
 	private static final double SCALING_EXP = 2;
-
+	
 	public DriverControlTank(DriveTrain driveTrain) {
-		super(driveTrain);
+		this(driveTrain, new DefaultJoystickFactory());
+	}
+
+	public DriverControlTank(DriveTrain driveTrain, IJoystickFactory factory) {
+		super(driveTrain, factory);
 	}
 
 	public void update() {
