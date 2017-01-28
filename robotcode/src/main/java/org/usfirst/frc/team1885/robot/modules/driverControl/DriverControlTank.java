@@ -1,11 +1,11 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
 import org.usfirst.frc.team1885.robot.interfaces.controller.DefaultJoystickFactory;
+import org.usfirst.frc.team1885.robot.interfaces.controller.EJoystickAxis;
 import org.usfirst.frc.team1885.robot.interfaces.controller.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick.AxisType;
 
 public class DriverControlTank extends DriverControl{
 	
@@ -20,8 +20,8 @@ public class DriverControlTank extends DriverControl{
 	}
 
 	public void update() {
-		double leftInput = getController(ControllerType.LEFT_STICK).getAxis(AxisType.kY);
-		double rightInput = getController(ControllerType.RIGHT_STICK).getAxis(AxisType.kY);
+		double leftInput = getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kY);
+		double rightInput = getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kY);
 
 		DriverStation.reportError(String.format("oL:%f oR:%f", leftInput, rightInput), false);
 		

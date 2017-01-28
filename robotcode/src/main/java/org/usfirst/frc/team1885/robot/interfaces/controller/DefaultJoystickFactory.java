@@ -30,8 +30,36 @@ public class DefaultJoystickFactory implements IJoystickFactory {
 		}
 
 		@Override
-		public double getAxis(AxisType ky) {
-			return this.realJoystick.getAxis(ky);
+		public double getAxis(EJoystickAxis ky) {
+			AxisType axisType = null;
+			double returnVal = Double.NaN;
+			
+			switch(ky) {
+			case kX:
+				axisType = AxisType.kX;
+				break;
+			case kY:
+				axisType = AxisType.kY;
+				break;
+			case kZ:
+				axisType = AxisType.kZ;
+				break;
+			case kTwist:
+				axisType = AxisType.kTwist;
+				break;
+			case kThrottle:
+				axisType = AxisType.kThrottle;
+				break;
+			case kNumAxis:
+				axisType = AxisType.kNumAxis;
+				break;
+			}
+			
+			if(axisType != null) { 
+				returnVal = this.realJoystick.getAxis(axisType);
+			}
+			
+			return returnVal;
 		}
 		
 	}
