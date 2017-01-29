@@ -4,15 +4,13 @@ import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain.DriveMode;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class DriveStraightNavX extends AutonomousCommand{
 	
 	private static final double ALLOWABLE_ERROR = 0.001;
 	private static final double INITIAL_POWER = 0.3;
-	private static final double PROPORTION = 0.1;
+	private static final double PROPORTION = 0.02;
 	
 	private final DriveTrain driveTrain;
 	private final NavX navx;

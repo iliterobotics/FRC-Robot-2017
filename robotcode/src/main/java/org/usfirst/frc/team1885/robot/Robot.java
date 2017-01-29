@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraight;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraightNavX;
 import org.usfirst.frc.team1885.robot.autonomous.TurnDegree;
 import org.usfirst.frc.team1885.robot.common.impl.DefaultAHRSFactory;
 import org.usfirst.frc.team1885.robot.common.interfaces.ESerialPort;
@@ -55,7 +57,7 @@ public class Robot extends SampleRobot {
 		setRunningModules(driveTrain);
 		autonomousCommands.clear();
 //		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
-		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90));
+		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
 		AutonomousCommand currentCommand = autonomousCommands.peek();
 		if(currentCommand != null){
 			currentCommand.init();
