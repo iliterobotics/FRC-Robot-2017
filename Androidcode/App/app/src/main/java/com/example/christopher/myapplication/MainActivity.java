@@ -17,6 +17,7 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.usfirst.frc.team1885.visioncode.utils.SimpleImage;
 
 import opencv.codeonion.com.opencv_test.R;
 
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         } else {
             Log.d(TAG, "OpenCV library found inside package. Using it!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+
         }
     }
 
