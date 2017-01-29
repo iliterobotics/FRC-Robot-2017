@@ -7,26 +7,24 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
-import org.usfirst.frc.team1885.robot.autonomous.DriveStraight;
 import org.usfirst.frc.team1885.robot.autonomous.DriveStraightNavX;
-import org.usfirst.frc.team1885.robot.autonomous.TurnDegree;
-import org.usfirst.frc.team1885.robot.common.impl.DefaultAHRSFactory;
-import org.usfirst.frc.team1885.robot.common.interfaces.ESerialPort;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
+import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl.ControllerType;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 import org.usfirst.frc.team1885.robot.modules.test.TestClamp;
 
-import com.kauailabs.navx.frc.AHRS;
-
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.SampleRobot;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
-public class Robot extends SampleRobot {
+public class Robot extends SampleRobot{
+	
 	
 	public static final long UPDATE_PERIOD = 5;
 
@@ -41,11 +39,11 @@ public class Robot extends SampleRobot {
 	public Robot(){
 		runningModules = new ArrayList<>();
 		autonomousCommands = new LinkedList<>();
-
-		driveTrain = new DriveTrain();	
-		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
-		gearManipulator = new GearManipulator(driverControl);
 		navx = new NavX();
+		driveTrain = new DriveTrain();	
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, navx);
+		gearManipulator = new GearManipulator(driverControl);
+		
 	}
 
 	public void robotInit(){
