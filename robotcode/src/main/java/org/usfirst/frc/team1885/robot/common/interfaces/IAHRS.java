@@ -1,6 +1,8 @@
 package org.usfirst.frc.team1885.robot.common.interfaces;
 
-public interface IAHRS {
+import edu.wpi.first.wpilibj.PIDSource;
+
+public interface IAHRS extends PIDSource{
 
 	double getYaw();
 

@@ -7,6 +7,8 @@ import org.usfirst.frc.team1885.robot.common.interfaces.IAHRSFactory;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.PIDSourceType;
+
 public class DefaultAHRSFactory implements IAHRSFactory{
 
 	public IAHRS getAHRS(ESerialPort port) {
@@ -49,6 +51,21 @@ public class DefaultAHRSFactory implements IAHRSFactory{
 		@Override
 		public void resetDisplacement() {
 			ahrs.resetDisplacement();
+		}
+
+		@Override
+		public void setPIDSourceType(PIDSourceType pidSource) {
+			ahrs.setPIDSourceType(pidSource);
+		}
+
+		@Override
+		public PIDSourceType getPIDSourceType() {
+			return getPIDSourceType();
+		}
+
+		@Override
+		public double pidGet() {
+			return ahrs.pidGet();
 		}
 		
 	}
