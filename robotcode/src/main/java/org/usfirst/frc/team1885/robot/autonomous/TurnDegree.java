@@ -1,93 +1,59 @@
 package org.usfirst.frc.team1885.robot.autonomous;
 
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.DriveTrain.DriveMode;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class TurnDegree extends AutonomousCommand {
 	
-	private static final double MAX_ERROR = 0.001;
-	
-	private DriveTrain driveTrain;
+	private DriveTrain drivetrain;
 	private NavX navx;
 	
-	private double currYaw;
-	private double initialYaw;
+	private static final double MAX_ERROR = 0.1;
+	private static final double PROPORTION = 0.006;
+	
+	private double degrees;
 	private double targetYaw;
-	private double yawError;
+	private double error;
 	
-	private double reducer = 1;
-	private double proportion;
-	private int turnDirection;
-	
-	public TurnDegree(DriveTrain driveTrain, NavX navx, double degrees) {
-		this.driveTrain = driveTrain;
+	public TurnDegree(DriveTrain drivetrain, NavX navx, double degrees)
+	{
+		this.drivetrain = drivetrain;
 		this.navx = navx;
-		
-		this.currYaw = navx.getYaw();
-		this.initialYaw = navx.getYaw();
-		this.targetYaw = (degrees + initialYaw) % 180;
-		this.yawError = Math.abs(targetYaw) - Math.abs(initialYaw);
-		
-		this.proportion = yawError / currYaw;
-		this.turnDirection = (this.initialYaw < this.targetYaw) ? 1 : -1;
+		this.degrees = degrees;
 	}
 	
-	@Override
-	public void init() {
-		driveTrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
+	public void init()
+	{
 		navx.zeroYaw();
+		this.targetYaw = (navx.getYaw() + degrees) % 180;
+		this.error = (navx.getYaw() - targetYaw) % 180;
+		DriverStation.reportError(String.format("Starting TurnDegree. \n Initial Yaw: %f \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getInitialYaw(), navx.getYaw(), targetYaw, error), false);
 	}
-
-	@Override
-	public boolean update() {
+	
+	public boolean update()
+	{
+		if(isWithinError(navx.getYaw(), targetYaw, MAX_ERROR)) return true;
+		DriverStation.reportError(String.format("Updating TurnDegree. \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getYaw(), targetYaw, error), false);
 		
-		double leftDrive;
-		double rightDrive;
+		double leftPower, rightPower;
+		error = ( navx.getYaw() - targetYaw) % 180;
 		
-		currYaw = navx.getYaw();
+		leftPower = (PROPORTION * error);
+		rightPower = -(PROPORTION * error);
 		
-		yawError = Math.abs(targetYaw) - Math.abs(navx.getYaw());
-		proportion = (yawError * invert(currYaw)) * reducer;
+		drivetrain.setMotors(leftPower, rightPower);
+		DriverStation.reportError(String.format("Left: %f Right %f", leftPower, rightPower), false );
 		
-//		reducer = (navx.getYaw() / targetYaw) * MAX_REDUCER;
-		
-		if(!isWithinError(currYaw, targetYaw, MAX_ERROR)) {
-			leftDrive = turnDirection * proportion;
-			rightDrive = -turnDirection * proportion;
-			DriverStation.reportError(String.format("Turning to Target Yaw: %f Current Yaw: %f Proportion: %f Left: %f Right: %f",
-													targetYaw, currYaw, proportion, leftDrive, rightDrive ), false);
-		} else {
-			DriverStation.reportError(String.format("Reached Target Yaw: %f Current Yaw: ", targetYaw, navx.getYaw()), false);
-			leftDrive = rightDrive = 0.0;
-			return true;
-		}
-		
-		DriverStation.reportError(String.format("Left: %f Right: %f", leftDrive, rightDrive), false);
-		DriverStation.reportError("Yaw: " + currYaw, false);
-		
-		driveTrain.setMotors(rightDrive, leftDrive);
 		return false;
-		
 	}
 	
 	private boolean isWithinError(double value, double targetValue, double error)
 	{
 		if( value < (targetValue + error) && value > (targetValue - error) ) return true;
+		DriverStation.reportError(String.format("Value: %f Target: %f Allowable Error: %f", value, targetValue, error), false);
 		return false;
-	}
-	
-	/**
-	 * 
-	 * @param value The value you wish to invert
-	 * @return The inverted value (ex: x -> 1/x)
-	 */
-	private double invert(double value)
-	{
-		if(value == 0) return 0;
-		return 1/value;
 	}
 	
 }
