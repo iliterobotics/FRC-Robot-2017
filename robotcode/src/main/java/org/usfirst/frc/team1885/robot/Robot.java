@@ -39,9 +39,10 @@ public class Robot extends SampleRobot {
 	public Robot(){
 		runningModules = new ArrayList<>();
 		autonomousCommands = new LinkedList<>();
-		
-		driveTrain = new DriveTrain();
+
+		driveTrain = new DriveTrain();	
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
+		gearManipulator = new GearManipulator(driverControl);
 		navx = new NavX();
 	}
 
@@ -51,7 +52,7 @@ public class Robot extends SampleRobot {
 	
 	public void autonomous()
 	{
-		setRunningModules(driveTrain, gearManipulator);
+		setRunningModules(driveTrain);
 		autonomousCommands.clear();
 //		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
 		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90));
@@ -74,7 +75,7 @@ public class Robot extends SampleRobot {
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, driveTrain, gearManipulator);
+		setRunningModules(driverControl, driveTrain);
 		while(isOperatorControl() && isEnabled()){
 			updateModules();
 			pause();
