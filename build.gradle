@@ -52,3 +52,13 @@ project(':commscode'){
   apply plugin: 'eclipse'
   apply plugin: 'java'
 }
+
+project(':visioncode') {
+  apply plugin: 'eclipse'
+  apply plugin: 'java'
+  dependencies { 
+	compile project(':Androidcode:App:visionUtils')
+
+  }
+
+}
