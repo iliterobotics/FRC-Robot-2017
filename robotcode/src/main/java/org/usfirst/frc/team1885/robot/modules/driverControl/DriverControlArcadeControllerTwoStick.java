@@ -5,7 +5,14 @@ import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
-
+	
+	public static final double kP = 0.03;
+	public static final double kI = 0.0;
+	public static final double kD = 0.0;
+	public static final double kF = 0.0;
+	
+	public static final double kToleranceDegrees = 2.0f;
+	
 	private static final int REDUCER = 2;
 
 	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain) { 
@@ -30,5 +37,5 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 
 		setSpeeds(leftInput, rightInput);
 	}
-
+	
 }

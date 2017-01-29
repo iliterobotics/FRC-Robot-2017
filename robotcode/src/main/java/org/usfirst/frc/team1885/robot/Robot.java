@@ -8,12 +8,13 @@ import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
 import org.usfirst.frc.team1885.robot.autonomous.TurnDegree;
+import org.usfirst.frc.team1885.robot.common.impl.DefaultAHRSFactory;
+import org.usfirst.frc.team1885.robot.common.interfaces.ESerialPort;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
-import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl.ControllerType;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 import org.usfirst.frc.team1885.robot.modules.test.TestClamp;
 
@@ -26,10 +27,10 @@ import edu.wpi.first.wpilibj.Timer;
 public class Robot extends SampleRobot {
 	
 	public static final long UPDATE_PERIOD = 5;
-	
+
 	private DriveTrain driveTrain;
 	private DriverControl driverControl;
-	private AHRS navx;
+	private NavX navx;
 	private GearManipulator gearManipulator;
 	
 	private Queue<AutonomousCommand> autonomousCommands;
@@ -41,7 +42,7 @@ public class Robot extends SampleRobot {
 		
 		driveTrain = new DriveTrain();
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
-		navx = new NavX(SerialPort.Port.kMXP);
+		navx = new NavX();
 	}
 
 	public void robotInit(){

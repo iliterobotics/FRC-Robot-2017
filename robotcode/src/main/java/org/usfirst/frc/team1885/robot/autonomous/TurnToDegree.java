@@ -8,7 +8,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 public class TurnToDegree extends AutonomousCommand{
 	private DriveTrain driveTrain;
-	private AHRS navx;
+	private NavX navx;
 	private double targetYaw;
 	private double yawError;
 	private double initialYaw;
@@ -18,18 +18,17 @@ public class TurnToDegree extends AutonomousCommand{
 		this.driveTrain = driveTrain;
 		this.navx = navx;
 		this.targetYaw = targetYaw;
-		initialYaw = navx.getInitialYaw();
 	}
 
 	@Override
 	public void init() {
 		driveTrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
+		initialYaw = navx.getInitialYaw();
 	}
 
 	@Override
 	public boolean update() {
 		double leftDrive, rightDrive;
-		
 		
 		return false;
 	}

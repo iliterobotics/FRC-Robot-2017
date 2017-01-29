@@ -2,8 +2,7 @@ package org.usfirst.frc.team1885.robot.autonomous;
 
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain.DriveMode;
-
-import com.kauailabs.navx.frc.AHRS;
+import org.usfirst.frc.team1885.robot.modules.NavX;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -12,7 +11,7 @@ public class TurnDegree extends AutonomousCommand {
 	private static final double MAX_ERROR = 0.001;
 	
 	private DriveTrain driveTrain;
-	private AHRS navx;
+	private NavX navx;
 	
 	private double currYaw;
 	private double initialYaw;
@@ -23,7 +22,7 @@ public class TurnDegree extends AutonomousCommand {
 	private double proportion;
 	private int turnDirection;
 	
-	public TurnDegree(DriveTrain driveTrain, AHRS navx, double degrees) {
+	public TurnDegree(DriveTrain driveTrain, NavX navx, double degrees) {
 		this.driveTrain = driveTrain;
 		this.navx = navx;
 		
