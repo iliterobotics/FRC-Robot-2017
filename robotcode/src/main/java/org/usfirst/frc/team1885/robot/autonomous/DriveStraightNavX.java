@@ -2,6 +2,7 @@ package org.usfirst.frc.team1885.robot.autonomous;
 
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain.DriveMode;
+import org.usfirst.frc.team1885.robot.modules.NavX;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -14,11 +15,11 @@ public class DriveStraightNavX extends AutonomousCommand{
 	private static final double PROPORTION = 0.1;
 	
 	private final DriveTrain driveTrain;
-	private final AHRS navx;
+	private final NavX navx;
 	
 	private double initialYaw;
 	
-	public DriveStraightNavX(DriveTrain dt, AHRS navx){
+	public DriveStraightNavX(DriveTrain dt, NavX navx){
 		driveTrain = dt;
 		this.navx = navx;
 	}
