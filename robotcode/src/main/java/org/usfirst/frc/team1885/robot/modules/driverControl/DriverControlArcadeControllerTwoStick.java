@@ -51,11 +51,20 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl impleme
 		leftInput =  throttle - turn;
 		rightInput = throttle + turn;
 
-		if(turnToAngle()) turnController.enable();
+		if(turnToAngle()) {
+			turnController.enable();
+			leftInput = rotateToAngleRate;
+			rightInput = -rotateToAngleRate;
+		}
 		else turnController.disable();
 		
 		setSpeeds(leftInput, rightInput);
 	}
+	
+	/**
+	 * 
+	 * @param rate A value from 1 to -1
+	 */
 	
 	public boolean turnToAngle() {
 		if(getController(ControllerType.CONTROLLER).getRawButton(6)) {
