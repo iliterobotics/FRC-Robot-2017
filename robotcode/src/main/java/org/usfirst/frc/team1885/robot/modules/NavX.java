@@ -5,10 +5,7 @@ import org.usfirst.frc.team1885.robot.common.interfaces.ESerialPort;
 import org.usfirst.frc.team1885.robot.common.interfaces.IAHRS;
 import org.usfirst.frc.team1885.robot.common.interfaces.IAHRSFactory;
 
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
-
-public class NavX implements PIDSource{
+public class NavX{
 	
 	private static final ESerialPort DEFAULT_PORT = ESerialPort.kMXP;
 	private final double initialYaw;
@@ -49,22 +46,6 @@ public class NavX implements PIDSource{
 
 	public void resetDisplacement() {
 		iahrs.resetDisplacement();
-	}
-
-	@Override
-	public void setPIDSourceType(PIDSourceType pidSource) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public PIDSourceType getPIDSourceType() {
-		return iahrs.getPIDSourceType();
-	}
-
-	@Override
-	public double pidGet() {
-		return iahrs.pidGet();
 	}
 
 }
