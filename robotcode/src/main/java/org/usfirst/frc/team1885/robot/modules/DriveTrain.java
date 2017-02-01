@@ -12,25 +12,37 @@ import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalon;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl.ControllerType;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.RobotDrive;
 
 
 /**
  * Class for running all drive train control operations from both autonomous and driver-control
  */
 
-public class DriveTrain implements Module{
-	
+public class DriveTrain implements Module, PIDOutput{
+
 	private static final double MAX_MOTOR_DIFF = 0.02;
 	
 	private double desiredLeftPower;
 	private double desiredRightPower;
 	private double actualLeftPower;
 	private double actualRightPower;
+	private double rotateToAngleRate;
+	
+	private static final double kP = 0.03;
+    private static final double kI = 0.00;
+    private static final double kD = 0.00;
+    private static final double kF = 0.00;
+    
+    private static final double kToleranceDegrees = 2.0f;
 		
 	private DriveMode currentMode;
+	private RobotDrive robot;
+	private PIDController turnController;
 	
 	public enum DriveMode{
 		DRIVER_CONTROL_HIGH, DRIVER_CONTROL_LOW, TICK_VEL;
@@ -54,14 +66,17 @@ public class DriveTrain implements Module{
 	private final ICanTalonFactory canTalonFactory;
 
 	
-	public DriveTrain() {
-		this(new DefaultCanTalonFactory());
+	public DriveTrain(AHRS navx) {
+		this(new DefaultCanTalonFactory(),
+				new DefaultDriverStation());
+		turnController = new PIDController(kP, kI, kD, kF, navx, this);
 	}
 
 	public DriveTrain(ICanTalonFactory canTalonFactory){
 		this.canTalonFactory = canTalonFactory;
 		motorMap = new HashMap<>();
 		setMode(DriveMode.DRIVER_CONTROL_LOW);
+		robot = new RobotDrive(MotorType.LEFT_MOTOR.talonId, MotorType.RIGHT_MOTOR.talonId);		
 	}
 	
 	@Override
@@ -78,6 +93,10 @@ public class DriveTrain implements Module{
 			}
 			motorMap.put(type, talon);
 		}
+		turnController.setInputRange(-180.0f, 180.0f);
+		turnController.setOutputRange(-1.0, 1.0);
+		turnController.setAbsoluteTolerance(kToleranceDegrees);
+		turnController.setContinuous(true);
 	}
 	
 	public void setMode(DriveMode mode){
@@ -156,5 +175,9 @@ public class DriveTrain implements Module{
 		else return newValue;
 	}
 
-
+	@Override
+	public void pidWrite(double output) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -40,10 +40,8 @@ public class Robot extends SampleRobot{
 		runningModules = new ArrayList<>();
 		autonomousCommands = new LinkedList<>();
 		navx = new NavX();
-		driveTrain = new DriveTrain();	
-		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, navx);
-		gearManipulator = new GearManipulator(driverControl);
-		
+		driveTrain = new DriveTrain(navx);
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);		
 	}
 
 	public void robotInit(){
