@@ -52,6 +52,21 @@ public class DefaultAHRSFactory implements IAHRSFactory{
 		public void resetDisplacement() {
 			ahrs.resetDisplacement();
 		}
+
+		@Override
+		public void setPIDSourceType(PIDSourceType pidSource) {
+			ahrs.setPIDSourceType(pidSource);
+		}
+
+		@Override
+		public PIDSourceType getPIDSourceType() {
+			return ahrs.getPIDSourceType();
+		}
+
+		@Override
+		public double pidGet() {
+			return ahrs.pidGet();
+		}
 		
 	}
 	
