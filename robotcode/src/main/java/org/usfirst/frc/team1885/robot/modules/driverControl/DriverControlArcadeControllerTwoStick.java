@@ -40,6 +40,10 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 		boolean turnControllerState = getController(ControllerType.CONTROLLER).getRawButton(TURN_90);
 		if(turnControllerState) {
 			driveTrain.setTurnTarget(90.0f);
+			driveTrain.setMode(DriveTrain.DriveMode.ARCADE_TURN);
+		}
+		else {
+			driveTrain.setMode(DriveTrain.DriveMode.DRIVER_CONTROL_LOW);
 		}
 		driveTrain.turnControlState(turnControllerState);
 	}
