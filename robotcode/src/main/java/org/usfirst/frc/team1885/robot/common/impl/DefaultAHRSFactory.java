@@ -60,7 +60,7 @@ public class DefaultAHRSFactory implements IAHRSFactory{
 
 		@Override
 		public PIDSourceType getPIDSourceType() {
-			return getPIDSourceType();
+			return ahrs.getPIDSourceType();
 		}
 
 		@Override

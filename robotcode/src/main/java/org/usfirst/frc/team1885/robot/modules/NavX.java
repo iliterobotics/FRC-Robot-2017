@@ -53,8 +53,7 @@ public class NavX implements PIDSource{
 
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
-		// TODO Auto-generated method stub
-		
+		iahrs.setPIDSourceType;
 	}
 
 	@Override
