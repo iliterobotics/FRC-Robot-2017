@@ -5,35 +5,19 @@ import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
 
-public class DriverControlArcadeControllerTwoStick extends DriverControl implements PIDOutput{
+public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	private static final int TURN_90 = 6;
-	public static final double kP = 0.03;
-	public static final double kI = 0.0;
-	public static final double kD = 0.0;
-	public static final double kF = 0.0;
-	
-	public static final double kToleranceDegrees = 2.0f;
-	
-	private double rotateToAngleRate;
-	private PIDController turnController;
-	
 	private static final int REDUCER = 2;
-
+	private DriveTrain driveTrain;
+	
 	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, NavX navx) { 
 		this(driveTrain, new DefaultJoystickFactory(), navx);
 	}
 	
 	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, IJoystickFactory joystickFactory, NavX navx) {
 		super(driveTrain, joystickFactory);
-		turnController = new PIDController(kP, kI, kD, kF, navx, this);
-		turnController.setInputRange(-180.0f, 180.0f);
-		turnController.setOutputRange(-1.0, 1.0);
-		turnController.setAbsoluteTolerance(kToleranceDegrees);
-		turnController.setContinuous(true);
+		this.driveTrain = driveTrain;
 	}
 
 	@Override
@@ -48,32 +32,19 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl impleme
 		leftInput =  throttle - turn;
 		rightInput = throttle + turn;
 		
-		if(turnToAngle()) {
-			turnController.enable();
-			leftInput = rotateToAngleRate;
-			rightInput = -rotateToAngleRate;
-		}
-		else {
-			turnController.disable();
-		}
 		setSpeeds(leftInput, rightInput);
 		
 	}
 	
-	
-	
-	public boolean turnToAngle() {
-		DriverStation.reportError("How you doin", false);
-		if(getController(ControllerType.CONTROLLER).getRawButton(TURN_90)) {
-			DriverStation.reportError("We moving fam", false);
-			turnController.setSetpoint(90.0f);			
-			return true;
+	public void turnToAngle() {
+		boolean turnControllerState = getController(ControllerType.CONTROLLER).getRawButton(TURN_90);
+		if(turnControllerState) {
+			driveTrain.setTurnTarget(90.0f);
+			driveTrain.setMode(DriveTrain.DriveMode.ARCADE_TURN);
 		}
-		return false;
-	}
-	
-	@Override
-	public void pidWrite(double output) {
-		rotateToAngleRate = output;
+		else {
+			driveTrain.setMode(DriveTrain.DriveMode.DRIVER_CONTROL_LOW);
+		}
+		driveTrain.turnControlState(turnControllerState);
 	}
 }

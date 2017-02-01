@@ -41,7 +41,7 @@ public class Robot extends SampleRobot{
 		autonomousCommands = new LinkedList<>();
 		navx = new NavX();
 		driveTrain = new DriveTrain(navx);
-		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);		
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, navx);		
 	}
 
 	public void robotInit(){

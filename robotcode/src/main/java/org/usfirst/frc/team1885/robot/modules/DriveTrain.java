@@ -3,17 +3,13 @@ package org.usfirst.frc.team1885.robot.modules;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc.team1885.robot.common.impl.DefaultAHRSFactory;
 import org.usfirst.frc.team1885.robot.common.impl.DefaultCanTalonFactory;
 import org.usfirst.frc.team1885.robot.common.impl.EFeedbackDevice;
 import org.usfirst.frc.team1885.robot.common.impl.ETalonControlMode;
-import org.usfirst.frc.team1885.robot.common.interfaces.IAHRSFactory;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalon;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
-import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl.ControllerType;
 
-import com.kauailabs.navx.frc.AHRS;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -34,7 +30,7 @@ public class DriveTrain implements Module, PIDOutput{
 	private double rotateToAngleRate;
 	
 	private static final double kP = 0.03;
-    private static final double kI = 0.00;
+    private static final double kI = 0.01;
     private static final double kD = 0.00;
     private static final double kF = 0.00;
     
@@ -45,7 +41,7 @@ public class DriveTrain implements Module, PIDOutput{
 	private PIDController turnController;
 	
 	public enum DriveMode{
-		DRIVER_CONTROL_HIGH, DRIVER_CONTROL_LOW, TICK_VEL;
+		DRIVER_CONTROL_HIGH, DRIVER_CONTROL_LOW, TICK_VEL, ARCADE_TURN;
 	}
 	private enum MotorType{
 		LEFT_MOTOR(-1, 3, 5), RIGHT_MOTOR(1, 4, 6);
@@ -66,9 +62,8 @@ public class DriveTrain implements Module, PIDOutput{
 	private final ICanTalonFactory canTalonFactory;
 
 	
-	public DriveTrain(AHRS navx) {
-		this(new DefaultCanTalonFactory(),
-				new DefaultDriverStation());
+	public DriveTrain(NavX navx) {
+		this(new DefaultCanTalonFactory());
 		turnController = new PIDController(kP, kI, kD, kF, navx, this);
 	}
 
@@ -111,6 +106,9 @@ public class DriveTrain implements Module, PIDOutput{
 			setMotorMode(ETalonControlMode.PercentVbus);
 			break;
 		case TICK_VEL:
+			setMotorMode(ETalonControlMode.PercentVbus);
+			break;
+		case ARCADE_TURN:		
 			setMotorMode(ETalonControlMode.PercentVbus);
 		}
 	}
@@ -164,6 +162,9 @@ public class DriveTrain implements Module, PIDOutput{
 				setMotor(MotorType.LEFT_MOTOR, actualLeftPower);
 				setMotor(MotorType.RIGHT_MOTOR, actualRightPower);
 				break;
+			case ARCADE_TURN:
+				robot.arcadeDrive(0.0, rotateToAngleRate);
+				
 		}
 	}
 	
@@ -174,10 +175,18 @@ public class DriveTrain implements Module, PIDOutput{
 		}
 		else return newValue;
 	}
+	
+	public void setTurnTarget(double angle) {
+		turnController.setSetpoint(angle);
+	}
+	
+	public void turnControlState(boolean state) {
+		if(state) turnController.enable(); 
+		else turnController.disable(); 
+	}
 
 	@Override
 	public void pidWrite(double output) {
-		// TODO Auto-generated method stub
-		
+		rotateToAngleRate = output;
 	}
 }
