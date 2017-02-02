@@ -53,7 +53,7 @@ public class NavX implements PIDSource{
 
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
-		iahrs.setPIDSourceType;
+		iahrs.setPIDSourceType(pidSource);
 	}
 
 	@Override
