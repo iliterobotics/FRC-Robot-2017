@@ -14,7 +14,7 @@ class DriveTrainTest extends Specification {
 			ICanTalonFactory canTalonFactory = Mock(ICanTalonFactory.class);
 			canTalonFactory.getCanTalon(_) >> Mock(ICanTalon.class);
 			IDriverStation driverStation = Mock(IDriverStation.class);
-			DriveTrain aTrain = new DriveTrain(canTalonFactory, driverStation);
+			DriveTrain aTrain = new DriveTrain(canTalonFactory);
 		when:
 			aTrain.initialize();
 			
