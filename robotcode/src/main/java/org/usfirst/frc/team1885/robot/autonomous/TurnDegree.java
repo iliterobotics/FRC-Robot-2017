@@ -11,7 +11,7 @@ public class TurnDegree extends AutonomousCommand {
 	private NavX navx;
 	
 	private static final double MAX_ERROR = 1;
-	private static final double PROPORTION = 0.006;
+	private static final double PROPORTION = 0.004006;
 	
 	private double degrees;
 	private double targetYaw;
@@ -28,7 +28,7 @@ public class TurnDegree extends AutonomousCommand {
 	{
 		navx.zeroYaw(); //Makes sure we will be turning relative to our current heading
 		this.targetYaw = (navx.getYaw() + degrees) % 180;  //Calculate the target heading off of # of degrees to turn
-		this.error = (navx.getYaw() - targetYaw) % 180; //Calculate the initial error value
+		this.error = (targetYaw - navx.getYaw()) % 180; //Calculate the initial error value
 		DriverStation.reportError(String.format("Starting TurnDegree. \n Initial Yaw: %f \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getInitialYaw(), navx.getYaw(), targetYaw, error), false);
 	}
 	
@@ -38,14 +38,13 @@ public class TurnDegree extends AutonomousCommand {
 		DriverStation.reportError(String.format("Updating TurnDegree. \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getYaw(), targetYaw, error), false);
 		
 		double leftPower, rightPower;
-		error = ( navx.getYaw() - targetYaw) % 180; //Update error value
+		error = ( targetYaw - navx.getYaw()) % 180; //Update error value
 		
 		leftPower = (PROPORTION * error); 
 		rightPower = -(PROPORTION * error); //So we don't just drive straight
 		
 		drivetrain.setMotors(leftPower, rightPower);
 		DriverStation.reportError(String.format("Left: %f Right %f", leftPower, rightPower), false );
-		
 		return false;
 	}
 	
