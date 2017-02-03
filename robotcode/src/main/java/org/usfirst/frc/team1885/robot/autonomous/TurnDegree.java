@@ -11,11 +11,13 @@ public class TurnDegree extends AutonomousCommand {
 	private NavX navx;
 	
 	private static final double MAX_ERROR = 1;
-	private static final double PROPORTION = 0.004006;
+	private static final double KP = 0.004;
+	private static final double KD = 0.01;
 	
 	private double degrees;
 	private double targetYaw;
 	private double error;
+	private double lastError;
 	
 	public TurnDegree(DriveTrain drivetrain, NavX navx, double degrees)
 	{
@@ -27,25 +29,44 @@ public class TurnDegree extends AutonomousCommand {
 	public void init()
 	{
 		navx.zeroYaw(); //Makes sure we will be turning relative to our current heading
-		this.targetYaw = (navx.getYaw() + degrees) % 180;  //Calculate the target heading off of # of degrees to turn
-		this.error = (targetYaw - navx.getYaw()) % 180; //Calculate the initial error value
+		this.targetYaw = degrees;  //Calculate the target heading off of # of degrees to turn
+		this.lastError = this.error = getAngleDifference(navx.getYaw(), targetYaw); //Calculate the initial error value
 		DriverStation.reportError(String.format("Starting TurnDegree. \n Initial Yaw: %f \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getInitialYaw(), navx.getYaw(), targetYaw, error), false);
 	}
 	
 	public boolean update()
 	{
-		if(isWithinError(navx.getYaw(), targetYaw, MAX_ERROR)) return true; //Terminate if within error margin
-		DriverStation.reportError(String.format("Updating TurnDegree. \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getYaw(), targetYaw, error), false);
+		error = getAngleDifference(navx.getYaw(), targetYaw); //Update error value
+		DriverStation.reportError("Error:" + error,  false);
+		if(Math.abs(error) < MAX_ERROR){
+			drivetrain.setMotors(0, 0);
+			return true;
+		}
 		
 		double leftPower, rightPower;
-		error = ( targetYaw - navx.getYaw()) % 180; //Update error value
 		
-		leftPower = (PROPORTION * error); 
-		rightPower = -(PROPORTION * error); //So we don't just drive straight
+		double output = (KP * error) + (KD * (error - lastError));
+		
+		leftPower = output; 
+		rightPower = -output;
 		
 		drivetrain.setMotors(leftPower, rightPower);
 		DriverStation.reportError(String.format("Left: %f Right %f", leftPower, rightPower), false );
+		
+		lastError = error;
 		return false;
+	}
+	
+	private double getAngleDifference(double angle1, double angle2){
+		double difference = angle1 - angle2;
+		if(Math.abs(difference) > 180){
+			if(angle1 < 0){
+				difference = angle2 - (angle1 + 360);
+			}else{
+				difference = (angle2 + 360) - angle1;				
+			}
+		}
+		return difference;
 	}
 	
 	/**
