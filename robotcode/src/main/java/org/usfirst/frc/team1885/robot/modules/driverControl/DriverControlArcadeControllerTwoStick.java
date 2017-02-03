@@ -7,7 +7,6 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 
 
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
-	private static final int TURN_90 = 6;
 	private static final int REDUCER = 2;
 	private DriveTrain driveTrain;
 	
@@ -34,17 +33,5 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 		
 		setSpeeds(leftInput, rightInput);
 		
-	}
-	
-	public void turnToAngle() {
-		boolean turnControllerState = getController(ControllerType.CONTROLLER).getRawButton(TURN_90);
-		if(turnControllerState) {
-			driveTrain.setTurnTarget(90.0f);
-			driveTrain.setMode(DriveTrain.DriveMode.ARCADE_TURN);
-		}
-		else {
-			driveTrain.setMode(DriveTrain.DriveMode.DRIVER_CONTROL_LOW);
-		}
-		driveTrain.turnControlState(turnControllerState);
 	}
 }

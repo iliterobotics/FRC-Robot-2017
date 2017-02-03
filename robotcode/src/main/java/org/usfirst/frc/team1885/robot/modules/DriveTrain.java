@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
  * Class for running all drive train control operations from both autonomous and driver-control
  */
 
-public class DriveTrain implements Module, PIDOutput{
+public class DriveTrain implements Module{
 
 	private static final double MAX_MOTOR_DIFF = 0.02;
 	
@@ -27,21 +27,11 @@ public class DriveTrain implements Module, PIDOutput{
 	private double desiredRightPower;
 	private double actualLeftPower;
 	private double actualRightPower;
-	private double rotateToAngleRate;
 	
-	private static final double kP = 0.03;
-    private static final double kI = 0.01;
-    private static final double kD = 0.00;
-    private static final double kF = 0.00;
-    
-    private static final double kToleranceDegrees = 2.0f;
-		
 	private DriveMode currentMode;
-	private RobotDrive robot;
-	private PIDController turnController;
 	
 	public enum DriveMode{
-		DRIVER_CONTROL_HIGH, DRIVER_CONTROL_LOW, TICK_VEL, ARCADE_TURN;
+		DRIVER_CONTROL_HIGH, DRIVER_CONTROL_LOW, TICK_VEL;
 	}
 	private enum MotorType{
 		LEFT_MOTOR(-1, 3, 5), RIGHT_MOTOR(1, 4, 6);
@@ -64,14 +54,12 @@ public class DriveTrain implements Module, PIDOutput{
 	
 	public DriveTrain(NavX navx) {
 		this(new DefaultCanTalonFactory());
-		turnController = new PIDController(kP, kI, kD, kF, navx, this);
 	}
 
 	public DriveTrain(ICanTalonFactory canTalonFactory){
 		this.canTalonFactory = canTalonFactory;
 		motorMap = new HashMap<>();
-		setMode(DriveMode.DRIVER_CONTROL_LOW);
-		robot = new RobotDrive(MotorType.LEFT_MOTOR.talonId, MotorType.RIGHT_MOTOR.talonId);		
+		setMode(DriveMode.DRIVER_CONTROL_LOW);		
 	}
 	
 	@Override
@@ -88,10 +76,6 @@ public class DriveTrain implements Module, PIDOutput{
 			}
 			motorMap.put(type, talon);
 		}
-		turnController.setInputRange(-180.0f, 180.0f);
-		turnController.setOutputRange(-1.0, 1.0);
-		turnController.setAbsoluteTolerance(kToleranceDegrees);
-		turnController.setContinuous(true);
 	}
 	
 	public void setMode(DriveMode mode){
@@ -108,8 +92,6 @@ public class DriveTrain implements Module, PIDOutput{
 		case TICK_VEL:
 			setMotorMode(ETalonControlMode.PercentVbus);
 			break;
-		case ARCADE_TURN:		
-			setMotorMode(ETalonControlMode.PercentVbus);
 		}
 	}
 	
@@ -162,9 +144,6 @@ public class DriveTrain implements Module, PIDOutput{
 				setMotor(MotorType.LEFT_MOTOR, actualLeftPower);
 				setMotor(MotorType.RIGHT_MOTOR, actualRightPower);
 				break;
-			case ARCADE_TURN:
-				robot.arcadeDrive(0.0, rotateToAngleRate);
-				
 		}
 	}
 	
@@ -174,19 +153,5 @@ public class DriveTrain implements Module, PIDOutput{
 			return oldValue + (MAX_MOTOR_DIFF * direction);
 		}
 		else return newValue;
-	}
-	
-	public void setTurnTarget(double angle) {
-		turnController.setSetpoint(angle);
-	}
-	
-	public void turnControlState(boolean state) {
-		if(state) turnController.enable(); 
-		else turnController.disable(); 
-	}
-
-	@Override
-	public void pidWrite(double output) {
-		rotateToAngleRate = output;
 	}
 }
