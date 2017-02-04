@@ -19,6 +19,11 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team1885.visioncode.utils.SimpleImage;
 
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 import opencv.codeonion.com.opencv_test.R;
 
 // OpenCV Classes
@@ -76,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 
         mOpenCvCameraView.setCvCameraViewListener(this);
+
+        ImageServer aServer = new ImageServer();
+        aServer.connect();
     }
 
     @Override
@@ -137,4 +145,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         }
         return edges; // This function must return
     }
+
+
 }
