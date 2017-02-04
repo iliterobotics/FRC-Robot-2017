@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     Mat mRgba;
     Mat mRgbaF;
     Mat mRgbaT;
+    ImageServer aServer;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         mOpenCvCameraView.setCvCameraViewListener(this);
 
-        ImageServer aServer = new ImageServer();
+        aServer = new ImageServer();
         aServer.connect();
     }
 
@@ -137,6 +138,9 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         Mat grayImage = new Mat();
         Imgproc.cvtColor(mRgba, grayImage, Imgproc.COLOR_BGRA2GRAY);
         Imgproc.blur(grayImage, grayImage, new Size(3,3));
+        aServer.submitImage(mRgba);
+
+
         Mat edges = new Mat();
         try {
             Imgproc.Canny(grayImage, edges, 10, 255);

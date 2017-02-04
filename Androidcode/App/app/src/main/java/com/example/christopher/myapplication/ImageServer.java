@@ -1,5 +1,7 @@
 package com.example.christopher.myapplication;
 
+import android.util.Log;
+
 import org.opencv.core.Mat;
 import org.usfirst.frc.team1885.visioncode.utils.SimpleImage;
 
@@ -15,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Created by Atishay on 1/29/2017.
@@ -28,7 +31,12 @@ public class ImageServer {
     }
 
     public void  connect() {
-        final ExecutorService service = Executors.newCachedThreadPool();
+        final ExecutorService service = Executors.newCachedThreadPool(new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                return new Thread(r, "Name");
+            }
+        });
         service.submit(new Runnable() {
                            @Override
                            public void run() {
@@ -37,6 +45,7 @@ public class ImageServer {
                                    server  = new ServerSocket(1180);
                                } catch(IOException e){
 
+                                   e.printStackTrace();
                                }
 
                                while(server != null) {
@@ -114,7 +123,7 @@ public class ImageServer {
 
             }catch (Exception e)
             {
-
+                e.printStackTrace();
             }
 
         }
