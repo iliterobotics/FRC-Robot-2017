@@ -11,13 +11,15 @@ public class TurnDegree extends AutonomousCommand {
 	private NavX navx;
 	
 	private static final double MAX_ERROR = 1;
-	private static final double KP = 0.004;
+	private static final double KP = 0.0085;
 	private static final double KD = 0.01;
+	private static final double KI = 0.000005;
 	
 	private double degrees;
 	private double targetYaw;
 	private double error;
 	private double lastError;
+	private double totalError;
 	
 	public TurnDegree(DriveTrain drivetrain, NavX navx, double degrees)
 	{
@@ -31,12 +33,14 @@ public class TurnDegree extends AutonomousCommand {
 		navx.zeroYaw(); //Makes sure we will be turning relative to our current heading
 		this.targetYaw = degrees;  //Calculate the target heading off of # of degrees to turn
 		this.lastError = this.error = getAngleDifference(navx.getYaw(), targetYaw); //Calculate the initial error value
+		this.totalError += this.error;
 		DriverStation.reportError(String.format("Starting TurnDegree. \n Initial Yaw: %f \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getInitialYaw(), navx.getYaw(), targetYaw, error), false);
 	}
 	
 	public boolean update()
 	{
 		error = getAngleDifference(navx.getYaw(), targetYaw); //Update error value
+		this.totalError += this.error; //Update running error total
 		DriverStation.reportError("Error:" + error,  false);
 		if(Math.abs(error) < MAX_ERROR){
 			drivetrain.setMotors(0, 0);
@@ -45,7 +49,7 @@ public class TurnDegree extends AutonomousCommand {
 		
 		double leftPower, rightPower;
 		
-		double output = (KP * error) + (KD * (error - lastError));
+		double output = (KP * error) + (KD * (error - lastError) + (KI * totalError));
 		
 		leftPower = output; 
 		rightPower = -output;
