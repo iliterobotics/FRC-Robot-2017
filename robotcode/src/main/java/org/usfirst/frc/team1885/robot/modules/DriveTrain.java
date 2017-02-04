@@ -11,6 +11,8 @@ import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalon;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
 import org.usfirst.frc.team1885.robot.common.interfaces.IDriverStation;
 
+import edu.wpi.first.wpilibj.Solenoid;
+
 
 /**
  * Class for running all drive train control operations from both autonomous and driver-control
@@ -19,6 +21,8 @@ import org.usfirst.frc.team1885.robot.common.interfaces.IDriverStation;
 public class DriveTrain implements Module{
 
 	private static final double MAX_MOTOR_DIFF = 0.02;
+	private static final int GEAR_SHIFT_PORT = 5;
+	private static final boolean LOW_GEAR = false;
 	
 	private double desiredLeftPower;
 	private double desiredRightPower;
@@ -26,9 +30,10 @@ public class DriveTrain implements Module{
 	private double actualRightPower;
 		
 	private DriveMode currentMode;
+	private Solenoid gearShift;
 	
 	public enum DriveMode{
-		DRIVER_CONTROL_HIGH, DRIVER_CONTROL_LOW, TICK_VEL;
+		DRIVER_CONTROL, TICK_VEL;
 	}
 	private enum MotorType{
 		LEFT_MOTOR(-1, 1, 3, 5), RIGHT_MOTOR(1, 2, 4, 6);
@@ -59,11 +64,12 @@ public class DriveTrain implements Module{
 		this.canTalonFactory = canTalonFactory;
 		this.driverStation = driverStation;
 		motorMap = new HashMap<>();
-		setMode(DriveMode.DRIVER_CONTROL_LOW);
+		setMode(DriveMode.DRIVER_CONTROL);
 	}
 	
 	@Override
 	public void initialize() {
+		gearShift = new Solenoid(GEAR_SHIFT_PORT);
 		for(MotorType type : MotorType.values()){
 			ICanTalon talon = canTalonFactory.getCanTalon(type.talonId);
 			talon.setEncPosition(0);
@@ -81,17 +87,21 @@ public class DriveTrain implements Module{
 	public void setMode(DriveMode mode){
 		this.currentMode = mode;
 		switch(currentMode){
-		case DRIVER_CONTROL_HIGH:
-		case DRIVER_CONTROL_LOW:
+		case DRIVER_CONTROL:
 			actualLeftPower = 0;
 			desiredLeftPower = 0;
 			actualRightPower = 0;
 			desiredRightPower = 0;
 			setMotorMode(ETalonControlMode.PercentVbus);
+			gearShift.set(LOW_GEAR);
 			break;
 		case TICK_VEL:
 			setMotorMode(ETalonControlMode.PercentVbus);
 		}
+	}
+	
+	public void setGearShift(boolean value) {
+		gearShift.set(value);
 	}
 	
 	public int getLeftEncoderVelocity(){
@@ -127,8 +137,7 @@ public class DriveTrain implements Module{
 	@Override
 	public void update() {
 			switch(currentMode){
-			case DRIVER_CONTROL_HIGH:
-			case DRIVER_CONTROL_LOW:
+			case DRIVER_CONTROL:
 				actualLeftPower = getRampedValue(actualLeftPower, desiredLeftPower);
 				actualRightPower = getRampedValue(actualRightPower, desiredRightPower);
 				setMotor(MotorType.LEFT_MOTOR, actualLeftPower);

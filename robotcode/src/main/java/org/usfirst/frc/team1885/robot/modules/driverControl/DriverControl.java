@@ -6,6 +6,7 @@ import java.util.Map;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystick;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
+import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 
 public abstract class DriverControl implements Module {
@@ -18,14 +19,27 @@ public abstract class DriverControl implements Module {
 	public static final int GAMEPAD_RIGHT_X = 4;
 	public static final int GAMEPAD_RIGHT_Y = 5;
 	
+	public static final int SERVO_TOGGLE = 6;
+	public static final int INTAKE_TOGGLE = 8;
+	public static final int INTAKE_IN = 5;
+	public static final int INTAKE_OUT = 7;
+	
+	private static final double INTAKING = 0.9;
+	private static final double OUTTAKING = -0.9;
+	
 
 	private Map<ControllerType, IJoystick> controllerMap;
 
 	private final DriveTrain driveTrain;
+	private final GearManipulator gearManipulator;
 	private IJoystickFactory joystickFactory;
+	
+	private boolean servoToggle, intakeToggle;	
+	private boolean servoPreviousState, intakePreviousState;
+	private double intakeSpeed;
 
 	public enum ControllerType {
-		LEFT_STICK(0), RIGHT_STICK(1), CONTROLLER(2);
+		LEFT_STICK(0), RIGHT_STICK(1), CONTROLLER(2), MANIPULATOR_CONTROLLER(3);
 
 		final int controllerId;
 
@@ -34,18 +48,63 @@ public abstract class DriverControl implements Module {
 		}
 	}
 
-	public DriverControl(DriveTrain driveTrain, IJoystickFactory created) {
+	public DriverControl(DriveTrain driveTrain, GearManipulator gearManipulator, IJoystickFactory created) {
 		this.driveTrain = driveTrain;
-		this.joystickFactory = created;
+		this.gearManipulator = gearManipulator;
+		this.joystickFactory = created;	
 		controllerMap = new HashMap<ControllerType, IJoystick>();
 	}
 
 	public void initialize() {
+		servoToggle = intakeToggle = false;
+		servoPreviousState = intakePreviousState = false;
+		intakeSpeed = 0.0;
 		for (ControllerType type : ControllerType.values()) {
 			controllerMap.put(type, joystickFactory.createJoystick(type.controllerId));
 					
 		}
-		driveTrain.setMode(DriveTrain.DriveMode.DRIVER_CONTROL_LOW);
+		driveTrain.setMode(DriveTrain.DriveMode.DRIVER_CONTROL);		
+	}
+	
+	public abstract void updateDriveTrain();
+	
+	public void updateManipulatorServos() {
+		if(getController(ControllerType.MANIPULATOR_CONTROLLER).getRawButton(SERVO_TOGGLE) && !servoPreviousState) {
+			servoPreviousState = servoToggle;
+			servoToggle = !servoToggle;
+		}
+		else if(!getController(ControllerType.CONTROLLER).getRawButton(SERVO_TOGGLE)){
+			servoPreviousState = false;
+		}
+		gearManipulator.updateServos(servoToggle);
+	}
+	
+	public void updateManipulatorPneumatics() {
+		if(getController(ControllerType.MANIPULATOR_CONTROLLER).getRawButton(INTAKE_TOGGLE) && !intakePreviousState) {
+			intakePreviousState = intakeToggle;
+			intakeToggle = !intakeToggle;
+		}
+		else if(!getController(ControllerType.MANIPULATOR_CONTROLLER).getRawButton(INTAKE_TOGGLE)){
+			intakePreviousState = false;
+		}
+		gearManipulator.updatePneumatics(intakeToggle);
+	}
+	
+	public void updateIntake() {
+		if(getController(ControllerType.MANIPULATOR_CONTROLLER).getRawButton(INTAKE_IN)) {
+			intakeSpeed = INTAKING;
+		}
+		else if(getController(ControllerType.MANIPULATOR_CONTROLLER).getRawButton(INTAKE_OUT)) {
+			intakeSpeed = OUTTAKING;
+		}
+		else {
+			intakeSpeed = 0.0;
+		}
+		gearManipulator.updateIntake(intakeSpeed);
+	}
+	
+	public void updateGearShift(boolean value) {
+		driveTrain.setGearShift(value);
 	}
 	
 	public void setSpeeds(double left, double right){
@@ -64,4 +123,5 @@ public abstract class DriverControl implements Module {
 	public IJoystick getController(ControllerType type){
 		return controllerMap.get(type);
 	}
+	
 }
