@@ -3,11 +3,14 @@ package org.usfirst.frc.team1885.robot.modules;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
+import org.usfirst.frc.team1885.robot.common.impl.DefaultCanTalonFactory;
+import org.usfirst.frc.team1885.robot.common.impl.DefaultDriverStation;
+import org.usfirst.frc.team1885.robot.common.impl.EFeedbackDevice;
+import org.usfirst.frc.team1885.robot.common.impl.ETalonControlMode;
+import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalon;
+import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
+import org.usfirst.frc.team1885.robot.common.interfaces.IDriverStation;
 
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * Class for running all drive train control operations from both autonomous and driver-control
@@ -28,7 +31,7 @@ public class DriveTrain implements Module{
 		DRIVER_CONTROL_HIGH, DRIVER_CONTROL_LOW, TICK_VEL;
 	}
 	private enum MotorType{
-		LEFT_MOTOR(-1, 2, 4), RIGHT_MOTOR(1, 3, 1);
+		LEFT_MOTOR(-1, 1, 3, 5), RIGHT_MOTOR(1, 2, 4, 6);
 		
 		final int talonId;
 		final int followerIds[];
@@ -41,9 +44,20 @@ public class DriveTrain implements Module{
 		}
 	}
 	
-	private Map<MotorType, CANTalon> motorMap;
+	private Map<MotorType, ICanTalon> motorMap;
 
-	public DriveTrain(){
+	private final ICanTalonFactory canTalonFactory;
+
+	private final IDriverStation driverStation;
+	
+	public DriveTrain() {
+		this(new DefaultCanTalonFactory(),
+				new DefaultDriverStation());
+	}
+
+	public DriveTrain(ICanTalonFactory canTalonFactory, IDriverStation driverStation){
+		this.canTalonFactory = canTalonFactory;
+		this.driverStation = driverStation;
 		motorMap = new HashMap<>();
 		setMode(DriveMode.DRIVER_CONTROL_LOW);
 	}
@@ -51,13 +65,13 @@ public class DriveTrain implements Module{
 	@Override
 	public void initialize() {
 		for(MotorType type : MotorType.values()){
-			CANTalon talon = new CANTalon(type.talonId);
+			ICanTalon talon = canTalonFactory.getCanTalon(type.talonId);
 			talon.setEncPosition(0);
 			talon.setP(0.5);
-			DriverStation.reportError(String.format("(%f, %f, %f)", talon.getP(), talon.getI(), talon.getD()), false);
+			driverStation.reportError(String.format("(%f, %f, %f)", talon.getP(), talon.getI(), talon.getD()), false);
 			for(int followerId : type.followerIds){
-				CANTalon follower = new CANTalon(followerId);
-				follower.setControlMode(TalonControlMode.Follower.value);
+				ICanTalon follower = canTalonFactory.getCanTalon(followerId);
+				follower.setControlMode(ETalonControlMode.Follower);
 				follower.set(type.talonId);
 			}
 			motorMap.put(type, talon);
@@ -73,10 +87,10 @@ public class DriveTrain implements Module{
 			desiredLeftPower = 0;
 			actualRightPower = 0;
 			desiredRightPower = 0;
-			setMotorMode(TalonControlMode.PercentVbus);
+			setMotorMode(ETalonControlMode.PercentVbus);
 			break;
 		case TICK_VEL:
-			setMotorMode(TalonControlMode.PercentVbus);
+			setMotorMode(ETalonControlMode.PercentVbus);
 		}
 	}
 	
@@ -97,13 +111,13 @@ public class DriveTrain implements Module{
 		motorMap.get(type).set(value * type.modifier);
 	}
 	
-	public void setMotorMode(TalonControlMode talonMode){
-		for(CANTalon talon : motorMap.values()){
-			talon.setControlMode(talonMode.value);
+	public void setMotorMode(ETalonControlMode talonMode){
+		for(ICanTalon talon : motorMap.values()){
+			talon.setControlMode(talonMode);
 		}
 	}
 	
-	public TalonControlMode getMotorMode(){
+	public ETalonControlMode getMotorMode(){
 		if(!motorMap.values().isEmpty()){
 			return motorMap.values().iterator().next().getControlMode();
 		}
@@ -123,9 +137,9 @@ public class DriveTrain implements Module{
 			case TICK_VEL:
 				actualLeftPower = desiredLeftPower;
 				actualRightPower = desiredRightPower;
-				motorMap.get(MotorType.LEFT_MOTOR).setFeedbackDevice(FeedbackDevice.AnalogEncoder);
-				motorMap.get(MotorType.RIGHT_MOTOR).setFeedbackDevice(FeedbackDevice.AnalogEncoder);
-				DriverStation.reportError(String.format("Left:%d, Right:%d", motorMap.get(MotorType.LEFT_MOTOR).getEncVelocity(), motorMap.get(MotorType.RIGHT_MOTOR).getEncVelocity()), false); 
+				motorMap.get(MotorType.LEFT_MOTOR).setFeedbackDevice(EFeedbackDevice.AnalogEncoder);
+				motorMap.get(MotorType.RIGHT_MOTOR).setFeedbackDevice(EFeedbackDevice.AnalogEncoder);
+				driverStation.reportError(String.format("Left:%d, Right:%d", motorMap.get(MotorType.LEFT_MOTOR).getEncVelocity(), motorMap.get(MotorType.RIGHT_MOTOR).getEncVelocity()), false); 
 				setMotor(MotorType.LEFT_MOTOR, actualLeftPower);
 				setMotor(MotorType.RIGHT_MOTOR, actualRightPower);
 				break;

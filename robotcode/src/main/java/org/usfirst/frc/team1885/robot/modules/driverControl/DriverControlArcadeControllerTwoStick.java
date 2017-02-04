@@ -1,13 +1,26 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
+import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
+import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
-
-	private static final int REDUCER = 2;
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain) {
-		super(driveTrain);
+	public static final double kP = 0.03;
+	public static final double kI = 0.0;
+	public static final double kD = 0.0;
+	public static final double kF = 0.0;
+	
+	public static final double kToleranceDegrees = 2.0f;
+	
+	private static final int REDUCER = 2;
+
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain) { 
+		this(driveTrain, new DefaultJoystickFactory());
+	}
+	
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, IJoystickFactory joystickFactory) {
+		super(driveTrain, joystickFactory);
 	}
 
 	@Override
@@ -24,5 +37,5 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 
 		setSpeeds(leftInput, rightInput);
 	}
-
+	
 }

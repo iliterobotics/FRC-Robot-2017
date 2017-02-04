@@ -1,5 +1,4 @@
-Week 1 General Notes
-=========
+# Week 1 General Notes
 ---
 
 ## Pre Summary

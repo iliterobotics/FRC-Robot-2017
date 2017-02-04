@@ -7,12 +7,16 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraight;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraightNavX;
 import org.usfirst.frc.team1885.robot.autonomous.TurnDegree;
+import org.usfirst.frc.team1885.robot.common.impl.DefaultAHRSFactory;
+import org.usfirst.frc.team1885.robot.common.interfaces.ESerialPort;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
+import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
-import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl.ControllerType;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 import org.usfirst.frc.team1885.robot.modules.test.TestClamp;
 
@@ -28,7 +32,7 @@ public class Robot extends SampleRobot {
 
 	private DriveTrain driveTrain;
 	private DriverControl driverControl;
-	private AHRS navx;
+	private NavX navx;
 	private GearManipulator gearManipulator;
 	
 	private Queue<AutonomousCommand> autonomousCommands;
@@ -37,11 +41,11 @@ public class Robot extends SampleRobot {
 	public Robot(){
 		runningModules = new ArrayList<>();
 		autonomousCommands = new LinkedList<>();
-		
-		driveTrain = new DriveTrain();
+
+		driveTrain = new DriveTrain();	
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
 		gearManipulator = new GearManipulator(driverControl);
-		navx = new AHRS(SerialPort.Port.kMXP);
+		navx = new NavX();
 	}
 
 	public void robotInit(){
@@ -50,10 +54,10 @@ public class Robot extends SampleRobot {
 	
 	public void autonomous()
 	{
-		setRunningModules(driveTrain, gearManipulator);
+		setRunningModules(driveTrain);
 		autonomousCommands.clear();
 //		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
-		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90));
+		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
 		AutonomousCommand currentCommand = autonomousCommands.peek();
 		if(currentCommand != null){
 			currentCommand.init();
@@ -73,7 +77,7 @@ public class Robot extends SampleRobot {
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, driveTrain, gearManipulator);
+		setRunningModules(driverControl, driveTrain);
 		while(isOperatorControl() && isEnabled()){
 			updateModules();
 			pause();

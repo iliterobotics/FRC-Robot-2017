@@ -9,17 +9,27 @@ project(':robotcode') {
 
    apply plugin: 'jaci.openrio.gradle.GradleRIO'
    apply plugin: 'eclipse'
-   apply plugin: 'java'
+   apply plugin: 'groovy'
+   sourceCompatibility = 1.8
+   targetCompatibility = 1.8
 
    frc {
        team = "1885"
        robotClass = "org.usfirst.frc.team1885.robot.Robot"
    }
+   repositories { 
+      jcenter()
 
+   }
    dependencies {
        compile wpilib()
        compile talonSrx()
        compile files('res/navx_frc.jar')
+       compile group: 'com.google.guava', name: 'guava', version: '19.0' 
+
+
+
+       testCompile( 'junit:junit:4.12', 'org.codehaus.groovy:groovy-all:2.4.4', 'org.spockframework:spock-core:1.0-groovy-2.4')
    }
 
    def robotManifest = {
@@ -35,5 +45,20 @@ project(':robotcode') {
    task wrapper(type: Wrapper) {
        gradleVersion = '3.2.1'
    }
+
+}
+
+project(':commscode'){
+  apply plugin: 'eclipse'
+  apply plugin: 'java'
+}
+
+project(':visioncode') {
+  apply plugin: 'eclipse'
+  apply plugin: 'java'
+  dependencies { 
+	compile project(':Androidcode:App:visionUtils')
+
+  }
 
 }
