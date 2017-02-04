@@ -1,5 +1,8 @@
 package org.usfirst.frc.team1885.visioncode.utils;
 
+/**
+ * Created by Atishay on 1/29/2017.
+ */
 public class SimpleImage {
 	
 	int numChannels;
