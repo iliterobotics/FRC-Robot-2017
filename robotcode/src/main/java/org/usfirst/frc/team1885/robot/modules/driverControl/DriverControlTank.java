@@ -6,22 +6,28 @@ import org.usfirst.frc.team1885.robot.common.interfaces.EJoystickAxis;
 import org.usfirst.frc.team1885.robot.common.interfaces.IDriverStation;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
+import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 
 public class DriverControlTank extends DriverControl{
 	
 	private static final double SCALING_EXP = 2;
 	private IDriverStation driveStation;
 	
-	public DriverControlTank(DriveTrain driveTrain) {
-		this(driveTrain, new DefaultJoystickFactory(), new DefaultDriverStation());
+	public DriverControlTank(DriveTrain driveTrain, GearManipulator gearManipulator) {
+		this(driveTrain, gearManipulator, new DefaultJoystickFactory(), new DefaultDriverStation());
 	}
 
-	public DriverControlTank(DriveTrain driveTrain, IJoystickFactory factory, IDriverStation driveStation) {
-		super(driveTrain, factory);
+	public DriverControlTank(DriveTrain driveTrain, GearManipulator gearManipulator, IJoystickFactory factory, IDriverStation driveStation) {
+		super(driveTrain, gearManipulator, factory);
 		this.driveStation = driveStation;
 	}
 
 	public void update() {
+		updateDriveTrain();
+	}
+
+	@Override
+	public void updateDriveTrain() {
 		double leftInput = getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kY);
 		double rightInput = getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kY);
 
