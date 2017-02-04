@@ -12,12 +12,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.usfirst.frc.team1885.visioncode.utils.SimpleImage;
 
-	
+
 public class ImageClient {
-	
+
 	public ImageClient (int port) throws UnknownHostException, IOException, ClassNotFoundException {
-		Socket aSocket = new Socket("localhost", 1180);
-		
+		Socket aSocket = new Socket("localhost", port);
+
 		InputStream inputStream2 = aSocket.getInputStream();
 		ExecutorService exce = Executors.newSingleThreadExecutor();
 		final ObjectInputStream  anObject = new ObjectInputStream(aSocket.getInputStream());
@@ -26,29 +26,36 @@ public class ImageClient {
 			@Override
 			public void run() {
 			}
-			
+
 		});
-	ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
-	scheduledExecutor.scheduleAtFixedRate(new Runnable() {
+		ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+		scheduledExecutor.scheduleAtFixedRate(new Runnable() {
 
-		@Override
-		public void run() {
-			Object readObject;
-			try {
-				readObject = anObject.readObject();
-				if(readObject instanceof SimpleImage) {
-					SimpleImage anObject = (SimpleImage)readObject;
-					//Do stuff with image
+			@Override
+			public void run() {
+				Object readObject;
+				try {
+					readObject = anObject.readObject();
+					if(readObject instanceof SimpleImage) {
+						SimpleImage anObject = (SimpleImage)readObject;
+						//Do stuff with image
+					}
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
-		}
-	}, 0, 100, TimeUnit.MILLISECONDS);
-    }
+			}
+		}, 0, 100, TimeUnit.MILLISECONDS);
 	}
+
+public static void main(String [] args) throws UnknownHostException, ClassNotFoundException, IOException {
+	
+	ImageClient aClient = new ImageClient(1180);
+	
+}
+}
+
