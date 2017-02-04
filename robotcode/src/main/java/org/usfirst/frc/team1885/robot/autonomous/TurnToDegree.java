@@ -22,7 +22,7 @@ public class TurnToDegree extends AutonomousCommand{
 
 	@Override
 	public void init() {
-		driveTrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
+		driveTrain.setMode(DriveMode.DRIVER_CONTROL);
 		initialYaw = navx.getInitialYaw();
 	}
 

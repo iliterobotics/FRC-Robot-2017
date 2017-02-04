@@ -24,7 +24,7 @@ public class DriveStraightNavX extends AutonomousCommand{
 	
 	public void init(){
 		initialYaw = navx.getYaw();
-		driveTrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
+		driveTrain.setMode(DriveMode.DRIVER_CONTROL);
 	}
 	
 	public boolean update(){
