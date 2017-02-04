@@ -53,7 +53,7 @@ project(':commscode'){
   apply plugin: 'java'
 }
 
-project(':visioncode') {
+project(':VisionClient') {
   apply plugin: 'eclipse'
   apply plugin: 'java'
   dependencies { 

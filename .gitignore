@@ -20,6 +20,7 @@ hs_err_pid*
 **/build/**
 /build/
 <<<<<<< HEAD
-/bin/
+**/bin/**
 /.gradle/
 **/.idea/**
+
