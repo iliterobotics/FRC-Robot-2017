@@ -34,22 +34,21 @@ public class TurnDegree extends AutonomousCommand {
 	public void init()
 	{
 		drivetrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
-		this.targetYaw = degrees;  //Calculate the target heading off of # of degrees to turn
-		this.lastError = this.error = getAngleDifference(navx.getYaw(), targetYaw); //Calculate the initial error value
+		this.targetYaw = convertTo360(navx.getYaw()) + convertTo360(degrees);  //Calculate the target heading off of # of degrees to turn
+		this.lastError = this.error = convertTo360(navx.getYaw()) - convertTo360(targetYaw); //Calculate the initial error value
 		this.totalError += this.error;
 		DriverStation.reportError(String.format("Starting TurnDegree. \n Initial Yaw: %f \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getInitialYaw(), navx.getYaw(), targetYaw, error), false);
 	}
 	
 	public boolean update()
 	{
-		error = getAngleDifference(navx.getYaw(), targetYaw); //Update error value
+		error = convertTo360(navx.getYaw()) - convertTo360(targetYaw); //Update error value
 		this.totalError += this.error; //Update running error total
 		
 		if((Math.abs(error) < MAX_ERROR)) alignedCount++;
 		if(alignedCount >= MIN_ALIGNED_COUNT) return true;
 		
 		output = ((KP * error) + (KI * totalError) + (KD * (error + lastError)));
-		output *= -1;
 		DriverStation.reportError(String.format("Error: %f Yaw: %f Output: %f", error, navx.getYaw(), output),false);
 		leftPower = output; 
 		rightPower = -output;
@@ -70,6 +69,11 @@ public class TurnDegree extends AutonomousCommand {
 			}
 		}
 		return difference;
+	}
+	
+	private double convertTo360(double angle){
+		if(angle < 0) return angle + 360;
+		return angle;
 	}
 	
 	private double getAngleSum(double angle1, double angle2) {

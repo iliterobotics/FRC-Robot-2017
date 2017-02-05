@@ -35,7 +35,7 @@ public class DriveTrain implements Module{
 		DRIVER_CONTROL_HIGH, DRIVER_CONTROL_LOW, TICK_VEL;
 	}
 	private enum MotorType{
-		LEFT_MOTOR(1, 1, 3, 5), RIGHT_MOTOR(-1, 2, 4, 6);
+		LEFT_MOTOR(-1, 1, 3, 5), RIGHT_MOTOR(1, 2, 4, 6);
 		
 		final int talonId;
 		final int followerIds[];
@@ -110,8 +110,7 @@ public class DriveTrain implements Module{
 	}
 	
 	private void setMotor(MotorType type, double value){
-		motorMap.get(type).set(value * type.modifier); //I Love Robotics So MUCH <3 Play League Please 
-		  											   //Add me @Minsanity21 Gold 5 GOD
+		motorMap.get(type).set(value * type.modifier); 
 	}
 	
 	public void setMotorMode(ETalonControlMode talonMode){
@@ -134,7 +133,7 @@ public class DriveTrain implements Module{
 			case DRIVER_CONTROL_LOW:
 				actualLeftPower = getRampedValue(actualLeftPower, desiredLeftPower);
 				actualRightPower = getRampedValue(actualRightPower, desiredRightPower);
-				DriverStation.reportError(String.format("Left: %f Right: %f", actualLeftPower, actualRightPower), false);
+				//DriverStation.reportError(String.format("Left: %f Right: %f", actualLeftPower, actualRightPower), false);
 				setMotor(MotorType.LEFT_MOTOR, actualLeftPower);
 				setMotor(MotorType.RIGHT_MOTOR, actualRightPower);
 				break;

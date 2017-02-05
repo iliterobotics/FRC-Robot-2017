@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
-import org.usfirst.frc.team1885.robot.autonomous.TurnDegree;
+import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
@@ -50,8 +50,8 @@ public class Robot extends SampleRobot{
 		setRunningModules(driveTrain);
 		autonomousCommands.clear();
 //		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
-		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90));
-		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90));
+		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 90));
+		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 90));
 		AutonomousCommand currentCommand = autonomousCommands.peek();
 		if(currentCommand != null) currentCommand.init();
 		while(isAutonomous() && isEnabled()){
