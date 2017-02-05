@@ -22,8 +22,8 @@ public class DriverControlTank extends DriverControl{
 	}
 
 	public void update() {
-		double leftInput = getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kThrottle);
-		double rightInput = getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kThrottle);
+		double leftInput = getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kZ);
+		double rightInput = getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kZ);
 
 		driveStation.reportError(String.format("oL:%f oR:%f", leftInput, rightInput), false);
 		
