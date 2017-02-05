@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
 public class DriveTrain implements Module{
 
 	private static final double MAX_MOTOR_DIFF = 0.02;
+	private static final double MAX_POWER = 0.5;
 	
 	private double desiredLeftPower;
 	private double desiredRightPower;
@@ -148,6 +149,9 @@ public class DriveTrain implements Module{
 	}
 	
 	public double getRampedValue(double oldValue, double newValue){
+		if(Math.abs(newValue) > MAX_POWER){
+			newValue = ((newValue > 0)?1:-1) * MAX_POWER;
+		}
 		if(Math.abs(oldValue - newValue) > MAX_MOTOR_DIFF){
 			int direction = (newValue - oldValue) > 0?1:-1;
 			return oldValue + (MAX_MOTOR_DIFF * direction);

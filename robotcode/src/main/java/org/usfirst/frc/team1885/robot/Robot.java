@@ -77,6 +77,7 @@ public class Robot extends SampleRobot{
 	{
 		setRunningModules(driverControl, driveTrain);
 		while(isOperatorControl() && isEnabled()){
+			DriverStation.reportError(String.format("Yaw: %f", navx.getYaw()), false);
 			updateModules();
 			pause();
 		}
