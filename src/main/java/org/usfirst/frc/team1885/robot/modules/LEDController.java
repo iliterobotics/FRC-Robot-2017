@@ -15,7 +15,7 @@ public class LEDController implements Module{
 	private I2C wire;
 	
 	public enum LEDColor {
-		PURPLE(1, 0, 1), RED(1, 0, 0), BLUE(0, 0, 1);
+		PURPLE(1, 0, 1), RED(1, 0, 0), BLUE(0, 0, 1), GREEN(0, 1, 0);
 		
 		final int r, g, b;
 		LEDColor(int r, int g, int b) {
@@ -35,7 +35,7 @@ public class LEDController implements Module{
 	}
 	
 	public enum LEDMode {
-		GEAR_NEEDED( LEDPattern.SOLID, LEDColor.PURPLE), LIFT_DETECTED(LEDPattern.PULSE,  LEDColor.RED), GEAR_PLACED(LEDPattern.BLINK, LEDColor.BLUE );
+		GEAR_NEEDED( LEDPattern.SOLID, LEDColor.PURPLE), LIFT_DETECTED(LEDPattern.PULSE,  LEDColor.RED), GEAR_PLACED(LEDPattern.BLINK, LEDColor.BLUE ), LIFT_STALLED(LEDPattern.BLINK, LEDColor.GREEN));
 
 		final LEDPattern pattern;
 		final LEDColor color;
