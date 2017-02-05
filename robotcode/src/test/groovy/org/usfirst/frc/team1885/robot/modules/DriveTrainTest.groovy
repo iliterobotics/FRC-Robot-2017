@@ -9,6 +9,7 @@ import spock.lang.Specification
 
 class DriveTrainTest extends Specification {
 	
+	/*
 	def "Test initiaize to ensure motor map is fully intialized without null"() {
 		setup:
 			ICanTalonFactory canTalonFactory = Mock(ICanTalonFactory.class);
@@ -24,5 +25,6 @@ class DriveTrainTest extends Specification {
 				aTrain.motorMap.containsKey(aType);
 			}
 	}
+	*/
 
 }
