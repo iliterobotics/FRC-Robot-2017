@@ -10,6 +10,7 @@ import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 public class DriverControlTank extends DriverControl{
 	
 	private static final double SCALING_EXP = 2;
+	private double reducer;
 	private IDriverStation driveStation;
 	
 	public DriverControlTank(DriveTrain driveTrain) {
@@ -22,8 +23,9 @@ public class DriverControlTank extends DriverControl{
 	}
 
 	public void update() {
-		double leftInput = getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kZ);
-		double rightInput = getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kZ);
+		reducer = getReducer(getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kZ));
+		double leftInput = getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kY);
+		double rightInput = getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kY);
 
 		driveStation.reportError(String.format("oL:%f oR:%f", leftInput, rightInput), false);
 		
@@ -34,13 +36,17 @@ public class DriverControlTank extends DriverControl{
 		
 		//Exponential ramping
 		int leftScaler = leftInput > 0?1:-1;
-		leftInput = Math.pow(leftInput, SCALING_EXP) * leftScaler;
+		leftInput = Math.pow(leftInput, SCALING_EXP) * leftScaler * reducer;
 		int rightScaler = leftInput > 0?1:-1;
-		leftInput = Math.pow(leftInput, SCALING_EXP) * rightScaler;
+		leftInput = Math.pow(leftInput, SCALING_EXP) * rightScaler * reducer;
 		
 		driveStation.reportError(String.format("fL:%f fR:%f", leftInput, rightInput), false);
 
 		setSpeeds(leftInput, rightInput);
+	}
+	
+	public double getReducer(double value) {
+		return (value + 1.0) / 2.0;
 	}
 
 }
