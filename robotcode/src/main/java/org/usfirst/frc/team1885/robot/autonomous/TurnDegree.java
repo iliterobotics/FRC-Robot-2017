@@ -13,7 +13,7 @@ public class TurnDegree extends AutonomousCommand {
 	
 	private static final int MIN_ALIGNED_COUNT = 5;
 	private static final double MAX_ERROR = 1;
-	private static final double KP = 0.009; 
+	private static final double KP = 0.006; 
 	private static final double KD = 0.00; 
 	private static final double KI = 0.0; 
 	
@@ -48,7 +48,8 @@ public class TurnDegree extends AutonomousCommand {
 		if((Math.abs(error) < MAX_ERROR)) alignedCount++;
 		if(alignedCount >= MIN_ALIGNED_COUNT) return true;
 		
-		output = (KP * error);
+		output = ((KP * error) + (KI * totalError) + (KD * (error + lastError)));
+		output *= -1;
 		DriverStation.reportError(String.format("Error: %f Yaw: %f Output: %f", error, navx.getYaw(), output),false);
 		leftPower = output; 
 		rightPower = -output;
