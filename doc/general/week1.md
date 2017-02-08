@@ -3,7 +3,7 @@
 
 ## Pre Summary
 
-This week was mainly focused on developing a working system for the season, both technically and amongst our members. Team members were assigned the first wave of tasks and a **working code repository was formed**. Our idea going into this week was to by the end have a running drive train as well as a considerable in our other smaller projects such as **LED control**, **Telemetry**, and **Vision**. Additionally, our school planned to host a pep-rally the following Thursday in which we plan to demonstrate our 2016 robot, *ILITE X*. This will give us an opportunity to re-familiarize ourselves with the prior year's code structure as well as possibly test some functions which are not yet possible on our **Test Drive Train**.
+This week was mainly focused on developing a working system for the season, both technically and amongst our members. Team members were assigned the first wave of tasks and a **working code repository was formed**. Our idea going into this week was to by the end have a running drive train as well as a considerable in our other smaller projects such as **LED control**, **Telemetry**, and **Vision**. Additionally, our school planned to host a pep-rally the following Thursday in which we plan to demonstrate our 2016 robot, *IKNIGHT*. This will give us an opportunity to re-familiarize ourselves with the prior year's code structure as well as possibly test some functions which are not yet possible on our **Test Drive Train**.
 
 ## Developments
 
