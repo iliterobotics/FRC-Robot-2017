@@ -70,7 +70,7 @@ public abstract class DriverControl implements Module {
 	
 	public void updateManipulatorServos() {
 		if(getController(ControllerType.MANIPULATOR_CONTROLLER).getRawButton(SERVO_TOGGLE) && !servoPreviousState) {
-			servoPreviousState = servoToggle;
+			servoPreviousState = true;
 			servoToggle = !servoToggle;
 		}
 		else if(!getController(ControllerType.CONTROLLER).getRawButton(SERVO_TOGGLE)){
@@ -81,7 +81,7 @@ public abstract class DriverControl implements Module {
 	
 	public void updateManipulatorPneumatics() {
 		if(getController(ControllerType.MANIPULATOR_CONTROLLER).getRawButton(INTAKE_TOGGLE) && !intakePreviousState) {
-			intakePreviousState = intakeToggle;
+			intakePreviousState = true;
 			intakeToggle = !intakeToggle;
 		}
 		else if(!getController(ControllerType.MANIPULATOR_CONTROLLER).getRawButton(INTAKE_TOGGLE)){
