@@ -34,22 +34,22 @@ public class TurnToDegree extends AutonomousCommand {
 	public void init()
 	{
 		drivetrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
-		this.targetYaw = convertTo360(degrees);  //Calculate the target heading off of # of degrees to turn
-		this.lastError = this.error = convertTo360(navx.getYaw()) - convertTo360(targetYaw); //Calculate the initial error value
+		this.targetYaw = convertTo360(navx.getAngle()) + convertTo360(degrees);  //Calculate the target heading off of # of degrees to turn
+		this.lastError = this.error = convertTo360(navx.getAngle()) - convertTo360(targetYaw); //Calculate the initial error value
 		this.totalError += this.error;
-		DriverStation.reportError(String.format("Starting TurnDegree. \n Initial Yaw: %f \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getInitialYaw(), navx.getYaw(), targetYaw, error), false);
+		DriverStation.reportError(String.format("Starting TurnDegree. \n Initial Yaw: %f \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getInitialYaw(), navx.getAngle(), targetYaw, error), false);
 	}
 	
 	public boolean update()
 	{
-		error = convertTo360(navx.getYaw()) - convertTo360(targetYaw); //Update error value
+		error = convertTo360(navx.getAngle()) - convertTo360(targetYaw); //Update error value
 		this.totalError += this.error; //Update running error total
 		
 		if((Math.abs(error) < MAX_ERROR)) alignedCount++;
 		if(alignedCount >= MIN_ALIGNED_COUNT) return true;
 		
 		output = ((KP * error) + (KI * totalError) + (KD * (error + lastError)));
-		DriverStation.reportError(String.format("Error: %f Yaw: %f Output: %f", error, navx.getYaw(), output),false);
+		DriverStation.reportError(String.format("Error: %f Yaw: %f Output: %f", error, navx.getAngle(), output),false);
 		leftPower = output; 
 		rightPower = -output;
 		

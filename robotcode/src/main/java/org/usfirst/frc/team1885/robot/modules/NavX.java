@@ -27,7 +27,7 @@ public class NavX implements PIDSource{
 		return initialYaw;
 	}
 
-	public double getYaw() {
+	public double getAngle() {
 		return iahrs.getYaw();
 	}
 
@@ -64,6 +64,11 @@ public class NavX implements PIDSource{
 	@Override
 	public double pidGet() {
 		return iahrs.pidGet();
+	}
+	
+	public void reset()
+	{
+		iahrs.reset();
 	}
 
 }

@@ -68,6 +68,11 @@ public class DefaultAHRSFactory implements IAHRSFactory{
 			return ahrs.pidGet();
 		}
 		
+		@Override
+		public void reset(){
+			ahrs.reset();
+		}
+		
 	}
 	
 	

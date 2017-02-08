@@ -13,7 +13,7 @@ public class TurnDegree extends AutonomousCommand {
 	
 	private static final int MIN_ALIGNED_COUNT = 5;
 	private static final double MAX_ERROR = 1;
-	private static final double KP = 0.006; 
+	private static final double KP = 0.03; 
 	private static final double KD = 0.00; 
 	private static final double KI = 0.0; 
 	
@@ -33,23 +33,24 @@ public class TurnDegree extends AutonomousCommand {
 	
 	public void init()
 	{
+		navx.reset();
 		drivetrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
-		this.targetYaw = convertTo360(navx.getYaw()) + convertTo360(degrees);  //Calculate the target heading off of # of degrees to turn
-		this.lastError = this.error = convertTo360(navx.getYaw()) - convertTo360(targetYaw); //Calculate the initial error value
+		this.targetYaw = convertTo360(navx.getAngle()) + convertTo360(degrees);  //Calculate the target heading off of # of degrees to turn
+		this.lastError = this.error = convertTo360(navx.getAngle() - targetYaw); //Calculate the initial error value
 		this.totalError += this.error;
-		DriverStation.reportError(String.format("Starting TurnDegree. \n Initial Yaw: %f \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getInitialYaw(), navx.getYaw(), targetYaw, error), false);
+		DriverStation.reportError(String.format("Starting TurnDegree. \n Initial Yaw: %f \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getInitialYaw(), navx.getAngle(), targetYaw, error), false);
 	}
 	
 	public boolean update()
 	{
-		error = convertTo360(navx.getYaw()) - convertTo360(targetYaw); //Update error value
+		error = convertTo360(navx.getAngle() - targetYaw); //Update error value
 		this.totalError += this.error; //Update running error total
 		
 		if((Math.abs(error) < MAX_ERROR)) alignedCount++;
 		if(alignedCount >= MIN_ALIGNED_COUNT) return true;
 		
 		output = ((KP * error) + (KI * totalError) + (KD * (error + lastError)));
-		DriverStation.reportError(String.format("Error: %f Yaw: %f Output: %f", error, navx.getYaw(), output),false);
+		DriverStation.reportError(String.format("Error: %f Yaw: %f Target: %f Output: %f", error, convertTo360(navx.getAngle()), targetYaw, output),false);
 		leftPower = output; 
 		rightPower = -output;
 		
@@ -78,9 +79,9 @@ public class TurnDegree extends AutonomousCommand {
 	
 	private double getAngleSum(double angle1, double angle2) {
 		double sum = angle1 + angle2;
-		if(sum > 180){
-			sum = -360 + sum;
-		} else if(sum < -180){
+		if(sum > 0){
+			sum = sum - 360;
+		} else if(sum < 0){
 			sum = 360 + sum;
 		}
 		return sum;

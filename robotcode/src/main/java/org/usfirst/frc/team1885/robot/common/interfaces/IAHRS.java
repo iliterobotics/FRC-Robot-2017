@@ -15,5 +15,7 @@ public interface IAHRS extends PIDSource{
 	void zeroYaw();
 
 	void resetDisplacement();
+	
+	void reset();
 
 }

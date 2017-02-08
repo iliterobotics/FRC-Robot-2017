@@ -23,16 +23,16 @@ public class DriveStraightNavX extends AutonomousCommand{
 	}
 	
 	public void init(){
-		initialYaw = navx.getYaw();
+		initialYaw = navx.getAngle();
 		driveTrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
 	}
 	
 	public boolean update(){
 		if(Math.abs(initialYaw) < ALLOWABLE_ERROR){
-			initialYaw = navx.getYaw();
+			initialYaw = navx.getAngle();
 			return false;
 		}
-		double yawError = initialYaw - navx.getYaw();
+		double yawError = initialYaw - navx.getAngle();
 		driveTrain.setMotors(-(INITIAL_POWER + yawError * PROPORTION), -(INITIAL_POWER - yawError * PROPORTION));
 		
 		DriverStation.reportError(String.format("Yaw Diff:%f, X:%f, Y:%f, Z:%f", yawError, navx.getDisplacementX(), navx.getDisplacementY(), navx.getDisplacementZ()), false);
