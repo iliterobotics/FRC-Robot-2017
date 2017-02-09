@@ -34,15 +34,15 @@ public class TurnToDegree extends AutonomousCommand {
 	public void init()
 	{
 		drivetrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
-		this.targetYaw = convertTo360(navx.getAngle()) + convertTo360(degrees);  //Calculate the target heading off of # of degrees to turn
-		this.lastError = this.error = convertTo360(navx.getAngle()) - convertTo360(targetYaw); //Calculate the initial error value
+		this.targetYaw = convertTo360(degrees);  //Calculate the target heading off of # of degrees to turn
+		this.lastError = this.error = getAngleSum(convertTo360(navx.getAngle()), -convertTo360(targetYaw)); //Calculate the initial error value
 		this.totalError += this.error;
 		DriverStation.reportError(String.format("Starting TurnDegree. \n Initial Yaw: %f \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getInitialYaw(), navx.getAngle(), targetYaw, error), false);
 	}
 	
 	public boolean update()
 	{
-		error = convertTo360(navx.getAngle()) - convertTo360(targetYaw); //Update error value
+		error = getAngleSum(convertTo360(navx.getAngle()), -convertTo360(targetYaw)); //Update error value
 		this.totalError += this.error; //Update running error total
 		
 		if((Math.abs(error) < MAX_ERROR)) alignedCount++;
