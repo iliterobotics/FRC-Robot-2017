@@ -19,7 +19,7 @@ public class DriveTrain implements Module{
 
 	
 	// Voltage proportion control variables
-	private static final double MAX_MOTOR_VOLTAGE_DIFF = 0.02;
+	private static final double VOLTAGE_RAMP_RATE = 12.0; //in V/sec
 	
 	private double desiredLeftPower;
 	private double desiredRightPower;
@@ -98,6 +98,7 @@ public class DriveTrain implements Module{
 			actualRightPower = 0;
 			desiredLeftPower = 0;
 			desiredRightPower = 0;
+			setVoltageRampRate(VOLTAGE_RAMP_RATE);
 			setMotorMode(ETalonControlMode.PercentVbus);
 			break;
 		case TICK_VEL:
@@ -105,13 +106,19 @@ public class DriveTrain implements Module{
 			actualRightSpeed = 0;
 			desiredLeftSpeed = 0;
 			desiredRightSpeed = 0;
+			setVoltageRampRate(Integer.MAX_VALUE);
 			setMotorMode(ETalonControlMode.Speed);
 			motorMap.get(MotorType.LEFT_MOTOR).setFeedbackDevice(EFeedbackDevice.AnalogEncoder);
 			motorMap.get(MotorType.RIGHT_MOTOR).setFeedbackDevice(EFeedbackDevice.AnalogEncoder);
 			break;
 		case POSITION:
+			setVoltageRampRate(Integer.MAX_VALUE);
 			break;
 		}
+	}
+	
+	private void setVoltageRampRate(double rate){
+		motorMap.get(MotorType.LEFT_MOTOR).setVoltageRampRate(rate);
 	}
 	
 	public int getLeftEncoderVelocity(){
@@ -157,8 +164,8 @@ public class DriveTrain implements Module{
 	public void update() {
 			switch(currentMode){
 			case P_VBUS:
-				actualLeftPower = getRampedPowerValue(actualLeftPower, desiredLeftPower);
-				actualRightPower = getRampedPowerValue(actualRightPower, desiredRightPower);
+				actualLeftPower = desiredLeftPower;
+				actualRightPower = desiredRightPower;
 				setMotor(MotorType.LEFT_MOTOR, actualLeftPower);
 				setMotor(MotorType.RIGHT_MOTOR, actualRightPower);
 				break;
@@ -171,13 +178,5 @@ public class DriveTrain implements Module{
 			case POSITION:
 				break;
 		}
-	}
-	
-	public double getRampedPowerValue(double oldValue, double newValue){
-		if(Math.abs(oldValue - newValue) > MAX_MOTOR_VOLTAGE_DIFF){
-			int direction = (newValue - oldValue) > 0?1:-1;
-			return oldValue + (MAX_MOTOR_VOLTAGE_DIFF * direction);
-		}
-		else return newValue;
 	}
 }

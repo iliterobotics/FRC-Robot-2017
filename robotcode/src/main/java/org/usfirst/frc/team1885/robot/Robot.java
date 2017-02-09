@@ -14,7 +14,7 @@ import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlTank;
-import org.usfirst.frc.team1885.robot.modules.test.TestClamp;
+import org.usfist.frc.team1885.robot.modules.TestClamp;
 
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
