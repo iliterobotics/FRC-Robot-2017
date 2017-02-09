@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1885.robot.autonomous;
 
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.DriveTrain.DriveMode;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,7 +23,6 @@ public class DriveStraightNavX extends AutonomousCommand{
 	
 	public void init(){
 		initialYaw = navx.getYaw();
-		driveTrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
 	}
 	
 	public boolean update(){
@@ -33,7 +31,7 @@ public class DriveStraightNavX extends AutonomousCommand{
 			return false;
 		}
 		double yawError = initialYaw - navx.getYaw();
-		driveTrain.setMotors(-(INITIAL_POWER + yawError * PROPORTION), -(INITIAL_POWER - yawError * PROPORTION));
+		driveTrain.setPower(-(INITIAL_POWER + yawError * PROPORTION), -(INITIAL_POWER - yawError * PROPORTION));
 		
 		DriverStation.reportError(String.format("Yaw Diff:%f, X:%f, Y:%f, Z:%f", yawError, navx.getDisplacementX(), navx.getDisplacementY(), navx.getDisplacementZ()), false);
 		

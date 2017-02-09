@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1885.robot.autonomous;
 
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.DriveTrain.DriveMode;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -37,7 +36,6 @@ public class TurnDegree extends AutonomousCommand {
 	
 	@Override
 	public void init() {
-		driveTrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
 		navx.zeroYaw();
 	}
 
@@ -68,7 +66,7 @@ public class TurnDegree extends AutonomousCommand {
 		DriverStation.reportError(String.format("Left: %f Right: %f", leftDrive, rightDrive), false);
 		DriverStation.reportError("Yaw: " + currYaw, false);
 		
-		driveTrain.setMotors(rightDrive, leftDrive);
+		driveTrain.setPower(rightDrive, leftDrive);
 		return false;
 		
 	}

@@ -15,20 +15,31 @@ import org.usfirst.frc.team1885.robot.common.interfaces.IDriverStation;
 /**
  * Class for running all drive train control operations from both autonomous and driver-control
  */
-
 public class DriveTrain implements Module{
 
-	private static final double MAX_MOTOR_DIFF = 0.02;
+	
+	// Voltage proportion control variables
+	private static final double MAX_MOTOR_VOLTAGE_DIFF = 0.02;
 	
 	private double desiredLeftPower;
 	private double desiredRightPower;
 	private double actualLeftPower;
 	private double actualRightPower;
-		
+	
+	// Speed control variables
+	
+	private int desiredLeftSpeed;
+	private int desiredRightSpeed;
+	private int actualLeftSpeed;
+	private int actualRightSpeed;
+	
+	// Position control variables
+	
+	
 	private DriveMode currentMode;
 	
 	public enum DriveMode{
-		DRIVER_CONTROL_HIGH, DRIVER_CONTROL_LOW, TICK_VEL;
+		P_VBUS, POSITION, TICK_VEL;
 	}
 	private enum MotorType{
 		LEFT_MOTOR(-1, 1, 3, 5), RIGHT_MOTOR(1, 2, 4, 6);
@@ -59,7 +70,7 @@ public class DriveTrain implements Module{
 		this.canTalonFactory = canTalonFactory;
 		this.driverStation = driverStation;
 		motorMap = new HashMap<>();
-		setMode(DriveMode.DRIVER_CONTROL_LOW);
+		setMode(DriveMode.P_VBUS);
 	}
 	
 	@Override
@@ -78,19 +89,28 @@ public class DriveTrain implements Module{
 		}
 	}
 	
-	public void setMode(DriveMode mode){
+	private void setMode(DriveMode mode){
+		if(currentMode == mode) return;
 		this.currentMode = mode;
 		switch(currentMode){
-		case DRIVER_CONTROL_HIGH:
-		case DRIVER_CONTROL_LOW:
+		case P_VBUS:
 			actualLeftPower = 0;
-			desiredLeftPower = 0;
 			actualRightPower = 0;
+			desiredLeftPower = 0;
 			desiredRightPower = 0;
 			setMotorMode(ETalonControlMode.PercentVbus);
 			break;
 		case TICK_VEL:
-			setMotorMode(ETalonControlMode.PercentVbus);
+			actualLeftSpeed = 0;
+			actualRightSpeed = 0;
+			desiredLeftSpeed = 0;
+			desiredRightSpeed = 0;
+			setMotorMode(ETalonControlMode.Speed);
+			motorMap.get(MotorType.LEFT_MOTOR).setFeedbackDevice(EFeedbackDevice.AnalogEncoder);
+			motorMap.get(MotorType.RIGHT_MOTOR).setFeedbackDevice(EFeedbackDevice.AnalogEncoder);
+			break;
+		case POSITION:
+			break;
 		}
 	}
 	
@@ -102,9 +122,18 @@ public class DriveTrain implements Module{
 		return motorMap.get(MotorType.RIGHT_MOTOR).getEncVelocity();		
 	}
 	
-	public void setMotors(double left, double right){
+	public void setPower(double left, double right){
+		setMode(DriveMode.P_VBUS);
 		desiredLeftPower = left;
 		desiredRightPower = right;
+	}
+	
+	public void setSpeed(double left, double right){
+		setMode(DriveMode.TICK_VEL);
+	}
+	
+	public void setPosition(double left, double right){
+		setMode(DriveMode.POSITION);
 	}
 	
 	private void setMotor(MotorType type, double value){
@@ -127,29 +156,27 @@ public class DriveTrain implements Module{
 	@Override
 	public void update() {
 			switch(currentMode){
-			case DRIVER_CONTROL_HIGH:
-			case DRIVER_CONTROL_LOW:
-				actualLeftPower = getRampedValue(actualLeftPower, desiredLeftPower);
-				actualRightPower = getRampedValue(actualRightPower, desiredRightPower);
+			case P_VBUS:
+				actualLeftPower = getRampedPowerValue(actualLeftPower, desiredLeftPower);
+				actualRightPower = getRampedPowerValue(actualRightPower, desiredRightPower);
 				setMotor(MotorType.LEFT_MOTOR, actualLeftPower);
 				setMotor(MotorType.RIGHT_MOTOR, actualRightPower);
 				break;
 			case TICK_VEL:
-				actualLeftPower = desiredLeftPower;
-				actualRightPower = desiredRightPower;
-				motorMap.get(MotorType.LEFT_MOTOR).setFeedbackDevice(EFeedbackDevice.AnalogEncoder);
-				motorMap.get(MotorType.RIGHT_MOTOR).setFeedbackDevice(EFeedbackDevice.AnalogEncoder);
-				driverStation.reportError(String.format("Left:%d, Right:%d", motorMap.get(MotorType.LEFT_MOTOR).getEncVelocity(), motorMap.get(MotorType.RIGHT_MOTOR).getEncVelocity()), false); 
-				setMotor(MotorType.LEFT_MOTOR, actualLeftPower);
-				setMotor(MotorType.RIGHT_MOTOR, actualRightPower);
+				actualLeftSpeed = desiredLeftSpeed;
+				actualRightSpeed = desiredRightSpeed;
+				setMotor(MotorType.LEFT_MOTOR, actualLeftSpeed);
+				setMotor(MotorType.RIGHT_MOTOR, actualRightSpeed);
+				break;
+			case POSITION:
 				break;
 		}
 	}
 	
-	public double getRampedValue(double oldValue, double newValue){
-		if(Math.abs(oldValue - newValue) > MAX_MOTOR_DIFF){
+	public double getRampedPowerValue(double oldValue, double newValue){
+		if(Math.abs(oldValue - newValue) > MAX_MOTOR_VOLTAGE_DIFF){
 			int direction = (newValue - oldValue) > 0?1:-1;
-			return oldValue + (MAX_MOTOR_DIFF * direction);
+			return oldValue + (MAX_MOTOR_VOLTAGE_DIFF * direction);
 		}
 		else return newValue;
 	}

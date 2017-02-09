@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1885.robot.autonomous;
 
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.DriveTrain.DriveMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -21,7 +20,6 @@ public class DriveStraightEncoders extends AutonomousCommand{
 	
 	@Override
 	public void init() {
-		driveTrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
 		leftOutput = INITIAL_POWER;
 		rightOutput = INITIAL_POWER;
 	}
@@ -37,7 +35,7 @@ public class DriveStraightEncoders extends AutonomousCommand{
 		
 		//DriverStation.reportError(String.format("Diff:%f, Left:%f Right:%f", difference, leftOutput, rightOutput), false);
 		
-		driveTrain.setMotors(-leftOutput, -rightOutput);
+		driveTrain.setPower(-leftOutput, -rightOutput);
 		return false;
 	}
 
