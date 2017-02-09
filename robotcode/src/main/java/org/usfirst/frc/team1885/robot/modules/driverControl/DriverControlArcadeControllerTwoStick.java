@@ -1,8 +1,10 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
 import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
+import org.usfirst.frc.team1885.robot.common.interfaces.EJoystickAxis;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
+import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl.ControllerType;
 
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	
@@ -25,6 +27,7 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 
 	@Override
 	public void update() {
+		double reducer = getReducer(getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kZ));
 		double throttle = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_LEFT_Y);
 		double turn = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_RIGHT_X);
 		
@@ -34,8 +37,15 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 		
 		leftInput =  throttle - turn;
 		rightInput = throttle + turn;
+		
+		leftInput *= reducer;
+		rightInput *= reducer;
 
 		setSpeeds(leftInput, rightInput);
+	}
+	
+	public double getReducer(double value) {
+		return (value + 1.0) / 2.0;
 	}
 	
 }
