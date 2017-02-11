@@ -15,7 +15,7 @@ public class LEDController implements Module{
 	private I2C wire;
 	
 	public enum LEDColor {
-		PURPLE(1, 0, 1), RED(1, 0, 0), BLUE(0, 0, 1), GREEN(0, 1, 0), DEFAULT_COLOR(0, 0, 0);
+		PURPLE(255, 0, 255), RED(255, 0, 0), WHITE(255, 255, 255), GREEN(0, 255, 0), DEFAULT_COLOR(0, 0, 0);
 		
 		final int r, g, b;
 		LEDColor(int r, int g, int b) {
@@ -26,7 +26,7 @@ public class LEDController implements Module{
 	}
 	
 	public enum LEDPattern {
-		BLINK("blink"), PULSE("pulse"), SOLID("solid"), CLEAR("clear");
+		BLINK("blink"), RUN("run"), SOLID("solid"), CLEAR("clear");
 		
 		final String command;
 		LEDPattern( String command ) {
@@ -34,12 +34,42 @@ public class LEDController implements Module{
 		}
 	}
 	
-	public enum LEDMode {
-		GEAR_NEEDED( LEDPattern.SOLID, LEDColor.PURPLE), LIFT_DETECTED(LEDPattern.PULSE,  LEDColor.RED), GEAR_PLACED(LEDPattern.BLINK, LEDColor.BLUE ), LIFT_STALLED(LEDPattern.BLINK, LEDColor.GREEN)) CLEAR(LEDPattern.CLEAR, LEDColor.DEFAULT_COLOR);
-
-		final LEDPattern pattern;
+	public enum FeederMessage {
+		WAIT(LEDPattern.SOLID, LEDColor.WHITE), DROP_TO_GROUND(LEDPattern.SOLID, LEDColor.GREEN), DROP_TO_INTAKE(LEDPattern.SOLID, LEDColor.PURPLE);
+		
 		final LEDColor color;
-		LEDMode( LEDPattern pattern, LEDColor color) {
+		final LEDPattern pattern;
+		private FeederMessage(LEDPattern pattern, LEDColor color) {
+			this.pattern = pattern;
+			this.color = color;
+		}
+	}
+	
+	public enum PilotMessage {
+		WAIT(LEDPattern.SOLID, LEDColor.WHITE), GEAR_PLACED(LEDPattern.BLINK, LEDColor.PURPLE)
+		final LEDColor color;
+		final LEDPattern pattern;
+		private PilotMessage(LEDPattern pattern, LEDColor color) {
+			this.pattern = pattern;
+			this.color = color;
+		}
+	}
+	
+	public enum DriverMessage {
+		
+		final LEDColor color;
+		final LEDPattern pattern;
+		private DriverMessage(LEDPattern pattern, LEDColor color) {
+			this.pattern = pattern;
+			this.color = color;
+		}
+	}
+	
+	public enum AutoMessage {
+		
+		final LEDColor color;
+		final LEDPattern pattern;
+		private AutoMessage(LEDPattern pattern, LEDColor color) {
 			this.pattern = pattern;
 			this.color = color;
 		}
@@ -54,7 +84,7 @@ public class LEDController implements Module{
 		currentMessage = message + TERM;
 	}
 	
-	public void setMode(LEDMode mode)
+	public void send(LEDMode mode)
 	{
 		sendMessage(mode.pattern.command + " " + mode.color.r + " " + mode.color.g + " " + mode.color.b);
 	}
