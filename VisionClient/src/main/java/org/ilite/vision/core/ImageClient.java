@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.usfirst.frc.team1885.visioncode.utils.ImageData;
 import org.usfirst.frc.team1885.visioncode.utils.SimpleImage;
 
 
@@ -36,8 +37,8 @@ public class ImageClient {
 				Object readObject;
 				try {
 					readObject = anObject.readObject();
-					if(readObject instanceof SimpleImage) {
-						SimpleImage anObject = (SimpleImage)readObject;
+					if(readObject instanceof ImageData) {
+						ImageData anObject = (ImageData)readObject;
 						//Do stuff with image
 					}
 				} catch (ClassNotFoundException e) {

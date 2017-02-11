@@ -32,8 +32,7 @@ public class ImageServer {
     ImageServer() {
 
     }
-
-    public void  connect() {
+        public void  connect() {
         final ExecutorService service = Executors.newCachedThreadPool(new ThreadFactory() {
             @Override
             public Thread newThread(Runnable r) {
@@ -54,7 +53,7 @@ public class ImageServer {
                 while(server != null) {
                     try {
                         Socket accept = server.accept();
-                        ClientThread clientThread = new ClientThread(accept);
+                        ClientThreadForImageData clientThread = new ClientThreadForImageData(accept);
                         allClients.add(clientThread);
                         service.submit(clientThread);
                     } catch(Exception e) {
@@ -68,14 +67,57 @@ public class ImageServer {
 
     }
 
-    public void submitImage(Mat aMat) {
-        for(ClientThread aThread : allClients){
-            aThread.submitImage(aMat);
+    public void submitImage(ImageData imageData) {
+        for(ClientThreadForImageData aThread : allClients){
+            aThread.submitImage(imageData);
         }
     }
 
+    private final List<ClientThreadForImageData>allClients = new ArrayList<>();
 
-    private final List<ClientThread>allClients = new ArrayList<>();
+//    public void  connect() {
+//        final ExecutorService service = Executors.newCachedThreadPool(new ThreadFactory() {
+//            @Override
+//            public Thread newThread(Runnable r) {
+//                return new Thread(r, "Name");
+//            }
+//        });
+//        service.submit(new Runnable() {
+//            @Override
+//            public void run() {
+//                ServerSocket server = null;
+//                try {
+//                    server  = new ServerSocket(1180);
+//                } catch(IOException e){
+//
+//                    e.printStackTrace();
+//                }
+//
+//                while(server != null) {
+//                    try {
+//                        Socket accept = server.accept();
+//                        ClientThread clientThread = new ClientThread(accept);
+//                        allClients.add(clientThread);
+//                        service.submit(clientThread);
+//                    } catch(Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
+//
+//
+//
+//    }
+//
+//    public void submitImage(Mat aMat) {
+//        for(ClientThread aThread : allClients){
+//            aThread.submitImage(aMat);
+//        }
+//    }
+//
+//
+//    private final List<ClientThread>allClients = new ArrayList<>();
 
 
     private class ClientThread implements Runnable{
