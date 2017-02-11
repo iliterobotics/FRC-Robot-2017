@@ -29,4 +29,6 @@ public interface ICanTalon {
 
 	void setFeedbackDevice(EFeedbackDevice analogencoder);
 
+	int getEncPostion();
+
 }

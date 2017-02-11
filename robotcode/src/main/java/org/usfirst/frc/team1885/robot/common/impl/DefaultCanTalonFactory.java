@@ -71,6 +71,11 @@ public class DefaultCanTalonFactory implements ICanTalonFactory {
 		}
 
 		@Override
+		public int getEncPostion() {
+			return this.canTalon.getEncPosition();
+		}
+		
+		@Override
 		public void set(double d) {
 			this.canTalon.set(d);
 			
