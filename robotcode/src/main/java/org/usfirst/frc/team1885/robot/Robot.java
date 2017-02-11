@@ -16,6 +16,8 @@ import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlTank;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -34,6 +36,9 @@ public class Robot extends SampleRobot{
 	private List<Module> runningModules;
 	
 	public Robot(){
+		CameraServer server = CameraServer.getInstance();
+		UsbCamera camera = server.startAutomaticCapture();
+
 		runningModules = new ArrayList<>();
 		autonomousCommands = new LinkedList<>();
 
