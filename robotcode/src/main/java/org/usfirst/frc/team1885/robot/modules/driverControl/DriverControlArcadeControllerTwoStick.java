@@ -4,7 +4,7 @@ import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
 import org.usfirst.frc.team1885.robot.common.interfaces.EJoystickAxis;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl.ControllerType;
+import org.usfirst.frc.team1885.robot.modules.NavX;
 
 
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
