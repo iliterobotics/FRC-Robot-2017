@@ -10,7 +10,7 @@ import java.net.URL;
 public class ConstantGetter {
 	
 	public static String getConstant( String var ) {
-		String url = "http://192.168.150.229/constant/" + var;
+		String url = "http://michael-laptop.local/constant/" + var;
 		try {
 			URL obj = new URL(url);
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();

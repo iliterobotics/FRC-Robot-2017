@@ -5,6 +5,12 @@ plugins {
     id "jaci.openrio.gradle.GradleRIO" version "2017.1.0" apply false
 }
 
+project(':commscode'){
+   apply plugin: 'eclipse'
+   apply plugin: 'java'
+}
+
+
 project(':robotcode') {
 
    apply plugin: 'jaci.openrio.gradle.GradleRIO'
@@ -22,6 +28,7 @@ project(':robotcode') {
 
    }
    dependencies {
+       compile project(':commscode')
        compile wpilib()
        compile talonSrx()
        compile files('res/navx_frc.jar')
@@ -46,11 +53,6 @@ project(':robotcode') {
        gradleVersion = '3.2.1'
    }
 
-}
-
-project(':commscode'){
-  apply plugin: 'eclipse'
-  apply plugin: 'java'
 }
 
 project(':VisionClient') {

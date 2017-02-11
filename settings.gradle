@@ -1,1 +1,2 @@
 include 'robotcode', 'commscode','VisionClient', 'Androidcode:App:visionUtils'
+project(':commscode').projectDir = new File(settingsDir, './commscode')

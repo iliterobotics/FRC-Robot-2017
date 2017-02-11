@@ -12,9 +12,9 @@ import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
+import org.usfirst.frc.team1885.robot.modules.VoltageValueTester;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlTank;
-import org.usfirst.frc.team1885.robot.modules.test.TestClamp;
 
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -78,8 +78,7 @@ public class Robot extends SampleRobot {
 	}
 	
 	public void test(){
-		TestClamp testClamp = new TestClamp();
-		setRunningModules(testClamp);
+		setRunningModules(new VoltageValueTester());
 		while(isTest() && isEnabled()){
 			updateModules();
 			pause();
