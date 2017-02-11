@@ -1,93 +1,87 @@
 package org.usfirst.frc.team1885.robot.autonomous;
 
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.DriveTrain.DriveMode;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class TurnDegree extends AutonomousCommand {
 	
-	private static final double MAX_ERROR = 0.001;
-	
-	private DriveTrain driveTrain;
+	private DriveTrain drivetrain;
 	private NavX navx;
 	
-	private double currYaw;
-	private double initialYaw;
-	private double targetYaw;
-	private double yawError;
+	private static final double MAX_ERROR = 1;
+	private static final double KP = 0.0065;
+	private static final double KD = 0.0;
+	private static final double KI = 0.000005;
 	
-	private double reducer = 1;
-	private double proportion;
-	private int turnDirection;
+	private double degrees, targetYaw;
+	private double error, lastError, totalError;
 	
-	public TurnDegree(DriveTrain driveTrain, NavX navx, double degrees) {
-		this.driveTrain = driveTrain;
+	double leftPower, rightPower, output = 0;
+	
+	public TurnDegree(DriveTrain drivetrain, NavX navx, double degrees)
+	{
+		this.drivetrain = drivetrain;
 		this.navx = navx;
-		
-		this.currYaw = navx.getYaw();
-		this.initialYaw = navx.getYaw();
-		this.targetYaw = (degrees + initialYaw) % 180;
-		this.yawError = Math.abs(targetYaw) - Math.abs(initialYaw);
-		
-		this.proportion = yawError / currYaw;
-		this.turnDirection = (this.initialYaw < this.targetYaw) ? 1 : -1;
+		this.degrees = degrees;
 	}
 	
-	@Override
-	public void init() {
-		driveTrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
-		navx.zeroYaw();
+	public void init()
+	{
+		this.targetYaw = getAngleSum(navx.getYaw(), degrees);  //Calculate the target heading off of # of degrees to turn
+		this.lastError = this.error = getAngleDifference(navx.getYaw(), targetYaw); //Calculate the initial error value
+		this.totalError += this.error;
+		DriverStation.reportError(String.format("Starting TurnDegree. \n Initial Yaw: %f \n Current Yaw: %f \n Target Yaw: %f \n Error: %f", navx.getInitialYaw(), navx.getYaw(), targetYaw, error), false);
 	}
-
-	@Override
-	public boolean update() {
+	
+	public boolean update()
+	{
+		error = getAngleDifference(navx.getYaw(), targetYaw); //Update error value
+		this.totalError += this.error; //Update running error total
+		DriverStation.reportError("Error:" + error,  false);
 		
-		double leftDrive;
-		double rightDrive;
-		
-		currYaw = navx.getYaw();
-		
-		yawError = Math.abs(targetYaw) - Math.abs(navx.getYaw());
-		proportion = (yawError * invert(currYaw)) * reducer;
-		
-//		reducer = (navx.getYaw() / targetYaw) * MAX_REDUCER;
-		
-		if(!isWithinError(currYaw, targetYaw, MAX_ERROR)) {
-			leftDrive = turnDirection * proportion;
-			rightDrive = -turnDirection * proportion;
-			DriverStation.reportError(String.format("Turning to Target Yaw: %f Current Yaw: %f Proportion: %f Left: %f Right: %f",
-													targetYaw, currYaw, proportion, leftDrive, rightDrive ), false);
-		} else {
-			DriverStation.reportError(String.format("Reached Target Yaw: %f Current Yaw: ", targetYaw, navx.getYaw()), false);
-			leftDrive = rightDrive = 0.0;
+		if(Math.abs(error) < MAX_ERROR){
+			output = leftPower = rightPower = 0;
+			DriverStation.reportError(String.format("Execution complete. Left: %f Right: %f", leftPower, rightPower), false);
+			drivetrain.setMotors(0, 0);
 			return true;
 		}
 		
-		DriverStation.reportError(String.format("Left: %f Right: %f", leftDrive, rightDrive), false);
-		DriverStation.reportError("Yaw: " + currYaw, false);
+		output = (KP * error) + (KD * (error - lastError) + (KI * totalError));
 		
-		driveTrain.setMotors(rightDrive, leftDrive);
-		return false;
+		leftPower = output; 
+		rightPower = -output;
 		
-	}
-	
-	private boolean isWithinError(double value, double targetValue, double error)
-	{
-		if( value < (targetValue + error) && value > (targetValue - error) ) return true;
+		drivetrain.setMotors(leftPower, rightPower);
+		DriverStation.reportError(String.format("Left: %f Right %f", leftPower, rightPower), false );
+		
+		lastError = error;
 		return false;
 	}
 	
-	/**
-	 * 
-	 * @param value The value you wish to invert
-	 * @return The inverted value (ex: x -> 1/x)
-	 */
-	private double invert(double value)
-	{
-		if(value == 0) return 0;
-		return 1/value;
+	private double getAngleDifference(double angle1, double angle2){
+		double difference = angle1 - angle2;
+		if(Math.abs(difference) > 180){
+			if(angle1 < 0){
+				difference = angle2 - (angle1 + 360);
+			}else{
+				difference = (angle2 + 360) - angle1;				
+			}
+		}
+		return difference;
+	}
+	
+	private double getAngleSum(double angle1, double angle2) {
+		double difference = angle1 + angle2;
+		if(Math.abs(difference) > 180){
+			if(angle1 < 0){
+				difference = angle2 - (angle1 + 360);
+			}else{
+				difference = (angle2 + 360) - angle1;				
+			}
+		}
+		return difference;
 	}
 	
 }

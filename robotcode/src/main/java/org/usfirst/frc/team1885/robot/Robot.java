@@ -19,7 +19,8 @@ import org.usfirst.frc.team1885.robot.modules.test.TestClamp;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
-public class Robot extends SampleRobot {
+public class Robot extends SampleRobot{
+	
 	
 	public static final long UPDATE_PERIOD = 5;
 
@@ -39,6 +40,8 @@ public class Robot extends SampleRobot {
 		driverControl = new DriverControlTank(driveTrain);
 		gearManipulator = new GearManipulator(driverControl);
 		navx = new NavX();
+		driveTrain = new DriveTrain(navx);
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, navx);		
 	}
 
 	public void robotInit(){
@@ -50,21 +53,26 @@ public class Robot extends SampleRobot {
 		setRunningModules(driveTrain);
 		autonomousCommands.clear();
 //		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
-		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
+		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90));
+		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90));
 		AutonomousCommand currentCommand = autonomousCommands.peek();
-		if(currentCommand != null){
-			currentCommand.init();
-		}
+		if(currentCommand != null) currentCommand.init();
 		while(isAutonomous() && isEnabled()){
-			currentCommand = autonomousCommands.peek();
-			if(currentCommand != null){
-				if(currentCommand.update()){
-					autonomousCommands.poll();
-					autonomousCommands.peek().init();
+				currentCommand = autonomousCommands.peek();
+				if(currentCommand != null){
+					if(currentCommand.update()){
+						autonomousCommands.poll();
+						if(autonomousCommands.peek() != null) {
+							autonomousCommands.peek().init();
+							DriverStation.reportError("Initialized Command", false);
+						} else {
+							DriverStation.reportError("Next command is null", false);
+							break;
+						}
+					}
 				}
-			}
-			updateModules();
-			pause();
+				updateModules();
+				pause();
 		}
 	}
 	

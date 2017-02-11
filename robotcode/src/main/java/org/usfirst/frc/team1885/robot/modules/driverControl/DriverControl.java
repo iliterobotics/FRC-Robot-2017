@@ -10,7 +10,7 @@ import org.usfirst.frc.team1885.robot.modules.Module;
 
 public abstract class DriverControl implements Module {
 	
-	public static final double DEADZONE = 0.01;
+	public static final double DEADZONE = 0.03;
 	public static final int GAMEPAD_LEFT_X = 0;
 	public static final int GAMEPAD_LEFT_Y = 1;
 	public static final int GAMEPAD_LEFT_TRIGGER = 2;

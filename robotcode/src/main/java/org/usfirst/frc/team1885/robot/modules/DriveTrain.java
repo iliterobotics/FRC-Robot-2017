@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.robot.common.impl.DefaultCanTalonFactory;
-import org.usfirst.frc.team1885.robot.common.impl.DefaultDriverStation;
 import org.usfirst.frc.team1885.robot.common.impl.EFeedbackDevice;
 import org.usfirst.frc.team1885.robot.common.impl.ETalonControlMode;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalon;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
-import org.usfirst.frc.team1885.robot.common.interfaces.IDriverStation;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.RobotDrive;
 
 
 /**
@@ -24,7 +27,7 @@ public class DriveTrain implements Module{
 	private double desiredRightPower;
 	private double actualLeftPower;
 	private double actualRightPower;
-		
+	
 	private DriveMode currentMode;
 	
 	public enum DriveMode{
@@ -48,18 +51,15 @@ public class DriveTrain implements Module{
 
 	private final ICanTalonFactory canTalonFactory;
 
-	private final IDriverStation driverStation;
 	
-	public DriveTrain() {
-		this(new DefaultCanTalonFactory(),
-				new DefaultDriverStation());
+	public DriveTrain(NavX navx) {
+		this(new DefaultCanTalonFactory());
 	}
 
-	public DriveTrain(ICanTalonFactory canTalonFactory, IDriverStation driverStation){
+	public DriveTrain(ICanTalonFactory canTalonFactory){
 		this.canTalonFactory = canTalonFactory;
-		this.driverStation = driverStation;
 		motorMap = new HashMap<>();
-		setMode(DriveMode.DRIVER_CONTROL_LOW);
+		setMode(DriveMode.DRIVER_CONTROL_LOW);		
 	}
 	
 	@Override
@@ -68,7 +68,7 @@ public class DriveTrain implements Module{
 			ICanTalon talon = canTalonFactory.getCanTalon(type.talonId);
 			talon.setEncPosition(0);
 			talon.setP(0.5);
-			driverStation.reportError(String.format("(%f, %f, %f)", talon.getP(), talon.getI(), talon.getD()), false);
+			DriverStation.reportError(String.format("(%f, %f, %f)", talon.getP(), talon.getI(), talon.getD()), false);
 			for(int followerId : type.followerIds){
 				ICanTalon follower = canTalonFactory.getCanTalon(followerId);
 				follower.setControlMode(ETalonControlMode.Follower);
@@ -91,6 +91,7 @@ public class DriveTrain implements Module{
 			break;
 		case TICK_VEL:
 			setMotorMode(ETalonControlMode.PercentVbus);
+			break;
 		}
 	}
 	
@@ -139,7 +140,7 @@ public class DriveTrain implements Module{
 				actualRightPower = desiredRightPower;
 				motorMap.get(MotorType.LEFT_MOTOR).setFeedbackDevice(EFeedbackDevice.AnalogEncoder);
 				motorMap.get(MotorType.RIGHT_MOTOR).setFeedbackDevice(EFeedbackDevice.AnalogEncoder);
-				driverStation.reportError(String.format("Left:%d, Right:%d", motorMap.get(MotorType.LEFT_MOTOR).getEncVelocity(), motorMap.get(MotorType.RIGHT_MOTOR).getEncVelocity()), false); 
+				DriverStation.reportError(String.format("Left:%d, Right:%d", motorMap.get(MotorType.LEFT_MOTOR).getEncVelocity(), motorMap.get(MotorType.RIGHT_MOTOR).getEncVelocity()), false); 
 				setMotor(MotorType.LEFT_MOTOR, actualLeftPower);
 				setMotor(MotorType.RIGHT_MOTOR, actualRightPower);
 				break;
