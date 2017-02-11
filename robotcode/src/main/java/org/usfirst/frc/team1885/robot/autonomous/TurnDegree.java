@@ -44,7 +44,7 @@ public class TurnDegree extends AutonomousCommand {
 		if(Math.abs(error) < MAX_ERROR){
 			output = leftPower = rightPower = 0;
 			DriverStation.reportError(String.format("Execution complete. Left: %f Right: %f", leftPower, rightPower), false);
-			drivetrain.setMotors(0, 0);
+			drivetrain.setPower(0, 0);
 			return true;
 		}
 		
@@ -53,7 +53,7 @@ public class TurnDegree extends AutonomousCommand {
 		leftPower = output; 
 		rightPower = -output;
 		
-		drivetrain.setMotors(leftPower, rightPower);
+		drivetrain.setPower(leftPower, rightPower);
 		DriverStation.reportError(String.format("Left: %f Right %f", leftPower, rightPower), false );
 		
 		lastError = error;

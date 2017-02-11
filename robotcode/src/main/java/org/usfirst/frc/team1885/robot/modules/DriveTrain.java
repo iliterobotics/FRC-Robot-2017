@@ -181,7 +181,4 @@ public class DriveTrain implements Module{
 		}
 	}
 
-	public void setMotors(double leftPower, double rightPower) {
-		
-	}
 }
