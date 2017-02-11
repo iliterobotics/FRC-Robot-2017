@@ -96,6 +96,11 @@ public class DefaultCanTalonFactory implements ICanTalonFactory {
 		public void setVoltageRampRate(double rate) {
 			this.canTalon.setVoltageRampRate(rate);
 		}
+
+		@Override
+		public int getEncPosition() {
+			return this.canTalon.getEncPosition();
+		}
 	}
 	
 	

@@ -13,16 +13,23 @@ public class DriveStraightNavX extends AutonomousCommand{
 	
 	private final DriveTrain driveTrain;
 	private final NavX navx;
+	private final int distanceToTravel;
+	
+	private int initialLeftPosition;
+	private int initialRightPosition;
 	
 	private double initialYaw;
 	
-	public DriveStraightNavX(DriveTrain dt, NavX navx){
-		driveTrain = dt;
+	public DriveStraightNavX(DriveTrain dt, NavX navx, int tickDistance){
+		this.driveTrain = dt;
 		this.navx = navx;
+		this.distanceToTravel = tickDistance;
 	}
 	
 	public void init(){
 		initialYaw = navx.getYaw();
+		initialLeftPosition = driveTrain.getLeftPosition();
+		initialRightPosition = driveTrain.getRightPosition();
 	}
 	
 	public boolean update(){
@@ -35,12 +42,17 @@ public class DriveStraightNavX extends AutonomousCommand{
 		
 		DriverStation.reportError(String.format("Yaw Diff:%f, X:%f, Y:%f, Z:%f", yawError, navx.getDisplacementX(), navx.getDisplacementY(), navx.getDisplacementZ()), false);
 		
-		return false;
+		return getAverageDistanceTravel() >= distanceToTravel;
 	}
 	
 	public double getDisplacement(){
 		return Math.sqrt(Math.pow(navx.getDisplacementX(), 2) +
 						 Math.pow(navx.getDisplacementY(), 2));
+	}
+	
+	private int getAverageDistanceTravel(){
+		return ((driveTrain.getLeftPosition() - initialLeftPosition) + 
+			   (driveTrain.getRightPosition() - initialRightPosition))/2;
 	}
 
 }

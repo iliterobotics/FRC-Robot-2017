@@ -121,6 +121,14 @@ public class DriveTrain implements Module{
 		motorMap.get(MotorType.RIGHT_MOTOR).setVoltageRampRate(rate);
 	}
 	
+	public int getLeftPosition(){
+		return motorMap.get(MotorType.LEFT_MOTOR).getEncPosition();
+	}
+
+	public int getRightPosition(){
+		return motorMap.get(MotorType.RIGHT_MOTOR).getEncPosition();
+	}
+
 	public int getLeftEncoderVelocity(){
 		return motorMap.get(MotorType.LEFT_MOTOR).getEncVelocity();
 	}
