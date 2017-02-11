@@ -1,10 +1,7 @@
 package org.usfirst.frc.team1885.robot.autonomous;
 
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.DriveTrain.DriveMode;
 import org.usfirst.frc.team1885.robot.modules.NavX;
-
-import com.kauailabs.navx.frc.AHRS;
 
 public class TurnToDegree extends AutonomousCommand{
 	private DriveTrain driveTrain;
@@ -22,7 +19,6 @@ public class TurnToDegree extends AutonomousCommand{
 
 	@Override
 	public void init() {
-		driveTrain.setMode(DriveMode.DRIVER_CONTROL_LOW);
 		initialYaw = navx.getInitialYaw();
 	}
 

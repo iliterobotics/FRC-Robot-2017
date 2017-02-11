@@ -91,6 +91,11 @@ public class DefaultCanTalonFactory implements ICanTalonFactory {
 			this.canTalon.setFeedbackDevice(convert);
 			
 		}
+
+		@Override
+		public void setVoltageRampRate(double rate) {
+			this.canTalon.setVoltageRampRate(rate);
+		}
 	}
 	
 	

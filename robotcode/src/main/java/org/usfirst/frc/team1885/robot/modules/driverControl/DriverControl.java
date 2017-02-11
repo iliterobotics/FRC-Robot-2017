@@ -45,7 +45,6 @@ public abstract class DriverControl implements Module {
 			controllerMap.put(type, joystickFactory.createJoystick(type.controllerId));
 					
 		}
-		driveTrain.setMode(DriveTrain.DriveMode.DRIVER_CONTROL_LOW);
 	}
 	
 	public void setSpeeds(double left, double right){
@@ -58,7 +57,7 @@ public abstract class DriverControl implements Module {
 		if(Math.abs(right) < DEADZONE){
 			right = 0;
 		}
-		driveTrain.setMotors(left, right);
+		driveTrain.setPower(left, right);
 	}
 	
 	public IJoystick getController(ControllerType type){
