@@ -70,7 +70,6 @@ public class DriveTrain implements Module{
 		this.canTalonFactory = canTalonFactory;
 		this.driverStation = driverStation;
 		motorMap = new HashMap<>();
-		setMode(DriveMode.P_VBUS);
 	}
 	
 	@Override
