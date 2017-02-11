@@ -1,8 +1,10 @@
 package com.example.christopher.myapplication;
 
+import android.media.Image;
 import android.util.Log;
 
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 import org.usfirst.frc.team1885.visioncode.utils.ImageData;
 import org.usfirst.frc.team1885.visioncode.utils.SimpleImage;
 
@@ -129,26 +131,13 @@ public class ImageServer {
 
         }
 
-        private void send(ImageData imageData)
-        {
 
-            try {
-
-
-                objectOutputStream.writeObject(imageData);
-
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-        }
     }
 
-    private class ClienThreadForImageData implements Runnable
+    private class ClientThreadForImageData implements Runnable
     {
         private Socket clientSocket;
-        private LinkedBlockingQueue<Double>imageDatas = new LinkedBlockingQueue<>();
+        private LinkedBlockingQueue<ImageData>imageDatas = new LinkedBlockingQueue<>();
         private ObjectOutputStream objectOutputStream;
 
         ClientThreadForImageData(Socket clientSocket) throws IOException{
@@ -156,55 +145,31 @@ public class ImageServer {
 
             OutputStream output = clientSocket.getOutputStream();
             objectOutputStream = new ObjectOutputStream(output);
+
         }
 
         @Override
         public void run() {
 
             while(true) {
-                List<Double> imageDataToSend = new ArrayList<>();
+                List<ImageData> imageDataToSend = new ArrayList<>();
                 imageDatas.drainTo(imageDataToSend);
 
                 if (!imageDataToSend.isEmpty()) {
-                    for (Double d : imageDataToSend) {
+                    for (ImageData d : imageDataToSend) {
                         send(d);
                     }
                 }
             }
         }
 
-        public void submitImage(double d) {
+        public void submitImage(ImageData d) {
             imageDatas.add(d);
-        }
-
-
-        private void send(double d)
-        {
-            try {
-                ImageData img = new ImageData();
-                img(img);
-                img.setRows(pMat.rows());
-                img.setNumChannels(pMat.channels());
-
-                byte[] raw = new byte[img.getCols() * img.getNumChannels() * img.getRows()];
-                pMat.get(0, 0, raw );
-                img.setRawImage(raw);
-
-                objectOutputStream.writeObject(img);
-
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
         }
 
         private void send(ImageData imageData)
         {
-
             try {
-
-
                 objectOutputStream.writeObject(imageData);
 
             }catch (Exception e)
