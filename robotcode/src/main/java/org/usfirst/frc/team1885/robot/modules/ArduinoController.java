@@ -3,7 +3,7 @@ package org.usfirst.frc.team1885.robot.modules;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 
-public class LEDController implements Module{
+public class ArduinoController implements Module{
 	
 	private static final Port PORT_TYPE = Port.kOnboard;
 	private static final int TARGET_ADDRESS = 1;
@@ -26,11 +26,13 @@ public class LEDController implements Module{
 	}
 	
 	public enum LEDPattern {
-		BLINK("blink"), RUN("run"), SOLID("solid"), CRAZY("crazy"), CLEAR("clear");
+		BLINK("blink", 500), RUN("run", 0), PULSE("pulse", 0), SOLID("solid", 0), CRAZY("crazy", 0), CLEAR("clear", 0);
 		
 		final String command;
-		LEDPattern( String command ) {
+		final int delay;
+		LEDPattern( String command, int delay ) {
 			this.command = command;
+			this.delay = delay;
 		}
 	}
 	
@@ -86,9 +88,19 @@ public class LEDController implements Module{
 		currentMessage = message + TERM;
 	}
 	
-	public void send(LEDMode mode)
+	public void send(FeederMessage message)
 	{
-		sendMessage(mode.pattern.command + " " + mode.color.r + " " + mode.color.g + " " + mode.color.b);
+		sendMessage(message.pattern.command + " " + message.color.r + " " + message.color.g + " " + message.color.b + " " + message.pattern.delay);
+	}
+	
+	public void send(DriverMessage message)
+	{
+		sendMessage(message.pattern.command + " " + message.color.r + " " + message.color.g + " " + message.color.b + " " + message.pattern.delay);	
+	}
+	
+	public void send(PilotMessage message)
+	{
+		sendMessage(message.pattern.command + " " + message.color.r + " " + message.color.g + " " + message.color.b + " " + message.pattern.delay);
 	}
 	
 	@Override
