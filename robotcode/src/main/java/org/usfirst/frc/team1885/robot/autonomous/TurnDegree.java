@@ -52,8 +52,6 @@ public class TurnDegree extends AutonomousCommand {
 		
 		leftPower = output; 
 		rightPower = -output;
-		driveTrain.setPower(rightDrive, leftDrive);
-		return false;
 		
 		drivetrain.setMotors(leftPower, rightPower);
 		DriverStation.reportError(String.format("Left: %f Right %f", leftPower, rightPower), false );

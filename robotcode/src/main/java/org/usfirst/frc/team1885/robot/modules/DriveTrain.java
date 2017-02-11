@@ -22,7 +22,7 @@ public class DriveTrain implements Module{
 
 	
 	// Voltage proportion control variables
-	private static final double VOLTAGE_RAMP_RATE = 12.0; //in V/sec
+	private static final double VOLTAGE_RAMP_RATE = 18.0; //in V/sec
 	
 	private double desiredLeftPower;
 	private double desiredRightPower;
@@ -63,7 +63,7 @@ public class DriveTrain implements Module{
 	private final ICanTalonFactory canTalonFactory;
 
 	
-	public DriveTrain(NavX navx) {
+	public DriveTrain() {
 		this(new DefaultCanTalonFactory());
 	}
 
@@ -118,6 +118,7 @@ public class DriveTrain implements Module{
 	
 	private void setVoltageRampRate(double rate){
 		motorMap.get(MotorType.LEFT_MOTOR).setVoltageRampRate(rate);
+		motorMap.get(MotorType.RIGHT_MOTOR).setVoltageRampRate(rate);
 	}
 	
 	public int getLeftEncoderVelocity(){
@@ -165,6 +166,7 @@ public class DriveTrain implements Module{
 			case P_VBUS:
 				actualLeftPower = desiredLeftPower;
 				actualRightPower = desiredRightPower;
+				DriverStation.reportError(String.format("Left:%f, right:%f", actualLeftPower, actualRightPower),  false);
 				setMotor(MotorType.LEFT_MOTOR, actualLeftPower);
 				setMotor(MotorType.RIGHT_MOTOR, actualRightPower);
 				break;
@@ -177,5 +179,9 @@ public class DriveTrain implements Module{
 			case POSITION:
 				break;
 		}
+	}
+
+	public void setMotors(double leftPower, double rightPower) {
+		
 	}
 }
