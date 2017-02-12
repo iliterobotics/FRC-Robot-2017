@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
-import org.usfirst.frc.team1885.robot.autonomous.DriveStraightNavX;
-import org.usfirst.frc.team1885.robot.autonomous.TurnDegree;
-import org.usfirst.frc.team1885.robot.autonomous.WaitForNavxCalibration;
+import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
@@ -17,7 +15,6 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -45,15 +42,16 @@ public class Robot extends SampleRobot{
 
 	public void robotInit(){
 		navx.resetDisplacement();
+		while(navx.isCalibrating()){
+			pause();
+		}
+		navx.setInitialAngle(navx.getAngle());
 	}
 	
 	public void autonomous()
 	{
 		autonomousCommands.clear();
-		autonomousCommands.add(new WaitForNavxCalibration(navx));
-		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx, 240));
-		autonomousCommands.add(new TurnDegree(driveTrain, navx, 180));
-		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx, 240));
+		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 90));
 		
 		setRunningModules(driveTrain);
 
@@ -66,9 +64,7 @@ public class Robot extends SampleRobot{
 						autonomousCommands.poll();
 						if(autonomousCommands.peek() != null) {
 							autonomousCommands.peek().init();
-							DriverStation.reportError("Initialized Command", false);
 						} else {
-							DriverStation.reportError("Next command is null", false);
 							updateModules();
 							break;
 						}
