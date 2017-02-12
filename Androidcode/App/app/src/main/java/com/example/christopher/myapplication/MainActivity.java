@@ -152,9 +152,9 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         aServer.submitImage(imageData);
 
         Imgproc.cvtColor(mRgba, mRgba, Imgproc.COLOR_BGR2HSV_FULL);
-        Scalar lower = new Scalar(58,0,109);
-        Scalar upper = new Scalar(93,255, 240);
-
+        Scalar lower = new Scalar(0,0,0); // Values Still need to be Tested
+        Scalar upper = new Scalar(200,255, 200); //Values Still need to be tested
+        //
         Mat matThresh = new Mat();
         Core.inRange(mRgba, lower, upper, matThresh);
 
