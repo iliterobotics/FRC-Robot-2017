@@ -16,6 +16,7 @@ import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlTank;
 import org.usfirst.frc.team1885.robot.modules.test.TestClamp;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -43,6 +44,10 @@ public class Robot extends SampleRobot {
 
 	public void robotInit(){
 		navx.resetDisplacement();
+		CameraServer server = CameraServer.getInstance();
+		server.s
+		server.startAutomaticCapture(0);
+
 	}
 	
 	public void autonomous()

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.visioncode.utils;
 
+import java.awt.Image;
 import java.io.*;
 import java.util.*;
 
@@ -31,7 +32,16 @@ public class ImageData implements Serializable
     {
         this.y = y;
     }
-    
+
+
+    public ImageData() {
+
+    }
+    public ImageData(ImageData pData) {
+        x = pData.getX();
+        y = pData.getY();
+    }
+
     
 
 }

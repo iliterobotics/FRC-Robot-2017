@@ -3,8 +3,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
+
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -15,8 +19,11 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.usfirst.frc.team1885.visioncode.utils.ImageData;
 import org.usfirst.frc.team1885.visioncode.utils.SimpleImage;
 
 import java.io.ObjectOutputStream;
@@ -32,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
     // Used for logging success or failure messages
     private static final String TAG = "OCVSample::Activity";
+    private int x;
+    private ImageData imageData;
 
     // Loads camera view of OpenCV for us to use. This lets us see using OpenCV
     private CameraBridgeViewBase mOpenCvCameraView;
@@ -42,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
     // These variables are used (at the moment) to fix camera orientation from 270degree to 0degree
     Mat mRgba;
-    Mat mRgbaF;
-    Mat mRgbaT;
     ImageServer aServer;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -65,8 +72,9 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
     public MainActivity() {
         Log.i(TAG, "Instantiated new " + this.getClass());
+        imageData = new ImageData();
+        imageData.setX(x);
     }
-
 
 
     @Override
@@ -79,7 +87,16 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         mOpenCvCameraView = (JavaCameraView) findViewById(R.id.showCam);
 
-        mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+        mOpenCvCameraView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                xPoint = event.getX();
+                yPoint = event.getY();
+                return true;
+            }
+        });
+
+                mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 
         mOpenCvCameraView.setCvCameraViewListener(this);
 
@@ -118,8 +135,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     public void onCameraViewStarted(int width, int height) {
 
         mRgba = new Mat(height, width, CvType.CV_8UC4);
-        mRgbaF = new Mat(height, width, CvType.CV_8UC4);
-        mRgbaT = new Mat(width, width, CvType.CV_8UC4);
     }
 
     public void onCameraViewStopped() {
@@ -130,25 +145,24 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         // TODO Auto-generated method stub
         mRgba = inputFrame.rgba();
-        // Rotate mRgba 90 degrees
-        Core.transpose(mRgba, mRgbaT);
-        Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
-        Core.flip(mRgbaF, mRgba, 1 );
 
-        Mat grayImage = new Mat();
-        Imgproc.cvtColor(mRgba, grayImage, Imgproc.COLOR_BGRA2GRAY);
-        Imgproc.blur(grayImage, grayImage, new Size(3,3));
-        aServer.submitImage(mRgba);
+        x++;
+        imageData.setX(x);
+        Log.d("x", x + "");
+        aServer.submitImage(imageData);
 
+        Imgproc.cvtColor(mRgba, mRgba, Imgproc.COLOR_BGR2HSV_FULL);
+        Scalar lower = new Scalar(58,0,109);
+        Scalar upper = new Scalar(93,255, 240);
 
-        Mat edges = new Mat();
-        try {
-            Imgproc.Canny(grayImage, edges, 10, 255);
-        } catch(Throwable e) {
-            Log.e("CHRIS", "Exception",e);
-        }
-        return edges; // This function must return
+        Mat matThresh = new Mat();
+        Core.inRange(mRgba, lower, upper, matThresh);
+
+        return matThresh; // This function must return
     }
 
+
+    private  double xPoint = -1;
+    private  double yPoint = -1;
 
 }

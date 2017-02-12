@@ -45,6 +45,7 @@ public class ImageServer {
                 ServerSocket server = null;
                 try {
                     server  = new ServerSocket(1180);
+
                 } catch(IOException e){
 
                     e.printStackTrace();
@@ -212,7 +213,7 @@ public class ImageServer {
         private void send(ImageData imageData)
         {
             try {
-                objectOutputStream.writeObject(imageData);
+                objectOutputStream.writeObject(new ImageData(imageData));
 
             }catch (Exception e)
             {
