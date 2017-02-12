@@ -58,6 +58,10 @@ public class DefaultAHRSFactory implements IAHRSFactory{
 			return ahrs.isCalibrating();
 		}
 		
+		public double getAngle(){
+			return ahrs.getAngle();
+		}
+		
 	}
 	
 	

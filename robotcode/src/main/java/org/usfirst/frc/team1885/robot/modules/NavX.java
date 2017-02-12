@@ -52,5 +52,9 @@ public class NavX{
 	public boolean isCalibrating(){
 		return iahrs.isCalibrating();
 	}
+	
+	public double getAngle(){
+		return iahrs.getAngle();
+	}
 
 }

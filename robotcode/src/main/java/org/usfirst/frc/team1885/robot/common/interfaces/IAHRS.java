@@ -15,5 +15,7 @@ public interface IAHRS{
 	void resetDisplacement();
 	
 	boolean isCalibrating();
+	
+	double getAngle();
 
 }
