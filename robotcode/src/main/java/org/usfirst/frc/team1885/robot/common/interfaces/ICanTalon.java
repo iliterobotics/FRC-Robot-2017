@@ -31,4 +31,6 @@ public interface ICanTalon {
 
 	void setVoltageRampRate(double rate);
 
+	int getEncPosition();
+
 }

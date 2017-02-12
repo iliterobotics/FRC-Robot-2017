@@ -5,13 +5,10 @@ import org.usfirst.frc.team1885.robot.common.interfaces.ESerialPort;
 import org.usfirst.frc.team1885.robot.common.interfaces.IAHRS;
 import org.usfirst.frc.team1885.robot.common.interfaces.IAHRSFactory;
 
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
-
-public class NavX implements PIDSource{
+public class NavX{
 	
 	private static final ESerialPort DEFAULT_PORT = ESerialPort.kMXP;
-	private final double initialYaw;
+	private double initialAngle;
 	private final IAHRS iahrs;
 	
 	public NavX(){
@@ -20,11 +17,11 @@ public class NavX implements PIDSource{
 	
 	public NavX(IAHRSFactory factory) {
 		this.iahrs = factory.getAHRS(DEFAULT_PORT);
-		initialYaw = iahrs.getYaw();
+		initialAngle = iahrs.getYaw();
 	}
 
-	public double getInitialYaw() {
-		return initialYaw;
+	public double getInitialAngle() {
+		return initialAngle;
 	}
 
 	public double getYaw() {
@@ -43,27 +40,43 @@ public class NavX implements PIDSource{
 		return iahrs.getDisplacementZ();
 	}
 
-	public void zeroYaw() {
-		iahrs.zeroYaw();
-	}
-
 	public void resetDisplacement() {
 		iahrs.resetDisplacement();
 	}
-
-	@Override
-	public void setPIDSourceType(PIDSourceType pidSource) {
-		iahrs.setPIDSourceType(pidSource);
+	
+	public boolean isCalibrating(){
+		return iahrs.isCalibrating();
+	}
+		
+	public double getAngle(){
+		return convertTo360(iahrs.getAngle());
+	}
+	
+	public double getAngleOffStart(){
+		return getAngleSum(getAngle(), -initialAngle);
+	}
+	
+	public void setInitialAngle(double yaw){
+		initialAngle = yaw;
 	}
 
-	@Override
-	public PIDSourceType getPIDSourceType() {
-		return iahrs.getPIDSourceType();
+	private double convertTo360(double angle){
+		if(angle < 0) return angle + 360;
+		return angle;
 	}
-
-	@Override
-	public double pidGet() {
-		return iahrs.pidGet();
+	
+	private double getAngleSum(double angle1, double angle2) {
+		double sum = angle1 + angle2;
+		if(sum > 180){
+			sum = -360 + sum;
+		} else if(sum < -180){
+			sum = 360 + sum;
+		}
+		return sum;
+	}
+	
+	public double getAngleDistance(double angle1, double angle2){
+		return getAngleSum(angle1, -angle2);
 	}
 
 }

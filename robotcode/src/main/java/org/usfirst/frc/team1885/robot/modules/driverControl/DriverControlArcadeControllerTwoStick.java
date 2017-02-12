@@ -22,7 +22,8 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 
 	@Override
 	public void update() {
-		double reducer = getReducer(getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kZ));
+		//double reducer = getReducer(getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kZ));
+		double reducer = 1;
 		double throttle = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_LEFT_Y);
 		double turn = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_RIGHT_X);
 		
