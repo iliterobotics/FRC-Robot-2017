@@ -64,6 +64,14 @@ public abstract class DriverControl implements Module {
 	}
 	
 	public void updateManipulator(){
+		IJoystick manipulatorController = getController(ControllerType.CONTROLLER_2);
+		double intakeSpeed = 0;
+		if(manipulatorController.getRawAxis(1) > 0.5){
+			gearManipulator.setIntakeSpeed(-GearManipulator.DEFAULT_INTAKE_SPEED);
+		}
+		else if(manipulatorController.getRawAxis(1) < -0.5){
+			gearManipulator.setIntakeSpeed(GearManipulator.DEFAULT_INTAKE_SPEED);
+		}
 		
 	}
 	

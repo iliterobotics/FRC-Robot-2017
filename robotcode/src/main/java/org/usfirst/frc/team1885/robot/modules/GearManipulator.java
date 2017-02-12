@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.SolenoidBase;
 public class GearManipulator implements Module{
 
 	private static final int FLY_CAN_ID = 7;
+	public static final double DEFAULT_INTAKE_SPEED = 0.8;
 	
 	private Map<PistonType, SolenoidBase> pistonMap;
 	
