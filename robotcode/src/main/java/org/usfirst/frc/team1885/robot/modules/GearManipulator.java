@@ -3,71 +3,123 @@ package org.usfirst.frc.team1885.robot.modules;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
-import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl.ControllerType;
+import com.ctre.CANTalon;
 
-import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.SolenoidBase;
 
 public class GearManipulator implements Module{
-	private static final int POSITION_1 = 0;
-	private static final int POSITION_2 = 65;
-	private static final int GEAR_TOGGLE = 5;
-	private Map<ServoType, Servo> servoMap = new HashMap<ServoType, Servo>();
-	private boolean toggle;
-	private DriverControl driverControl;
-	private boolean previousState;
+
+	private static final int FLY_CAN_ID = 7;
 	
-	private enum ServoType {
-		RIGHT_GEAR_HOLD(0), LEFT_GEAR_HOLD(1);
+	private Map<PistonType, SolenoidBase> pistonMap;
+	
+	private boolean isOpen;
+	private boolean isTilted;
+	private boolean isKicked;
+	private boolean isUp;
+	private boolean isDropping;
+	private double intakePower;
+	
+	private CANTalon intakeWheels;
+	
+	private enum PistonType {
+		DOOR_DOWN(0, false), DOOR_TIPPER(1, false), KICKER(2, false), INTAKE(3, true), DROPPER(5, false);
 		
-		final int channel;
-		int position;
+		public final int port;
+		public final boolean isDouble;
 		
-		ServoType(int channel) {
-			this.channel = channel;
-			position = POSITION_1;
+		PistonType(int port, boolean isDouble){
+			this.port = port;
+			this.isDouble = isDouble;
 		}
 	}
 	
-	public GearManipulator(DriverControl driverControl) {
-		servoMap = new HashMap<>();
-		this.driverControl = driverControl;
-		toggle = previousState = false;
-	}
+	public GearManipulator(){
+		pistonMap = new HashMap<>();
+	}	
 
 	@Override
 	public void initialize() {
-		for(ServoType type : ServoType.values()) {
-			Servo servo = new Servo(type.channel);
-			servoMap.put(type, servo);
-		}		
+		for(PistonType type : PistonType.values()) {
+			SolenoidBase solenoid;
+			if(type.isDouble){
+				solenoid = new DoubleSolenoid(type.port, type.port + 1);
+			}
+			else{
+				solenoid = new Solenoid(type.port);
+			}
+			pistonMap.put(type, solenoid);
+		}
+		intakeWheels = new CANTalon(FLY_CAN_ID);
+		intakeWheels.setControlMode(CANTalon.TalonControlMode.PercentVbus.value);
+	}
+	
+	public void setOpen(boolean open){
+		this.isOpen = open;
+	}
+	
+	public void setTilted(boolean tilted){
+		this.isTilted = tilted;
+	}
+	
+	public void setKick(boolean kicked){
+		if(!isOpen && kicked){
+			kicked = false;
+		}
+		isKicked = kicked;
+	}
+	
+	public void setRaised(boolean raised){
+		if(!raised && (isOpen || isTilted || isDropping)){
+			raised = true;
+		}
+		if(raised && (isOpen || isTilted)){
+			raised = false;
+		}
+		isUp = raised;
+	}
+	
+	public void setDropping(boolean drop){
+		if(drop && (!isUp || !isTilted)){
+			drop = false;
+		}
+		isDropping = drop;
+	}
+	
+	public void setIntakeSpeed(double power){
+		this.intakePower = power;
 	}
 
 	@Override
 	public void update() {
-		if(driverControl.getController(ControllerType.CONTROLLER).getRawButton(GEAR_TOGGLE) && !previousState) {
-			previousState = toggle;
-			toggle = !toggle;
+		setSingleSolenoid(PistonType.DOOR_DOWN, isOpen);
+		setSingleSolenoid(PistonType.DOOR_TIPPER, isTilted || isOpen);
+		setSingleSolenoid(PistonType.KICKER, isKicked);
+		setSingleSolenoid(PistonType.DROPPER, isDropping);
+		setDoubleSolenoid(PistonType.INTAKE, isUp?Value.kReverse:Value.kForward);
+		intakeWheels.set(intakePower);
+	}
+	
+	public void setSingleSolenoid(PistonType type, boolean open){
+		SolenoidBase base = pistonMap.get(type);
+		if(base instanceof Solenoid){
+			((Solenoid)base).set(open);
+		}else{
+			DriverStation.reportError("WRONG SOLENOID TYPE", false);
 		}
-		else if(!driverControl.getController(ControllerType.CONTROLLER).getRawButton(GEAR_TOGGLE)){
-			previousState = false;
+	}
+	
+	public void setDoubleSolenoid(PistonType type, DoubleSolenoid.Value value){
+		SolenoidBase base = pistonMap.get(type);
+		if(base instanceof DoubleSolenoid){
+			((DoubleSolenoid)base).set(value);
+		}else{
+			DriverStation.reportError("WRONG SOLENOID TYPE", false);
 		}
-		if(toggle) {
-			servoMap.get(servoMap.get(ServoType.LEFT_GEAR_HOLD)).set(0.0);
-			servoMap.get(servoMap.get(ServoType.RIGHT_GEAR_HOLD)).set(0.0);
-		}
-		else {
-			servoMap.get(servoMap.get(ServoType.LEFT_GEAR_HOLD)).set(0.3);
-			servoMap.get(servoMap.get(ServoType.RIGHT_GEAR_HOLD)).set(0.5);
-		}
-//		if(driverControl.getController(ControllerType.CONTROLLER).getRawButton(5)) {
-//			servoMap.get(ServoType.LEFT_GEAR_HOLD).set(0.0);
-//			servoMap.get(ServoType.RIGHT_GEAR_HOLD).set(0.0);
-//		}
-//		else if(driverControl.getController(ControllerType.CONTROLLER).getRawButton(6)) {
-//			servoMap.get(ServoType.LEFT_GEAR_HOLD).set(0.5);
-//			servoMap.get(ServoType.RIGHT_GEAR_HOLD).set(0.5);
-//		}
 	}
 	
 }
