@@ -4,25 +4,25 @@ import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
 import org.usfirst.frc.team1885.robot.common.interfaces.EJoystickAxis;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.NavX;
+import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl.ControllerType;
 
 
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	private static final int REDUCER = 2;
 	private DriveTrain driveTrain;
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, NavX navx) { 
-		this(driveTrain, new DefaultJoystickFactory(), navx);
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain) { 
+		this(driveTrain, new DefaultJoystickFactory());
 	}
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, IJoystickFactory joystickFactory, NavX navx) {
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, IJoystickFactory joystickFactory) {
 		super(driveTrain, joystickFactory);
 		this.driveTrain = driveTrain;
 	}
 
 	@Override
 	public void update() {
-		double reducer = getReducer(getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kZ));
+		double reducer = getReducer(getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kZ));
 		double throttle = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_LEFT_Y);
 		double turn = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_RIGHT_X);
 		

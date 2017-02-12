@@ -85,7 +85,7 @@ public class Robot extends SampleRobot{
 	}
 	
 	public void test(){
-		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, navx);		
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);		
 		setRunningModules(driverControl, driveTrain);
 		while(isTest() && isEnabled()){
 			updateModules();
