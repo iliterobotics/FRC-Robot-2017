@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Solenoid;
 
 
 /**
@@ -21,6 +22,8 @@ import edu.wpi.first.wpilibj.RobotDrive;
 public class DriveTrain implements Module{
 
 	public static final double WHEEL_DIAMETER = 8.5;
+	public static final int SHIFT_SOLENOID_ID = 10;
+	public static final int CASTER_SOLENOID_ID = 11;
 	// Voltage proportion control variables
 	private static final double VOLTAGE_RAMP_RATE = 18.0; //in V/sec
 	
@@ -59,7 +62,9 @@ public class DriveTrain implements Module{
 	}
 	
 	private Map<MotorType, ICanTalon> motorMap;
-
+	private Solenoid gearShifter;
+	private Solenoid casterShifter;
+	
 	private final ICanTalonFactory canTalonFactory;
 
 	
@@ -86,6 +91,8 @@ public class DriveTrain implements Module{
 			}
 			motorMap.put(type, talon);
 		}
+		gearShifter = new Solenoid(SHIFT_SOLENOID_ID);
+		casterShifter = new Solenoid(CASTER_SOLENOID_ID);
 		setMode(DriveMode.P_VBUS);
 	}
 	
@@ -115,6 +122,14 @@ public class DriveTrain implements Module{
 			setVoltageRampRate(Integer.MAX_VALUE);
 			break;
 		}
+	}
+	
+	public void setShift(boolean shift){
+		gearShifter.set(shift);
+	}
+	
+	public void lowerCasters(boolean lowered){
+		casterShifter.set(lowered);
 	}
 	
 	private void setVoltageRampRate(double rate){
@@ -189,6 +204,10 @@ public class DriveTrain implements Module{
 			case POSITION:
 				break;
 		}
+	}
+
+	public void setCasting(boolean casted) {
+
 	}
 
 }

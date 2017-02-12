@@ -6,6 +6,7 @@ import java.util.Map;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystick;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
+import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 
 public abstract class DriverControl implements Module {
@@ -22,10 +23,11 @@ public abstract class DriverControl implements Module {
 	private Map<ControllerType, IJoystick> controllerMap;
 
 	private final DriveTrain driveTrain;
+	private final GearManipulator gearManipulator;
 	private IJoystickFactory joystickFactory;
 
 	public enum ControllerType {
-		LEFT_STICK(0), RIGHT_STICK(1), CONTROLLER(2);
+		LEFT_STICK(0), RIGHT_STICK(1), CONTROLLER(2), CONTROLLER_2(3);
 
 		final int controllerId;
 
@@ -34,9 +36,10 @@ public abstract class DriverControl implements Module {
 		}
 	}
 
-	public DriverControl(DriveTrain driveTrain, IJoystickFactory created) {
+	public DriverControl(DriveTrain driveTrain, GearManipulator gearManipulator, IJoystickFactory created) {
 		this.driveTrain = driveTrain;
 		this.joystickFactory = created;
+		this.gearManipulator = gearManipulator;
 		controllerMap = new HashMap<ControllerType, IJoystick>();
 	}
 
@@ -58,6 +61,24 @@ public abstract class DriverControl implements Module {
 			right = 0;
 		}
 		driveTrain.setPower(left, right);
+	}
+	
+	public void updateManipulator(){
+		
+	}
+	
+	public abstract void updateDriveTrain();
+	
+	public void update(){
+		updateManipulator();
+	}
+	
+	public void setShift(boolean shifted){
+		driveTrain.setShift(shifted);
+	}
+	
+	public void setCasters(boolean casted){
+		driveTrain.setCasting(casted);
 	}
 	
 	public IJoystick getController(ControllerType type){

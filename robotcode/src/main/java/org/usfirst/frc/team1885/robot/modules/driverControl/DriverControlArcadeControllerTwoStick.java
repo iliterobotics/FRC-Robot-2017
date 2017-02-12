@@ -4,41 +4,38 @@ import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
 import org.usfirst.frc.team1885.robot.common.interfaces.EJoystickAxis;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
+import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl.ControllerType;
 
 
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
-	private static final int REDUCER = 2;
+	private static final double TURN_REDUCER = 0.5;
+	private static final double HIGH_GEAR_TURN_REDUCER = 0.2;
 	private DriveTrain driveTrain;
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain) { 
-		this(driveTrain, new DefaultJoystickFactory());
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator) { 
+		this(driveTrain, gearManipulator, new DefaultJoystickFactory());
 	}
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, IJoystickFactory joystickFactory) {
-		super(driveTrain, joystickFactory);
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, IJoystickFactory joystickFactory) {
+		super(driveTrain, gearManipulator,joystickFactory);
 		this.driveTrain = driveTrain;
 	}
 
 	@Override
-	public void update() {
-		//double reducer = getReducer(getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kZ));
-		double reducer = 1;
+	public void updateDriveTrain() {
 		double throttle = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_LEFT_Y);
 		double turn = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_RIGHT_X);
 		
 		double leftInput, rightInput;
 		
-		if(getController(ControllerType.CONTROLLER).getRawButton(5)) turn /= REDUCER;
+		if(getController(ControllerType.CONTROLLER).getRawButton(5)) turn *= TURN_REDUCER;
 		
 		leftInput =  throttle - turn;
 		rightInput = throttle + turn;
 		
-		leftInput *= reducer;
-		rightInput *= reducer;
-
+		setCasters(getController(ControllerType.CONTROLLER).getRawAxis(5) >= 0.9);
 		setSpeeds(leftInput, rightInput);
-		
 	}
 	
 	public double getReducer(double value) {
