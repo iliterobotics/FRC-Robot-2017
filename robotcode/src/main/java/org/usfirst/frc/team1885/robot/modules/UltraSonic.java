@@ -2,8 +2,6 @@ package org.usfirst.frc.team1885.robot.modules;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
 public class UltraSonic implements Module{
@@ -13,17 +11,12 @@ public class UltraSonic implements Module{
 	private double distanceInch;
 	private double distanceMM;
 	
-	
-	public UltraSonic(){
-		  
-	}
-	
-	public double getRangeInches()
+	public double getInches()
 	{
 		return distanceInch;
 	}
 	
-	public double getRangeMM()
+	public double getMM()
 	{
 		return distanceMM;
 	}
