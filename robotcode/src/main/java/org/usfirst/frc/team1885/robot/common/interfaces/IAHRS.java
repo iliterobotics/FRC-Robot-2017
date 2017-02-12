@@ -16,4 +16,6 @@ public interface IAHRS extends PIDSource{
 
 	void resetDisplacement();
 
+	boolean isCalibrating();
+
 }

@@ -67,6 +67,11 @@ public class DefaultAHRSFactory implements IAHRSFactory{
 		public double pidGet() {
 			return ahrs.pidGet();
 		}
+
+		@Override
+		public boolean isCalibrating() {
+			return ahrs.isCalibrating();
+		}
 		
 	}
 	
