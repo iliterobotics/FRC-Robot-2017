@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
  */
 public class DriveTrain implements Module{
 
-	
+	public static final double WHEEL_DIAMETER = 8.5;
 	// Voltage proportion control variables
 	private static final double VOLTAGE_RAMP_RATE = 18.0; //in V/sec
 	
@@ -45,7 +45,7 @@ public class DriveTrain implements Module{
 		P_VBUS, POSITION, TICK_VEL;
 	}
 	private enum MotorType{
-		LEFT_MOTOR(-1, 1, 3, 5), RIGHT_MOTOR(1, 2, 4, 6);
+		LEFT_MOTOR(-1, 3, 1, 5), RIGHT_MOTOR(1, 2, 4, 6);
 		
 		final int talonId;
 		final int followerIds[];
@@ -86,6 +86,7 @@ public class DriveTrain implements Module{
 			}
 			motorMap.put(type, talon);
 		}
+		setMode(DriveMode.P_VBUS);
 	}
 	
 	private void setMode(DriveMode mode){
@@ -121,6 +122,14 @@ public class DriveTrain implements Module{
 		motorMap.get(MotorType.RIGHT_MOTOR).setVoltageRampRate(rate);
 	}
 	
+	public int getLeftPosition(){
+		return motorMap.get(MotorType.LEFT_MOTOR).getEncPosition();
+	}
+
+	public int getRightPosition(){
+		return motorMap.get(MotorType.RIGHT_MOTOR).getEncPosition();
+	}
+
 	public int getLeftEncoderVelocity(){
 		return motorMap.get(MotorType.LEFT_MOTOR).getEncVelocity();
 	}
@@ -145,6 +154,7 @@ public class DriveTrain implements Module{
 	
 	private void setMotor(MotorType type, double value){
 		motorMap.get(type).set(value * type.modifier);
+		System.out.printf("Type:%s OutputV:%f\n", type.toString(), value * type.modifier);
 	}
 	
 	public void setMotorMode(ETalonControlMode talonMode){

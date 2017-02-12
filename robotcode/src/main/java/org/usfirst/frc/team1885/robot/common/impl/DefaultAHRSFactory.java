@@ -54,18 +54,12 @@ public class DefaultAHRSFactory implements IAHRSFactory{
 		}
 
 		@Override
-		public void setPIDSourceType(PIDSourceType pidSource) {
-			ahrs.setPIDSourceType(pidSource);
+		public boolean isCalibrating() {
+			return ahrs.isCalibrating();
 		}
-
-		@Override
-		public PIDSourceType getPIDSourceType() {
-			return ahrs.getPIDSourceType();
-		}
-
-		@Override
-		public double pidGet() {
-			return ahrs.pidGet();
+		
+		public double getAngle(){
+			return ahrs.getAngle();
 		}
 		
 	}
