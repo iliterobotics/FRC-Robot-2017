@@ -50,15 +50,14 @@ public class NavX implements PIDSource{
 	public void resetDisplacement() {
 		iahrs.resetDisplacement();
 	}
-
-	@Override
-	public void setPIDSourceType(PIDSourceType pidSource) {
-		iahrs.setPIDSourceType(pidSource);
+	
+	public boolean isCalibrating(){
+		return iahrs.isCalibrating();
 	}
-
-	@Override
-	public PIDSourceType getPIDSourceType() {
-		return iahrs.getPIDSourceType();
+	
+	public void reset()
+	{
+		iahrs.reset();
 	}
 
 	@Override

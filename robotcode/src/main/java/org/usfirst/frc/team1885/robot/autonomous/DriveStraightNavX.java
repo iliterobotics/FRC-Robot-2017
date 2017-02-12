@@ -9,6 +9,9 @@ public class DriveStraightNavX extends AutonomousCommand{
 	
 	private static final double ALLOWABLE_ERROR = 0.001;
 	private static final double INITIAL_POWER = 0.3;
+=======
+	private static final double INITIAL_POWER = 0.4;
+>>>>>>> Stashed changes
 	private static final double PROPORTION = 0.02;
 	
 	private final DriveTrain driveTrain;
@@ -44,6 +47,7 @@ public class DriveStraightNavX extends AutonomousCommand{
 		
 		return getAverageDistanceTravel() >= distanceToTravel;
 	}
+<<<<<<< Updated upstream
 	
 	public double getDisplacement(){
 		return Math.sqrt(Math.pow(navx.getDisplacementX(), 2) +
