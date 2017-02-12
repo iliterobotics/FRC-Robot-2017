@@ -5,13 +5,10 @@ import org.usfirst.frc.team1885.robot.common.interfaces.ESerialPort;
 import org.usfirst.frc.team1885.robot.common.interfaces.IAHRS;
 import org.usfirst.frc.team1885.robot.common.interfaces.IAHRSFactory;
 
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
-
 public class NavX{
 	
 	private static final ESerialPort DEFAULT_PORT = ESerialPort.kMXP;
-	private final double initialYaw;
+	private double initialYaw;
 	private final IAHRS iahrs;
 	
 	public NavX(){
@@ -45,6 +42,7 @@ public class NavX{
 
 	public void zeroYaw() {
 		iahrs.zeroYaw();
+		initialYaw = iahrs.getYaw();
 	}
 
 	public void resetDisplacement() {

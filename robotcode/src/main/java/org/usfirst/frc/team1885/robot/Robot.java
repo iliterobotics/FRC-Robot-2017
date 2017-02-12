@@ -7,14 +7,15 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraightNavX;
 import org.usfirst.frc.team1885.robot.autonomous.TurnDegree;
+import org.usfirst.frc.team1885.robot.autonomous.WaitForNavxCalibration;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
-import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlTank;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
@@ -39,7 +40,7 @@ public class Robot extends SampleRobot{
 
 		navx = new NavX();
 		driveTrain = new DriveTrain();	
-		driverControl = new DriverControlTank(driveTrain);
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
 	}
 
 	public void robotInit(){
@@ -48,11 +49,14 @@ public class Robot extends SampleRobot{
 	
 	public void autonomous()
 	{
-		setRunningModules(driveTrain);
 		autonomousCommands.clear();
-//		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
-		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90));
-		autonomousCommands.add(new TurnDegree(driveTrain, navx, 90));
+		autonomousCommands.add(new WaitForNavxCalibration(navx));
+		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx, 240));
+		autonomousCommands.add(new TurnDegree(driveTrain, navx, 180));
+		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx, 240));
+		
+		setRunningModules(driveTrain);
+
 		AutonomousCommand currentCommand = autonomousCommands.peek();
 		if(currentCommand != null) currentCommand.init();
 		while(isAutonomous() && isEnabled()){
@@ -65,6 +69,7 @@ public class Robot extends SampleRobot{
 							DriverStation.reportError("Initialized Command", false);
 						} else {
 							DriverStation.reportError("Next command is null", false);
+							updateModules();
 							break;
 						}
 					}
@@ -113,6 +118,6 @@ public class Robot extends SampleRobot{
 	}
 	
 	private void pause(){
-		Timer.delay(0.005);
+		Timer.delay(0.001 * UPDATE_PERIOD);
 	}
 }

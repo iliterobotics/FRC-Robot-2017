@@ -7,8 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class DriveStraightNavX extends AutonomousCommand{
 	
-	private static final double ALLOWABLE_ERROR = 0.001;
-	private static final double INITIAL_POWER = 0.3;
+	private static final double INITIAL_POWER = 0.4;
 	private static final double PROPORTION = 0.02;
 	
 	private final DriveTrain driveTrain;
@@ -20,34 +19,48 @@ public class DriveStraightNavX extends AutonomousCommand{
 	
 	private double initialYaw;
 	
-	public DriveStraightNavX(DriveTrain dt, NavX navx, int tickDistance){
+	public DriveStraightNavX(DriveTrain dt, NavX navx, double footDistance){
 		this.driveTrain = dt;
 		this.navx = navx;
-		this.distanceToTravel = tickDistance;
+		this.distanceToTravel = feetToTicks(footDistance);
+	}
+	
+	public int feetToTicks(double feet){
+		double rotations = feet / (Math.PI * DriveTrain.WHEEL_DIAMETER);
+		return (int)(rotations * 1024);
 	}
 	
 	public void init(){
 		initialYaw = navx.getYaw();
 		initialLeftPosition = driveTrain.getLeftPosition();
 		initialRightPosition = driveTrain.getRightPosition();
+		System.out.println("Initial Yaw:" + navx.getYaw());
 	}
 	
 	public boolean update(){
-		if(Math.abs(initialYaw) < ALLOWABLE_ERROR){
-			initialYaw = navx.getYaw();
-			return false;
+
+		if( getAverageDistanceTravel() >= distanceToTravel){
+			driveTrain.setPower(0, 0);
+			DriverStation.reportError("I AM STOPPING", false);
+			return true;
 		}
+
 		double yawError = initialYaw - navx.getYaw();
 		driveTrain.setPower(-(INITIAL_POWER + yawError * PROPORTION), -(INITIAL_POWER - yawError * PROPORTION));
 		
-		DriverStation.reportError(String.format("Yaw Diff:%f, X:%f, Y:%f, Z:%f", yawError, navx.getDisplacementX(), navx.getDisplacementY(), navx.getDisplacementZ()), false);
+		System.out.printf("YawDiff:%f\tDistError:%d\n", yawError, getAverageDistanceTravel());
 		
-		return getAverageDistanceTravel() >= distanceToTravel;
+		return false;
+	}
+	
+	public double getDisplacement(){
+		return Math.sqrt(Math.pow(navx.getDisplacementX(), 2) +
+						 Math.pow(navx.getDisplacementY(), 2));
 	}
 	
 	private int getAverageDistanceTravel(){
-		return ((driveTrain.getLeftPosition() - initialLeftPosition) + 
-			   (driveTrain.getRightPosition() - initialRightPosition))/2;
+		return Math.abs(driveTrain.getLeftPosition() - initialLeftPosition) + 
+			   Math.abs(driveTrain.getRightPosition() - initialRightPosition)/2;
 	}
 
 }

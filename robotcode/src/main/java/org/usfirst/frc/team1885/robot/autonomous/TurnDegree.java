@@ -12,8 +12,8 @@ public class TurnDegree extends AutonomousCommand {
 	
 	private static final double MAX_ERROR = 1;
 	private static final double KP = 0.0065;
-	private static final double KD = 0.0;
-	private static final double KI = 0.000005;
+	private static final double KD = 0.01;
+	private static final double KI = 0.000009;
 	
 	private double degrees, targetYaw;
 	private double error, lastError, totalError;

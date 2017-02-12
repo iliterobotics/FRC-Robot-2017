@@ -1,8 +1,6 @@
 package org.usfirst.frc.team1885.robot.common.interfaces;
 
-import edu.wpi.first.wpilibj.PIDSource;
-
-public interface IAHRS extends PIDSource{
+public interface IAHRS{
 
 	double getYaw();
 
@@ -15,7 +13,7 @@ public interface IAHRS extends PIDSource{
 	void zeroYaw();
 
 	void resetDisplacement();
-
+	
 	boolean isCalibrating();
 
 }
