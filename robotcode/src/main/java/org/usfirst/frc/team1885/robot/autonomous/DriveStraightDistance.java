@@ -1,15 +1,15 @@
 package org.usfirst.frc.team1885.robot.autonomous;
 
+import static org.usfirst.frc.team1885.robot.autonomous.DriveStraight.INITIAL_POWER;
+import static org.usfirst.frc.team1885.robot.autonomous.DriveStraight.PROPORTION;
+
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
-public class DriveStraightNavX extends AutonomousCommand{
-	
-	private static final double INITIAL_POWER = 0.4;
-	private static final double PROPORTION = 0.02;
-	
+public class DriveStraightDistance extends Command{
+		
 	private final DriveTrain driveTrain;
 	private final NavX navx;
 	private final int distanceToTravel;
@@ -19,7 +19,7 @@ public class DriveStraightNavX extends AutonomousCommand{
 	
 	private double initialYaw;
 	
-	public DriveStraightNavX(DriveTrain dt, NavX navx, double footDistance){
+	public DriveStraightDistance(DriveTrain dt, NavX navx, double footDistance){
 		this.driveTrain = dt;
 		this.navx = navx;
 		this.distanceToTravel = feetToTicks(footDistance);
@@ -48,14 +48,7 @@ public class DriveStraightNavX extends AutonomousCommand{
 		double yawError = initialYaw - navx.getYaw();
 		driveTrain.setPower(-(INITIAL_POWER + yawError * PROPORTION), -(INITIAL_POWER - yawError * PROPORTION));
 		
-		System.out.printf("YawDiff:%f\tDistError:%d\n", yawError, getAverageDistanceTravel());
-		
 		return false;
-	}
-	
-	public double getDisplacement(){
-		return Math.sqrt(Math.pow(navx.getDisplacementX(), 2) +
-						 Math.pow(navx.getDisplacementY(), 2));
 	}
 	
 	private int getAverageDistanceTravel(){

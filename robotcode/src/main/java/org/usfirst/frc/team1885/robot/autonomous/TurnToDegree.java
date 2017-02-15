@@ -3,7 +3,7 @@ package org.usfirst.frc.team1885.robot.autonomous;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
-public class TurnToDegree extends AutonomousCommand {
+public class TurnToDegree extends Command {
 	
 	private DriveTrain drivetrain;
 	private NavX navx;
