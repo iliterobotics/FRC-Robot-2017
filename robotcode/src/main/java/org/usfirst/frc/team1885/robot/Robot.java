@@ -7,11 +7,12 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
-import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
+import org.usfirst.frc.team1885.robot.autonomous.TestUltrasonic;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
+import org.usfirst.frc.team1885.robot.modules.UltraSonic;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
@@ -27,6 +28,7 @@ public class Robot extends SampleRobot{
 	private DriverControl driverControl;
 	private NavX navx;
 	private GearManipulator gearManipulator;
+	private UltraSonic ultraSonic;
 	
 	private Queue<AutonomousCommand> autonomousCommands;
 	private List<Module> runningModules;
@@ -36,8 +38,9 @@ public class Robot extends SampleRobot{
 		autonomousCommands = new LinkedList<>();
 
 		navx = new NavX();
-		driveTrain = new DriveTrain();	
+		driveTrain = new DriveTrain();
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
+		ultraSonic = new UltraSonic();
 	}
 
 	public void robotInit(){
@@ -51,9 +54,9 @@ public class Robot extends SampleRobot{
 	public void autonomous()
 	{
 		autonomousCommands.clear();
-		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 90));
+		autonomousCommands.add(new TestUltrasonic(ultraSonic));
 		
-		setRunningModules(driveTrain);
+		setRunningModules(driveTrain, ultraSonic);
 
 		AutonomousCommand currentCommand = autonomousCommands.peek();
 		if(currentCommand != null) currentCommand.init();
