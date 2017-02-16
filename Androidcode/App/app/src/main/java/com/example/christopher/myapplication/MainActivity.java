@@ -145,15 +145,15 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         // TODO Auto-generated method stub
         mRgba = inputFrame.rgba();
-
         x++;
         imageData.setX(x);
         Log.d("x", x + "");
         aServer.submitImage(imageData);
 
+        Imgproc.GaussianBlur(mRgba, mRgba, new Size(5,5), 1);
         Imgproc.cvtColor(mRgba, mRgba, Imgproc.COLOR_BGR2HSV_FULL);
-        Scalar lower = new Scalar(0,0,0); // Values Still need to be Tested
-        Scalar upper = new Scalar(200,255, 200); //Values Still need to be tested
+        Scalar lower = new Scalar(40,74,160); // Values Still need to be Tested
+        Scalar upper = new Scalar(90,255,255); //Values Still need to be tested
         //
         Mat matThresh = new Mat();
         Core.inRange(mRgba, lower, upper, matThresh);
