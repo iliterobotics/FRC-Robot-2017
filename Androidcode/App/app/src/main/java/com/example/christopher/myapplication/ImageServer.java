@@ -1,8 +1,11 @@
 package com.example.christopher.myapplication;
 
+import android.media.Image;
 import android.util.Log;
 
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.usfirst.frc.team1885.visioncode.utils.ImageData;
 import org.usfirst.frc.team1885.visioncode.utils.SimpleImage;
 
 import java.io.IOException;
@@ -29,8 +32,7 @@ public class ImageServer {
     ImageServer() {
 
     }
-
-    public void  connect() {
+        public void  connect() {
         final ExecutorService service = Executors.newCachedThreadPool(new ThreadFactory() {
             @Override
             public Thread newThread(Runnable r) {
@@ -38,41 +40,85 @@ public class ImageServer {
             }
         });
         service.submit(new Runnable() {
-                           @Override
-                           public void run() {
-                               ServerSocket server = null;
-                               try {
-                                   server  = new ServerSocket(1180);
-                               } catch(IOException e){
+            @Override
+            public void run() {
+                ServerSocket server = null;
+                try {
+                    server  = new ServerSocket(1180);
 
-                                   e.printStackTrace();
-                               }
+                } catch(IOException e){
 
-                               while(server != null) {
-                                   try {
-                                       Socket accept = server.accept();
-                                       ClientThread clientThread = new ClientThread(accept);
-                                       allClients.add(clientThread);
-                                       service.submit(clientThread);
-                                   } catch(Exception e) {
-                                       e.printStackTrace();
-                                   }
-                               }
-                           }
-                       });
+                    e.printStackTrace();
+                }
+
+                while(server != null) {
+                    try {
+                        Socket accept = server.accept();
+                        ClientThreadForImageData clientThread = new ClientThreadForImageData(accept);
+                        allClients.add(clientThread);
+                        service.submit(clientThread);
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
 
 
 
     }
 
-    public void submitImage(Mat aMat) {
-        for(ClientThread aThread : allClients){
-            aThread.submitImage(aMat);
+    public void submitImage(ImageData imageData) {
+        for(ClientThreadForImageData aThread : allClients){
+            aThread.submitImage(imageData);
         }
     }
 
+    private final List<ClientThreadForImageData>allClients = new ArrayList<>();
 
-    private final List<ClientThread>allClients = new ArrayList<>();
+//    public void  connect() {
+//        final ExecutorService service = Executors.newCachedThreadPool(new ThreadFactory() {
+//            @Override
+//            public Thread newThread(Runnable r) {
+//                return new Thread(r, "Name");
+//            }
+//        });
+//        service.submit(new Runnable() {
+//            @Override
+//            public void run() {
+//                ServerSocket server = null;
+//                try {
+//                    server  = new ServerSocket(1180);
+//                } catch(IOException e){
+//
+//                    e.printStackTrace();
+//                }
+//
+//                while(server != null) {
+//                    try {
+//                        Socket accept = server.accept();
+//                        ClientThread clientThread = new ClientThread(accept);
+//                        allClients.add(clientThread);
+//                        service.submit(clientThread);
+//                    } catch(Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
+//
+//
+//
+//    }
+//
+//    public void submitImage(Mat aMat) {
+//        for(ClientThread aThread : allClients){
+//            aThread.submitImage(aMat);
+//        }
+//    }
+//
+//
+//    private final List<ClientThread>allClients = new ArrayList<>();
 
 
     private class ClientThread implements Runnable{
@@ -120,6 +166,54 @@ public class ImageServer {
                 img.setRawImage(raw);
 
                 objectOutputStream.writeObject(img);
+
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+
+
+    }
+
+    private class ClientThreadForImageData implements Runnable
+    {
+        private Socket clientSocket;
+        private LinkedBlockingQueue<ImageData>imageDatas = new LinkedBlockingQueue<>();
+        private ObjectOutputStream objectOutputStream;
+
+        ClientThreadForImageData(Socket clientSocket) throws IOException{
+            this.clientSocket = clientSocket;
+
+            OutputStream output = clientSocket.getOutputStream();
+            objectOutputStream = new ObjectOutputStream(output);
+
+        }
+
+        @Override
+        public void run() {
+
+            while(true) {
+                List<ImageData> imageDataToSend = new ArrayList<>();
+                imageDatas.drainTo(imageDataToSend);
+
+                if (!imageDataToSend.isEmpty()) {
+                    for (ImageData d : imageDataToSend) {
+                        send(d);
+                    }
+                }
+            }
+        }
+
+        public void submitImage(ImageData d) {
+            imageDatas.add(d);
+        }
+
+        private void send(ImageData imageData)
+        {
+            try {
+                objectOutputStream.writeObject(new ImageData(imageData));
 
             }catch (Exception e)
             {
