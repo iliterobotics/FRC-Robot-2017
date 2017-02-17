@@ -5,19 +5,25 @@ import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
+import org.usfirst.frc.team1885.robot.modules.NavX;
 
 
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
+	
+	private static final int TURN_REDUCER_BUTTON = 5;
+	private static final int CASTER_BUTTON = 3;
+	
 	private static final double TURN_REDUCER = 0.5;
 	private static final double HIGH_GEAR_TURN_REDUCER = 0.2;
+
 	private DriveTrain driveTrain;
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber) { 
-		this(driveTrain, gearManipulator, climber, new DefaultJoystickFactory());
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) { 
+		this(driveTrain, gearManipulator, climber, navx, new DefaultJoystickFactory());
 	}
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, IJoystickFactory joystickFactory) {
-		super(driveTrain, gearManipulator, climber, joystickFactory);
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, IJoystickFactory joystickFactory) {
+		super(driveTrain, gearManipulator, climber, navx, joystickFactory);
 		this.driveTrain = driveTrain;
 	}
 
@@ -28,12 +34,12 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 		
 		double leftInput, rightInput;
 		
-		if(getController(ControllerType.CONTROLLER).getRawButton(5)) turn *= TURN_REDUCER;
+		if(getController(ControllerType.CONTROLLER).getRawButton(TURN_REDUCER_BUTTON)) turn *= TURN_REDUCER;
 		
 		leftInput =  throttle - turn;
 		rightInput = throttle + turn;
 		
-		setCasters(getController(ControllerType.CONTROLLER).getRawAxis(5) >= 0.9);
+		setCasters(getController(ControllerType.CONTROLLER).getRawAxis(CASTER_BUTTON) >= 0.9);
 		setSpeeds(leftInput, rightInput);
 	}
 	
