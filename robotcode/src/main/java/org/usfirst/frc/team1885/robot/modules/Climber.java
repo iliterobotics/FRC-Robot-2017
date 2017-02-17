@@ -9,17 +9,23 @@ public class Climber implements Module{
 
 	private static final double MAX_CURRENT_V_RATIO = 2;
 	private static final double CLIMBER_POWER = 1.0;
-	private static final int MAX_STALL_TIME = 200;
-	private static final int BUMP_TIME = 100;
 	private static final int[] TALON_IDS = {7, 8};
 	
-	private CANTalon masterTalon;
+	public enum ClimberState{
+		INIT, PULSING, READY_TO_CLIMB, CLIMBING, STALLED, BUMPING;
+	}
 	
-	private boolean isRunning;
-	private boolean hasStalled;
-	private boolean isBumping;
+	private ClimberState currentState;
+	
+	private CANTalon masterTalon;
+	private double currentPower;
+	
+	private static final int MAX_STALL_TIME = 200;
+	private static final int MAX_BUMP_TIME = 100;
+	private static final int MAX_PULSE_TIME = 200;
 	
 	private int stallTime;
+	private int pulseTime;
 	private int bumpTime;
 	
 	public Climber(){		
@@ -33,52 +39,64 @@ public class Climber implements Module{
 			talon.set(TALON_IDS[0]);
 		}
 		masterTalon.setControlMode(TalonControlMode.PercentVbus.value);
+		currentState = ClimberState.INIT;
 	}
 	
 	public void run(){
-		if(!hasStalled){
-			isRunning = true;
-		}else{
-			bump();
+		switch(currentState){
+		case INIT:
+			currentState = ClimberState.PULSING;
+			break;
+		case READY_TO_CLIMB:
+			currentState = ClimberState.CLIMBING;
+			break;
+		case STALLED:
+			currentState = ClimberState.BUMPING;
+			break;
+		default:
+			break;
 		}
 	}
 	
-	public void bump(){
-		if(isRunning) return;
-		isBumping = true;
-		bumpTime = 0;
-	}
-
 	public void update() {
 		
-		if(isRunning){
-			
+		switch(currentState){
+		case INIT:
+		case READY_TO_CLIMB:
+		case STALLED:
+			currentPower = 0;
+		case PULSING:
+			currentPower = CLIMBER_POWER;
+			pulseTime += Robot.UPDATE_PERIOD;
+			if(pulseTime >= MAX_PULSE_TIME){
+				currentState = ClimberState.READY_TO_CLIMB;
+			}
+		case CLIMBING:
+			currentPower = CLIMBER_POWER;
 			double current = masterTalon.getOutputCurrent();
-			double voltage = masterTalon.getBusVoltage();
-		
-			if(current / voltage >= MAX_CURRENT_V_RATIO){
+			double voltage = masterTalon.getOutputVoltage();
+			double ratio = current/voltage;
+			if(ratio > MAX_CURRENT_V_RATIO){
 				stallTime += Robot.UPDATE_PERIOD;
 				if(stallTime >= MAX_STALL_TIME){
-					isRunning = false;
-					hasStalled = true;
+					currentState = ClimberState.STALLED;
 				}
-			}else{
+			} else {
 				stallTime = 0;
 			}
-		
-		} else if(isBumping) {
+		case BUMPING:
+			currentPower = CLIMBER_POWER;
 			bumpTime += Robot.UPDATE_PERIOD;
-			if(bumpTime >= BUMP_TIME){
-				isBumping = false;
-			}
+			if(bumpTime >= MAX_BUMP_TIME){
+				currentState = ClimberState.STALLED;
+				bumpTime = 0;
+			}			
 		}
-		
-		if(isRunning || isBumping){
-			masterTalon.set(CLIMBER_POWER);
-		}
-		else{
-			masterTalon.set(0);
-		}
+		masterTalon.set(currentPower);
+	}
+	
+	public ClimberState getClimberState(){
+		return currentState;
 	}
 
 }

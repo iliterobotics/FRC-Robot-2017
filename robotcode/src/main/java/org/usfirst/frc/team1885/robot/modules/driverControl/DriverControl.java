@@ -23,7 +23,7 @@ public abstract class DriverControl implements Module {
 	
 
 	private Map<ControllerType, IJoystick> controllerMap;
-
+	
 	private final DriveTrain driveTrain;
 	private final GearManipulator gearManipulator;
 	private final Climber climber;
