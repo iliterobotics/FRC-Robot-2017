@@ -65,7 +65,7 @@ public class NavX{
 		return angle;
 	}
 	
-	private double getAngleSum(double angle1, double angle2) {
+	public double getAngleSum(double angle1, double angle2) {
 		double sum = angle1 + angle2;
 		if(sum > 180){
 			sum = -360 + sum;

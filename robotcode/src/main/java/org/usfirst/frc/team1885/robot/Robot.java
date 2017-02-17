@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
+import org.usfirst.frc.team1885.robot.autonomous.Command;
 import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
@@ -30,7 +30,7 @@ public class Robot extends SampleRobot{
 	private GearManipulator gearManipulator;
 	private Climber climber;
 	
-	private Queue<AutonomousCommand> autonomousCommands;
+	private Queue<Command> autonomousCommands;
 	private List<Module> runningModules;
 	
 	public Robot(){
@@ -59,7 +59,7 @@ public class Robot extends SampleRobot{
 		
 		setRunningModules(driveTrain);
 
-		AutonomousCommand currentCommand = autonomousCommands.peek();
+		Command currentCommand = autonomousCommands.peek();
 		if(currentCommand != null) currentCommand.init();
 		while(isAutonomous() && isEnabled()){
 				currentCommand = autonomousCommands.peek();

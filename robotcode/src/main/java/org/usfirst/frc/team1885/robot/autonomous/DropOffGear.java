@@ -2,7 +2,7 @@ package org.usfirst.frc.team1885.robot.autonomous;
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 
-public class DropOffGear extends AutonomousCommand{
+public class DropOffGear extends Command{
 
 	private final GearManipulator gearManipulator;
 
