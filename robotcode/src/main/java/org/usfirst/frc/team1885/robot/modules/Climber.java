@@ -8,7 +8,7 @@ import com.ctre.CANTalon.TalonControlMode;
 public class Climber implements Module{
 
 	private static final double MAX_CURRENT_V_RATIO = 2;
-	private static final double CLIMBER_POWER = 0.8;
+	private static final double CLIMBER_POWER = 1.0;
 	private static final int MAX_STALL_TIME = 200;
 	private static final int BUMP_TIME = 100;
 	private static final int[] TALON_IDS = {7, 8};
