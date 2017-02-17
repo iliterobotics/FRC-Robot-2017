@@ -15,6 +15,7 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -42,10 +43,14 @@ public class Robot extends SampleRobot{
 
 	public void robotInit(){
 		navx.resetDisplacement();
+    
+		CameraServer server = CameraServer.getInstance();
+		server.startAutomaticCapture(0);
 		while(navx.isCalibrating()){
 			pause();
 		}
 		navx.setInitialAngle(navx.getAngle());
+
 	}
 	
 	public void autonomous()
