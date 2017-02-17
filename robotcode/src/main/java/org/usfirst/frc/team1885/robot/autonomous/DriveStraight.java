@@ -20,15 +20,18 @@ public class DriveStraight extends Command{
 	
 	public void init(){
 		initialYaw = navx.getYaw();
-		System.out.println("Initial Yaw:" + navx.getYaw());
 	}
 	
 	public boolean update(){
 
-		double yawError = initialYaw - navx.getYaw();
+		double yawError = navx.getAngleDistance(initialYaw, navx.getYaw());
 		driveTrain.setPower(-(INITIAL_POWER + yawError * PROPORTION), -(INITIAL_POWER - yawError * PROPORTION));
 		
 		return false;
+	}
+	
+	public void adjustBearing(double angleDiff){
+		initialYaw = navx.getAngleSum(initialYaw, angleDiff);
 	}
 	
 }
