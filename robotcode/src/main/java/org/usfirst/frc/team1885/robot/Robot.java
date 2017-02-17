@@ -16,6 +16,7 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -36,12 +37,16 @@ public class Robot extends SampleRobot{
 	public Robot(){
 		runningModules = new ArrayList<>();
 		autonomousCommands = new LinkedList<>();
-
+		
+		CameraServer server = CameraServer.getInstance();
+		server.startAutomaticCapture(0);
+		server.startAutomaticCapture(1);
+		
 		navx = new NavX();
-		driveTrain = new DriveTrain();	
+		driveTrain = new DriveTrain();
 		gearManipulator = new GearManipulator();
 		climber = new Climber();
-		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber);
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
 	}
 
 	public void robotInit(){
@@ -89,7 +94,7 @@ public class Robot extends SampleRobot{
 	}
 	
 	public void test(){
-		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber);
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
 		setRunningModules(driverControl, driveTrain);
 		while(isTest() && isEnabled()){
 			updateModules();

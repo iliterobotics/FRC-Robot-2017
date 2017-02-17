@@ -6,15 +6,16 @@ import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
+import org.usfirst.frc.team1885.robot.modules.NavX;
 
 public class DriverControlArcadeOneStick extends DriverControl {
 	
-	public DriverControlArcadeOneStick(DriveTrain driveTrain, Climber climber, GearManipulator gearManipulator) {
-		this(driveTrain, gearManipulator, climber, new DefaultJoystickFactory());
+	public DriverControlArcadeOneStick(DriveTrain driveTrain, Climber climber, NavX navx, GearManipulator gearManipulator) {
+		this(driveTrain, gearManipulator, climber, navx, new DefaultJoystickFactory());
 	}
 	
-	public DriverControlArcadeOneStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, IJoystickFactory joystickFact) {
-		super(driveTrain, gearManipulator, climber, joystickFact);
+	public DriverControlArcadeOneStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, IJoystickFactory joystickFact) {
+		super(driveTrain, gearManipulator, climber, navx, joystickFact);
 	}
 
 	public void updateDriveTrain() {

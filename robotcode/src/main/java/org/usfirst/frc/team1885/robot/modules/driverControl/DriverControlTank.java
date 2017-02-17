@@ -8,6 +8,7 @@ import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
+import org.usfirst.frc.team1885.robot.modules.NavX;
 
 public class DriverControlTank extends DriverControl{
 	
@@ -15,12 +16,12 @@ public class DriverControlTank extends DriverControl{
 	private double reducer;
 	private IDriverStation driveStation;
 	
-	public DriverControlTank(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber) {
-		this(driveTrain, gearManipulator, climber, new DefaultJoystickFactory(), new DefaultDriverStation());
+	public DriverControlTank(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) {
+		this(driveTrain, gearManipulator, climber, navx, new DefaultJoystickFactory(), new DefaultDriverStation());
 	}
 
-	public DriverControlTank(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, IJoystickFactory factory, IDriverStation driveStation) {
-		super(driveTrain, gearManipulator, climber, factory);
+	public DriverControlTank(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, IJoystickFactory factory, IDriverStation driveStation) {
+		super(driveTrain, gearManipulator, climber, navx, factory);
 		this.driveStation = driveStation;
 	}
 	

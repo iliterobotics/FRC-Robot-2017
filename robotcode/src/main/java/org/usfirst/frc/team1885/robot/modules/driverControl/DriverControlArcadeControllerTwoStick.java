@@ -12,6 +12,7 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	
 	private static final int TURN_REDUCER_BUTTON = 5;
 	private static final int CASTER_BUTTON = 3;
+	private static final int WARP_SPEED_FORWARD = 0;
 	
 	private static final double TURN_REDUCER = 0.5;
 	private static final double HIGH_GEAR_TURN_REDUCER = 0.2;
@@ -41,6 +42,13 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 		
 		setCasters(getController(ControllerType.CONTROLLER).getRawAxis(CASTER_BUTTON) >= 0.9);
 		setSpeeds(leftInput, rightInput);
+		
+		if(getController(ControllerType.CONTROLLER).getPOV() == WARP_SPEED_FORWARD && !isWarpSpeed()){
+			initiateWarpSpeed();
+		}
+		else if( isWarpSpeed() && getController(ControllerType.CONTROLLER).getPOV() != WARP_SPEED_FORWARD){
+			disableWarpSpeed();
+		}
 	}
 	
 	public double getReducer(double value) {
