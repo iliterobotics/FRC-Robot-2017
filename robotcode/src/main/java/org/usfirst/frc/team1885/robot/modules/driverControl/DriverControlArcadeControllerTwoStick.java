@@ -1,11 +1,10 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
 import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
-import org.usfirst.frc.team1885.robot.common.interfaces.EJoystickAxis;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
+import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
-import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl.ControllerType;
 
 
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
@@ -13,12 +12,12 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	private static final double HIGH_GEAR_TURN_REDUCER = 0.2;
 	private DriveTrain driveTrain;
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator) { 
-		this(driveTrain, gearManipulator, new DefaultJoystickFactory());
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber) { 
+		this(driveTrain, gearManipulator, climber, new DefaultJoystickFactory());
 	}
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, IJoystickFactory joystickFactory) {
-		super(driveTrain, gearManipulator,joystickFactory);
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, IJoystickFactory joystickFactory) {
+		super(driveTrain, gearManipulator, climber, joystickFactory);
 		this.driveTrain = driveTrain;
 	}
 

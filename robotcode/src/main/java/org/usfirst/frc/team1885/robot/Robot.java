@@ -8,6 +8,7 @@ import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
 import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
+import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
@@ -27,6 +28,7 @@ public class Robot extends SampleRobot{
 	private DriverControl driverControl;
 	private NavX navx;
 	private GearManipulator gearManipulator;
+	private Climber climber;
 	
 	private Queue<AutonomousCommand> autonomousCommands;
 	private List<Module> runningModules;
@@ -37,7 +39,9 @@ public class Robot extends SampleRobot{
 
 		navx = new NavX();
 		driveTrain = new DriveTrain();	
-		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
+		gearManipulator = new GearManipulator();
+		climber = new Climber();
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber);
 	}
 
 	public void robotInit(){
@@ -85,7 +89,7 @@ public class Robot extends SampleRobot{
 	}
 	
 	public void test(){
-		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber);
 		setRunningModules(driverControl, driveTrain);
 		while(isTest() && isEnabled()){
 			updateModules();

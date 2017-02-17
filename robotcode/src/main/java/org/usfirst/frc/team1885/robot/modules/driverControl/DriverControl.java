@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystick;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
+import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
@@ -18,13 +19,17 @@ public abstract class DriverControl implements Module {
 	public static final int GAMEPAD_RIGHT_TRIGGER = 3;
 	public static final int GAMEPAD_RIGHT_X = 4;
 	public static final int GAMEPAD_RIGHT_Y = 5;
+	public static final int CLIMBER_BUTTON = 3;
 	
 
 	private Map<ControllerType, IJoystick> controllerMap;
 
 	private final DriveTrain driveTrain;
 	private final GearManipulator gearManipulator;
+	private final Climber climber;
 	private IJoystickFactory joystickFactory;
+	
+	private boolean wasClimberPushed;
 
 	public enum ControllerType {
 		LEFT_STICK(0), RIGHT_STICK(1), CONTROLLER(2), CONTROLLER_2(3);
@@ -36,10 +41,11 @@ public abstract class DriverControl implements Module {
 		}
 	}
 
-	public DriverControl(DriveTrain driveTrain, GearManipulator gearManipulator, IJoystickFactory created) {
+	public DriverControl(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, IJoystickFactory created) {
 		this.driveTrain = driveTrain;
 		this.joystickFactory = created;
 		this.gearManipulator = gearManipulator;
+		this.climber = climber;
 		controllerMap = new HashMap<ControllerType, IJoystick>();
 	}
 
@@ -65,7 +71,6 @@ public abstract class DriverControl implements Module {
 	
 	public void updateManipulator(){
 		IJoystick manipulatorController = getController(ControllerType.CONTROLLER_2);
-		double intakeSpeed = 0;
 		if(manipulatorController.getRawAxis(1) > 0.5){
 			gearManipulator.setIntakeSpeed(-GearManipulator.DEFAULT_INTAKE_SPEED);
 		}
@@ -73,6 +78,12 @@ public abstract class DriverControl implements Module {
 			gearManipulator.setIntakeSpeed(GearManipulator.DEFAULT_INTAKE_SPEED);
 		}
 		
+		if( !wasClimberPushed && manipulatorController.getRawButton(CLIMBER_BUTTON)){
+			climber.run();
+			wasClimberPushed = true;
+		}else if(!manipulatorController.getRawButton(CLIMBER_BUTTON)){
+			wasClimberPushed = false;
+		}
 	}
 	
 	public abstract void updateDriveTrain();
