@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.I2C.Port;
 
 public class ArduinoController implements Module{
 	
+
 	private static final Port PORT_TYPE = Port.kOnboard;
 	private static final int TARGET_ADDRESS = 1;
 	
@@ -84,23 +85,23 @@ public class ArduinoController implements Module{
 		wire = new I2C(PORT_TYPE, TARGET_ADDRESS);
 	}
 	
-	public void sendMessage(String message){
+	private void sendMessage(String message){
 		currentMessage = message + TERM;
 	}
 	
 	public void send(FeederMessage message)
 	{
-		sendMessage(message.pattern.command + " " + message.color.r + " " + message.color.g + " " + message.color.b + " " + message.pattern.delay);
+		sendMessage(message.pattern.command + TERM + message.color.r + TERM + message.color.g + TERM + message.color.b + TERM + message.pattern.delay + TERM);
 	}
 	
 	public void send(DriverMessage message)
 	{
-		sendMessage(message.pattern.command + " " + message.color.r + " " + message.color.g + " " + message.color.b + " " + message.pattern.delay);	
+		sendMessage(message.pattern.command + TERM + message.color.r + TERM + message.color.g + TERM + message.color.b + TERM + message.pattern.delay + TERM);	
 	}
 	
 	public void send(PilotMessage message)
 	{
-		sendMessage(message.pattern.command + " " + message.color.r + " " + message.color.g + " " + message.color.b + " " + message.pattern.delay);
+		sendMessage(message.pattern.command + TERM + message.color.r + TERM + message.color.g + TERM + message.color.b + TERM + message.pattern.delay + TERM);
 	}
 	
 	@Override
