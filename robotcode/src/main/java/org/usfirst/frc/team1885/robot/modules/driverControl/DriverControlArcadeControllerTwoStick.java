@@ -6,28 +6,24 @@ import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl.ControllerType;
 
-public class DriverControlArcadeControllerTwoStick extends DriverControl{
-	
-	public static final double kP = 0.03;
-	public static final double kI = 0.0;
-	public static final double kD = 0.0;
-	public static final double kF = 0.0;
-	
-	public static final double kToleranceDegrees = 2.0f;
-	
-	private static final int REDUCER = 2;
 
+public class DriverControlArcadeControllerTwoStick extends DriverControl{
+	private static final int REDUCER = 2;
+	private DriveTrain driveTrain;
+	
 	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain) { 
 		this(driveTrain, new DefaultJoystickFactory());
 	}
 	
 	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, IJoystickFactory joystickFactory) {
 		super(driveTrain, joystickFactory);
+		this.driveTrain = driveTrain;
 	}
 
 	@Override
 	public void update() {
-		double reducer = getReducer(getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kZ));
+		//double reducer = getReducer(getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kZ));
+		double reducer = 1;
 		double throttle = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_LEFT_Y);
 		double turn = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_RIGHT_X);
 		
@@ -42,6 +38,7 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 		rightInput *= reducer;
 
 		setSpeeds(leftInput, rightInput);
+		
 	}
 	
 	public double getReducer(double value) {

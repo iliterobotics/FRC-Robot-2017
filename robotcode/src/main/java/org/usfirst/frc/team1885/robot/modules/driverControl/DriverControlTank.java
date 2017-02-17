@@ -37,8 +37,8 @@ public class DriverControlTank extends DriverControl{
 		//Exponential ramping
 		int leftScaler = leftInput > 0?1:-1;
 		leftInput = Math.pow(leftInput, SCALING_EXP) * leftScaler * reducer;
-		int rightScaler = leftInput > 0?1:-1;
-		leftInput = Math.pow(leftInput, SCALING_EXP) * rightScaler * reducer;
+		int rightScaler = rightInput > 0?1:-1;
+		rightInput = Math.pow(rightInput, SCALING_EXP) * rightScaler * reducer;
 		
 		driveStation.reportError(String.format("fL:%f fR:%f", leftInput, rightInput), false);
 

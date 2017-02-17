@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1885.robot.modules.test;
+package org.usfist.frc.team1885.robot.modules;
 
 import org.usfirst.frc.team1885.robot.modules.Module;
 
