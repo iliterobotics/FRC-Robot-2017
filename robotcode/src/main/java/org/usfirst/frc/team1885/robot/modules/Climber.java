@@ -24,14 +24,13 @@ public class Climber implements Module{
 	private static final int MAX_BUMP_TIME = 100;
 	private static final int MAX_PULSE_TIME = 200;
 	
+	private boolean broken;
+	
 	private int stallTime;
 	private int pulseTime;
 	private int bumpTime;
 	
-	public Climber(){		
-	}
-	
-	public void initialize() {
+	public Climber(){
 		masterTalon = new CANTalon(TALON_IDS[0]);
 		for(int i = 1; i < TALON_IDS.length; i++){
 			CANTalon talon = new CANTalon(TALON_IDS[i]);
@@ -39,6 +38,9 @@ public class Climber implements Module{
 			talon.set(TALON_IDS[0]);
 		}
 		masterTalon.setControlMode(TalonControlMode.PercentVbus.value);
+	}
+	
+	public void initialize() {
 		currentState = ClimberState.INIT;
 	}
 	
@@ -93,6 +95,10 @@ public class Climber implements Module{
 			}			
 		}
 		masterTalon.set(currentPower);
+	}
+	
+	public void setClimberPower(double power){
+		currentPower = power;
 	}
 	
 	public ClimberState getClimberState(){

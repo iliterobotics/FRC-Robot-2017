@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.Command;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraight;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraightDistance;
 import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
@@ -16,7 +18,8 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
-import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -38,9 +41,7 @@ public class Robot extends SampleRobot{
 		runningModules = new ArrayList<>();
 		autonomousCommands = new LinkedList<>();
 		
-		CameraServer server = CameraServer.getInstance();
-		server.startAutomaticCapture(0);
-		server.startAutomaticCapture(1);
+		new Compressor(0).start();
 		
 		navx = new NavX();
 		driveTrain = new DriveTrain();
@@ -60,7 +61,9 @@ public class Robot extends SampleRobot{
 	public void autonomous()
 	{
 		autonomousCommands.clear();
-		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 90));
+		autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 85));
+		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 60));
+		autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 18));
 		
 		setRunningModules(driveTrain);
 
@@ -86,7 +89,7 @@ public class Robot extends SampleRobot{
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, driveTrain);
+		setRunningModules(driverControl, driveTrain, climber);
 		while(isOperatorControl() && isEnabled()){
 			updateModules();
 			pause();

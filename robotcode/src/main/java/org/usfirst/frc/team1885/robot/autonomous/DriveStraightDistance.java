@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1885.robot.autonomous;
 
-import static org.usfirst.frc.team1885.robot.autonomous.DriveStraight.INITIAL_POWER;
 import static org.usfirst.frc.team1885.robot.autonomous.DriveStraight.PROPORTION;
 
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
@@ -9,7 +8,9 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class DriveStraightDistance extends Command{
-		
+
+	private static final double INITIAL_POWER = 0.4;
+	
 	private final DriveTrain driveTrain;
 	private final NavX navx;
 	private final int distanceToTravel;
@@ -35,6 +36,7 @@ public class DriveStraightDistance extends Command{
 		initialLeftPosition = driveTrain.getLeftPosition();
 		initialRightPosition = driveTrain.getRightPosition();
 		System.out.println("Initial Yaw:" + navx.getYaw());
+		System.out.printf("InitL:%d InitR:%d\n", driveTrain.getLeftPosition(), driveTrain.getRightPosition());
 	}
 	
 	public boolean update(){
@@ -42,6 +44,7 @@ public class DriveStraightDistance extends Command{
 		if( getAverageDistanceTravel() >= distanceToTravel){
 			driveTrain.setPower(0, 0);
 			DriverStation.reportError("I AM STOPPING", false);
+			System.out.printf("FinalL:%d FinalR:%d DistTravelled:%d Target:%d\n", driveTrain.getLeftPosition(), driveTrain.getRightPosition(), getAverageDistanceTravel(), distanceToTravel);
 			return true;
 		}
 
@@ -52,8 +55,8 @@ public class DriveStraightDistance extends Command{
 	}
 	
 	private int getAverageDistanceTravel(){
-		return Math.abs(driveTrain.getLeftPosition() - initialLeftPosition) + 
-			   Math.abs(driveTrain.getRightPosition() - initialRightPosition)/2;
+		return (Math.abs(driveTrain.getLeftPosition() - initialLeftPosition) + 
+			   Math.abs(driveTrain.getRightPosition() - initialRightPosition))/2;
 	}
 
 }

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
 import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
+import org.usfirst.frc.team1885.robot.common.interfaces.IJoystick;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
@@ -11,8 +12,13 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	
 	private static final int TURN_REDUCER_BUTTON = 5;
-	private static final int CASTER_BUTTON = 3;
+	private static final int CASTER_BUTTON = 2;
+	private static final int SHIFTER_AXIS = 3;
+	
 	private static final int WARP_SPEED_FORWARD = 0;
+
+	private static final int NUDGE_BUTTON_LEFT = 4;
+	private static final int NUDGE_BUTTON_RIGHT = 5;
 	
 	private static final double TURN_REDUCER = 0.5;
 	private static final double HIGH_GEAR_TURN_REDUCER = 0.2;
@@ -30,23 +36,29 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 
 	@Override
 	public void updateDriveTrain() {
-		double throttle = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_LEFT_Y);
-		double turn = getController(ControllerType.CONTROLLER).getRawAxis(GAMEPAD_RIGHT_X);
+		IJoystick driverController = getController(ControllerType.CONTROLLER);
+		double throttle = driverController.getRawAxis(GAMEPAD_LEFT_Y);
+		double turn = driverController.getRawAxis(GAMEPAD_RIGHT_X);
 		
 		double leftInput, rightInput;
 		
-		if(getController(ControllerType.CONTROLLER).getRawButton(TURN_REDUCER_BUTTON)) turn *= TURN_REDUCER;
+		if(driverController.getRawButton(TURN_REDUCER_BUTTON)) turn *= TURN_REDUCER;
 		
 		leftInput =  throttle - turn;
 		rightInput = throttle + turn;
 		
-		setCasters(getController(ControllerType.CONTROLLER).getRawAxis(CASTER_BUTTON) >= 0.9);
+		setCasters(driverController.getRawAxis(CASTER_BUTTON) >= 0.9);
+		setShift(driverController.getRawAxis(SHIFTER_AXIS) >= 0.9);
 		setSpeeds(leftInput, rightInput);
+
+		if(driverController.getRawButton(NUDGE_BUTTON_RIGHT) && !isNudging()){
+			
+		}
 		
-		if(getController(ControllerType.CONTROLLER).getPOV() == WARP_SPEED_FORWARD && !isWarpSpeed()){
+		if(driverController.getPOV() == WARP_SPEED_FORWARD && !isWarpSpeed()){
 			initiateWarpSpeed();
 		}
-		else if( isWarpSpeed() && getController(ControllerType.CONTROLLER).getPOV() != WARP_SPEED_FORWARD){
+		else if( isWarpSpeed() && driverController.getPOV() != WARP_SPEED_FORWARD){
 			disableWarpSpeed();
 		}
 	}

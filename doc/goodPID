@@ -1,0 +1,5 @@
+Use these; Good values; Make turn
+Turning PID:
+P 0.01
+I 0.00
+D 0.3

@@ -9,10 +9,6 @@ import org.usfirst.frc.team1885.robot.common.impl.ETalonControlMode;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalon;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
 
 
@@ -21,9 +17,9 @@ import edu.wpi.first.wpilibj.Solenoid;
  */
 public class DriveTrain implements Module{
 
-	public static final double WHEEL_DIAMETER = 8.5;
-	public static final int SHIFT_SOLENOID_ID = 10;
-	public static final int CASTER_SOLENOID_ID = 11;
+	public static final double WHEEL_DIAMETER = 3.98;
+	public static final int SHIFT_SOLENOID_ID = 2;
+	public static final int CASTER_SOLENOID_ID = 7;
 	// Voltage proportion control variables
 	private static final double VOLTAGE_RAMP_RATE = 18.0; //in V/sec
 	
@@ -48,7 +44,7 @@ public class DriveTrain implements Module{
 		P_VBUS, POSITION, TICK_VEL;
 	}
 	private enum MotorType{
-		LEFT_MOTOR(-1, 3, 1, 5), RIGHT_MOTOR(1, 2, 4, 6);
+		LEFT_MOTOR(-1, 1, 3, 5), RIGHT_MOTOR(1, 2, 4, 6);
 		
 		final int talonId;
 		final int followerIds[];
@@ -66,7 +62,6 @@ public class DriveTrain implements Module{
 	private Solenoid casterShifter;
 	
 	private final ICanTalonFactory canTalonFactory;
-
 	
 	public DriveTrain() {
 		this(new DefaultCanTalonFactory());
@@ -75,15 +70,13 @@ public class DriveTrain implements Module{
 	public DriveTrain(ICanTalonFactory canTalonFactory){
 		this.canTalonFactory = canTalonFactory;
 		motorMap = new HashMap<>();
-	}
-	
-	@Override
-	public void initialize() {
+		gearShifter = new Solenoid(SHIFT_SOLENOID_ID);
+		casterShifter = new Solenoid(CASTER_SOLENOID_ID);
 		for(MotorType type : MotorType.values()){
 			ICanTalon talon = canTalonFactory.getCanTalon(type.talonId);
 			talon.setEncPosition(0);
 			talon.setP(0.5);
-			DriverStation.reportError(String.format("(%f, %f, %f)", talon.getP(), talon.getI(), talon.getD()), false);
+			talon.setFeedbackDevice(EFeedbackDevice.QuadEncoder);
 			for(int followerId : type.followerIds){
 				ICanTalon follower = canTalonFactory.getCanTalon(followerId);
 				follower.setControlMode(ETalonControlMode.Follower);
@@ -91,8 +84,10 @@ public class DriveTrain implements Module{
 			}
 			motorMap.put(type, talon);
 		}
-		gearShifter = new Solenoid(SHIFT_SOLENOID_ID);
-		casterShifter = new Solenoid(CASTER_SOLENOID_ID);
+	}
+	
+	@Override
+	public void initialize() {
 		setMode(DriveMode.P_VBUS);
 	}
 	
@@ -105,8 +100,8 @@ public class DriveTrain implements Module{
 			actualRightPower = 0;
 			desiredLeftPower = 0;
 			desiredRightPower = 0;
-			setVoltageRampRate(VOLTAGE_RAMP_RATE);
 			setMotorMode(ETalonControlMode.PercentVbus);
+			setVoltageRampRate(VOLTAGE_RAMP_RATE);
 			break;
 		case TICK_VEL:
 			actualLeftSpeed = 0;
@@ -169,7 +164,6 @@ public class DriveTrain implements Module{
 	
 	private void setMotor(MotorType type, double value){
 		motorMap.get(type).set(value * type.modifier);
-		System.out.printf("Type:%s OutputV:%f\n", type.toString(), value * type.modifier);
 	}
 	
 	public void setMotorMode(ETalonControlMode talonMode){
@@ -191,7 +185,6 @@ public class DriveTrain implements Module{
 			case P_VBUS:
 				actualLeftPower = desiredLeftPower;
 				actualRightPower = desiredRightPower;
-				DriverStation.reportError(String.format("Left:%f, right:%f", actualLeftPower, actualRightPower),  false);
 				setMotor(MotorType.LEFT_MOTOR, actualLeftPower);
 				setMotor(MotorType.RIGHT_MOTOR, actualRightPower);
 				break;
@@ -207,7 +200,7 @@ public class DriveTrain implements Module{
 	}
 
 	public void setCasting(boolean casted) {
-
+		casterShifter.set(casted);
 	}
 
 }

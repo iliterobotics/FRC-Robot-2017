@@ -41,10 +41,6 @@ public class GearManipulator implements Module{
 	
 	public GearManipulator(){
 		pistonMap = new HashMap<>();
-	}	
-
-	@Override
-	public void initialize() {
 		for(PistonType type : PistonType.values()) {
 			SolenoidBase solenoid;
 			if(type.isDouble){
@@ -57,6 +53,14 @@ public class GearManipulator implements Module{
 		}
 		intakeWheels = new CANTalon(FLY_CAN_ID);
 		intakeWheels.setControlMode(CANTalon.TalonControlMode.PercentVbus.value);
+	}	
+
+	@Override
+	public void initialize() {
+		isOpen = 
+		isDropping = 
+		isTilted = 
+		isKicked = false;
 	}
 	
 	public void setOpen(boolean open){

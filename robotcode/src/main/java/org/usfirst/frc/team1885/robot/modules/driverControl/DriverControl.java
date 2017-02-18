@@ -8,9 +8,11 @@ import java.util.Map;
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.autonomous.Command;
 import org.usfirst.frc.team1885.robot.autonomous.DriveStraight;
+import org.usfirst.frc.team1885.robot.autonomous.Nudge;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystick;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.Climber;
+import org.usfirst.frc.team1885.robot.modules.Climber.ClimberState;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
@@ -18,7 +20,7 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 
 public abstract class DriverControl implements Module {
 	
-	public static final double DEADZONE = 0.03;
+	public static final double DEADZONE = 0.1;
 	public static final double WARP_DEGREES_PER_SECOND = 5;
 	public static final int GAMEPAD_LEFT_X = 0;
 	public static final int GAMEPAD_LEFT_Y = 1;
@@ -26,7 +28,9 @@ public abstract class DriverControl implements Module {
 	public static final int GAMEPAD_RIGHT_TRIGGER = 3;
 	public static final int GAMEPAD_RIGHT_X = 4;
 	public static final int GAMEPAD_RIGHT_Y = 5;
-	public static final int CLIMBER_BUTTON = 3;
+	
+	public static final int CLIMBER_OPERATOR_BUTTON = 7;
+	public static final int CLIMBER_DRIVER_BUTTON = 7;
 	
 	public static final boolean HIGH_GEAR = true;
 	public static final boolean LOW_GEAR = false;
@@ -36,6 +40,7 @@ public abstract class DriverControl implements Module {
 	private List<Command> runningCommands;
 	
 	private DriveStraight warpSpeedCommand;
+	private Nudge nudgeCommand;
 	
 	private final DriveTrain driveTrain;
 	private final GearManipulator gearManipulator;
@@ -44,9 +49,11 @@ public abstract class DriverControl implements Module {
 	private IJoystickFactory joystickFactory;
 	
 	private boolean wasClimberPushed;
+	private boolean isWarping;
+	private boolean isNudging;
 
 	public enum ControllerType {
-		LEFT_STICK(0), RIGHT_STICK(1), CONTROLLER(2), CONTROLLER_2(3);
+		CONTROLLER(0), CONTROLLER_2(1), TEST_CONTROLLER(2), LEFT_STICK(3), RIGHT_STICK(4);
 
 		final int controllerId;
 
@@ -72,8 +79,8 @@ public abstract class DriverControl implements Module {
 	}
 	
 	public void setSpeeds(double left, double right){
-		
-		if(warpSpeedCommand != null){
+		if(nudgeCommand != null && runningCommands.contains(nudgeCommand)) return;
+		if(warpSpeedCommand != null && runningCommands.contains(warpSpeedCommand)){
 			double powerDiff = left - right;
 			double degreesPerUpdate = ((1000.0 / Robot.UPDATE_PERIOD) / WARP_DEGREES_PER_SECOND);
 			double angleDiff = powerDiff * degreesPerUpdate;
@@ -95,6 +102,7 @@ public abstract class DriverControl implements Module {
 	
 	public void updateManipulator(){
 		IJoystick manipulatorController = getController(ControllerType.CONTROLLER_2);
+		IJoystick driverController = getController(ControllerType.CONTROLLER);
 		if(manipulatorController.getRawAxis(1) > 0.5){
 			gearManipulator.setIntakeSpeed(-GearManipulator.DEFAULT_INTAKE_SPEED);
 		}
@@ -102,10 +110,12 @@ public abstract class DriverControl implements Module {
 			gearManipulator.setIntakeSpeed(GearManipulator.DEFAULT_INTAKE_SPEED);
 		}
 		
-		if( !wasClimberPushed && manipulatorController.getRawButton(CLIMBER_BUTTON)){
-			climber.run();
-			wasClimberPushed = true;
-		}else if(!manipulatorController.getRawButton(CLIMBER_BUTTON)){
+		if( !wasClimberPushed && manipulatorController.getRawButton(CLIMBER_OPERATOR_BUTTON)){
+			if(climber.getClimberState() != ClimberState.INIT || driverController.getRawButton(CLIMBER_DRIVER_BUTTON)){
+				climber.run();
+				wasClimberPushed = true;
+			}
+		}else if(!manipulatorController.getRawButton(CLIMBER_OPERATOR_BUTTON)){
 			wasClimberPushed = false;
 		}
 	}
@@ -131,16 +141,24 @@ public abstract class DriverControl implements Module {
 	}
 		
 	protected void initiateWarpSpeed(){
-		warpSpeedCommand = new DriveStraight(driveTrain, navx);
+		warpSpeedCommand = new DriveStraight(driveTrain, navx, 1.0);
 		warpSpeedCommand.init();
 		setShift(true);
 		injectCommand(warpSpeedCommand);
+		isWarping = true;
 	}
 	
 	protected void disableWarpSpeed(){
 		removeCommand(warpSpeedCommand);
 		setShift(false);
 		warpSpeedCommand = null;
+		isWarping = false;
+	}
+	
+	protected void nudge(double direction){
+		nudgeCommand = new Nudge(driveTrain, direction);
+		injectCommand(nudgeCommand);
+		isNudging = true;
 	}
 	
 	public boolean isWarpSpeed(){
@@ -166,5 +184,13 @@ public abstract class DriverControl implements Module {
 	
 	protected void removeCommand(Command command){
 		runningCommands.remove(command);
+	}
+	
+	public boolean isNudging(){
+		return isNudging;
+	}
+	
+	public boolean isWarping(){
+		return isWarping;
 	}
 }

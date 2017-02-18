@@ -5,7 +5,7 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 
 public class DriveStraight extends Command{
 	
-	public static final double INITIAL_POWER = 0.4;
+	public final double INITIAL_POWER;
 	public static final double PROPORTION = 0.02;
 	
 	private final DriveTrain driveTrain;
@@ -13,9 +13,10 @@ public class DriveStraight extends Command{
 	
 	private double initialYaw;
 	
-	public DriveStraight(DriveTrain dt, NavX navx){
+	public DriveStraight(DriveTrain dt, NavX navx, double initialPower){
 		this.driveTrain = dt;
 		this.navx = navx;
+		this.INITIAL_POWER = initialPower;
 	}
 	
 	public void init(){
