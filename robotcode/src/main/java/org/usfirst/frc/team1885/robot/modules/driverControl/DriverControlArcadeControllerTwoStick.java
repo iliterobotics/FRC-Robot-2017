@@ -52,7 +52,10 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 		setSpeeds(leftInput, rightInput);
 
 		if(driverController.getRawButton(NUDGE_BUTTON_RIGHT) && !isNudging()){
-			
+			nudge(1);
+		}
+		else if(driverController.getRawButton(NUDGE_BUTTON_LEFT) && !isNudging()){
+			nudge(-1);			
 		}
 		
 		if(driverController.getPOV() == WARP_SPEED_FORWARD && !isWarpSpeed()){

@@ -79,8 +79,15 @@ public abstract class DriverControl implements Module {
 	}
 	
 	public void setSpeeds(double left, double right){
-		if(nudgeCommand != null && runningCommands.contains(nudgeCommand)) return;
-		if(warpSpeedCommand != null && runningCommands.contains(warpSpeedCommand)){
+		if(nudgeCommand == null || !runningCommands.contains(nudgeCommand)){
+			isNudging = false;
+		}
+		if(warpSpeedCommand == null || !runningCommands.contains(warpSpeedCommand)){
+			isWarping = false;
+		}
+		
+		if(isNudging) return;
+		if(isWarping){
 			double powerDiff = left - right;
 			double degreesPerUpdate = ((1000.0 / Robot.UPDATE_PERIOD) / WARP_DEGREES_PER_SECOND);
 			double angleDiff = powerDiff * degreesPerUpdate;
