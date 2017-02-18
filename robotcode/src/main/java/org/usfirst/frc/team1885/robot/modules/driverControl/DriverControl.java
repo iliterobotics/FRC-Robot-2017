@@ -10,7 +10,7 @@ import org.usfirst.frc.team1885.robot.modules.Module;
 
 public abstract class DriverControl implements Module {
 	
-	public static final double DEADZONE = 0.01;
+	public static final double DEADZONE = 0.03;
 	public static final int GAMEPAD_LEFT_X = 0;
 	public static final int GAMEPAD_LEFT_Y = 1;
 	public static final int GAMEPAD_LEFT_TRIGGER = 2;
@@ -45,7 +45,6 @@ public abstract class DriverControl implements Module {
 			controllerMap.put(type, joystickFactory.createJoystick(type.controllerId));
 					
 		}
-		driveTrain.setMode(DriveTrain.DriveMode.DRIVER_CONTROL_LOW);
 	}
 	
 	public void setSpeeds(double left, double right){
@@ -58,7 +57,7 @@ public abstract class DriverControl implements Module {
 		if(Math.abs(right) < DEADZONE){
 			right = 0;
 		}
-		driveTrain.setMotors(left, right);
+		driveTrain.setPower(left, right);
 	}
 	
 	public IJoystick getController(ControllerType type){

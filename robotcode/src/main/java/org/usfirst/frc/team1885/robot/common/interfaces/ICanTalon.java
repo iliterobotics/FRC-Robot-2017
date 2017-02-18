@@ -29,4 +29,8 @@ public interface ICanTalon {
 
 	void setFeedbackDevice(EFeedbackDevice analogencoder);
 
+	void setVoltageRampRate(double rate);
+
+	int getEncPosition();
+
 }

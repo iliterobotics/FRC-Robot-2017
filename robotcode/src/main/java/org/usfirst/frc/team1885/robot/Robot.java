@@ -7,20 +7,20 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
-import org.usfirst.frc.team1885.robot.autonomous.DriveStraightNavX;
+import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
-import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlTank;
-import org.usfirst.frc.team1885.robot.modules.test.TestClamp;
+import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
-public class Robot extends SampleRobot {
+public class Robot extends SampleRobot{
+	
 	
 	public static final long UPDATE_PERIOD = 5;
 
@@ -36,40 +36,47 @@ public class Robot extends SampleRobot {
 		runningModules = new ArrayList<>();
 		autonomousCommands = new LinkedList<>();
 
-		driveTrain = new DriveTrain();	
-		driverControl = new DriverControlTank(driveTrain);
-		gearManipulator = new GearManipulator(driverControl);
 		navx = new NavX();
+		driveTrain = new DriveTrain();	
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
 	}
 
 	public void robotInit(){
 		navx.resetDisplacement();
+    
 		CameraServer server = CameraServer.getInstance();
-		server.s
 		server.startAutomaticCapture(0);
+		while(navx.isCalibrating()){
+			pause();
+		}
+		navx.setInitialAngle(navx.getAngle());
 
 	}
 	
 	public void autonomous()
 	{
-		setRunningModules(driveTrain);
 		autonomousCommands.clear();
-//		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
-		autonomousCommands.add(new DriveStraightNavX(driveTrain, navx));
+		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 90));
+		
+		setRunningModules(driveTrain);
+
 		AutonomousCommand currentCommand = autonomousCommands.peek();
-		if(currentCommand != null){
-			currentCommand.init();
-		}
+		if(currentCommand != null) currentCommand.init();
 		while(isAutonomous() && isEnabled()){
-			currentCommand = autonomousCommands.peek();
-			if(currentCommand != null){
-				if(currentCommand.update()){
-					autonomousCommands.poll();
-					autonomousCommands.peek().init();
+				currentCommand = autonomousCommands.peek();
+				if(currentCommand != null){
+					if(currentCommand.update()){
+						autonomousCommands.poll();
+						if(autonomousCommands.peek() != null) {
+							autonomousCommands.peek().init();
+						} else {
+							updateModules();
+							break;
+						}
+					}
 				}
-			}
-			updateModules();
-			pause();
+				updateModules();
+				pause();
 		}
 	}
 	
@@ -83,8 +90,8 @@ public class Robot extends SampleRobot {
 	}
 	
 	public void test(){
-		TestClamp testClamp = new TestClamp();
-		setRunningModules(testClamp);
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
+		setRunningModules(driverControl, driveTrain);
 		while(isTest() && isEnabled()){
 			updateModules();
 			pause();
@@ -112,6 +119,6 @@ public class Robot extends SampleRobot {
 	}
 	
 	private void pause(){
-		Timer.delay(0.005);
+		Timer.delay(0.001 * UPDATE_PERIOD);
 	}
 }
