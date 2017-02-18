@@ -17,7 +17,9 @@ public class ImageClient {
 	public ImageClient (int port) throws UnknownHostException, IOException, ClassNotFoundException {
 
 	    final Socket aSocket = new Socket("localhost", port);
+	    System.out.println("Got socket connection!");
         final ObjectInputStream  anObject = new ObjectInputStream(aSocket.getInputStream());
+        System.out.println("Got object inputstream");
 
 		ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
 		scheduledExecutor.scheduleAtFixedRate(new Runnable() {
@@ -34,6 +36,8 @@ public class ImageClient {
 						System.out.println("The X value is: " + iObject.getX() + " and the "
 						        + "Y value is: " + iObject.getY());
 						//Do stuff with image
+					} else {
+					    System.out.println("Got something else");
 					}
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block

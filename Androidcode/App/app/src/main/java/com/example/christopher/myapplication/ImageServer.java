@@ -161,12 +161,14 @@ public class ImageServer {
                 img.setRows(pMat.rows());
                 img.setNumChannels(pMat.channels());
 
+
+
                 byte[] raw = new byte[img.getCols() * img.getNumChannels() * img.getRows()];
                 pMat.get(0, 0, raw );
                 img.setRawImage(raw);
 
                 objectOutputStream.writeObject(img);
-
+                objectOutputStream.flush();
             }catch (Exception e)
             {
                 e.printStackTrace();
