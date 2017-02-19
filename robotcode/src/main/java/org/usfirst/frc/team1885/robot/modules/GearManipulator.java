@@ -18,6 +18,8 @@ public class GearManipulator implements Module{
 	private static final int FLY_CAN_ID = 9;
 	public static final double DEFAULT_INTAKE_SPEED = 0.8;
 	
+	public static final double MAX_INTAKE_AMPERAGE = 30;
+	
 	private Map<PistonType, SolenoidBase> pistonMap;
 	
 	private static final double BAR_WAIT = 100;
@@ -148,7 +150,11 @@ public class GearManipulator implements Module{
 			}
 		}			
 		setDoubleSolenoid(PistonType.INTAKE, isDown?Value.kReverse:Value.kForward);
-		intakeWheels.set(intakePower);
+		if(intakePower == 0) hasIntakeHitLimit = false;
+		intakeWheels.set(hasIntakeHitLimit?0:intakePower);
+		if(intakeWheels.getOutputCurrent() >= MAX_INTAKE_AMPERAGE){
+			hasIntakeHitLimit = true;
+		}
 		ConstantGetter.setConstant("intake_current", "" + intakeWheels.getOutputCurrent());
 	}
 	
@@ -168,10 +174,6 @@ public class GearManipulator implements Module{
 		}else{
 			DriverStation.reportError("WRONG SOLENOID TYPE", false);
 		}
-	}
-	
-	public boolean hasIntakeHitLimit(){
-		return hasIntakeHitLimit;
 	}
 	
 }

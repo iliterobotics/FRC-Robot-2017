@@ -9,7 +9,6 @@ public class TurnToDegree extends Command {
 	private NavX navx;
 	
 	private static final int MIN_ALIGNED_COUNT = 5;
-	private static final double MAX_ERROR = 1;
 	private static final double KP = 0.009; 
 	private static final double KD = 0.0105;
 	private static final double KI = 0.0;
@@ -18,15 +17,17 @@ public class TurnToDegree extends Command {
 	private double degrees, targetYaw;
 	private double error, lastError, totalError;
 	private double alignedCount;
+	private final double allowableError;
 	
 	double leftPower, rightPower, output = 0;
 	
-	public TurnToDegree(DriveTrain drivetrain, NavX navx, double degrees)
+	public TurnToDegree(DriveTrain drivetrain, NavX navx, double degrees, double allowableError)
 	{
 		this.drivetrain = drivetrain;
 		this.navx = navx;
 		this.degrees = degrees;
 		this.alignedCount = 0;
+		this.allowableError = allowableError;
 	}
 	
 	public void init()
@@ -42,7 +43,7 @@ public class TurnToDegree extends Command {
 		System.out.println(error);
 		this.totalError += this.error; //Update running error total
 		
-		if((Math.abs(error) < MAX_ERROR)) alignedCount++;
+		if((Math.abs(error) < allowableError)) alignedCount++;
 		if(alignedCount >= MIN_ALIGNED_COUNT) return true;
 		
 		output = ((KP * error) + (KI * totalError) + (KD * (error - lastError)));

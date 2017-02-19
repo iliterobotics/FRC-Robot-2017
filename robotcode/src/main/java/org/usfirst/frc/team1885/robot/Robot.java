@@ -8,6 +8,7 @@ import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.Command;
 import org.usfirst.frc.team1885.robot.autonomous.DriveStraightVision;
+import org.usfirst.frc.team1885.robot.autonomous.DropOffGear;
 import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
@@ -59,11 +60,14 @@ public class Robot extends SampleRobot{
 	public void autonomous()
 	{
 		autonomousCommands.clear();
-		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 96));
-		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 60));
-		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 12));
+		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 90));
+		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 60, 5));
+		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 15));
+		autonomousCommands.add(new DropOffGear(gearManipulator, driveTrain));
+		autonomousCommands.add(new TurnToDegree(driveTrain, navx, -10, 20));
+		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 48));
 		
-		setRunningModules(driveTrain);
+		setRunningModules(driveTrain, gearManipulator, pressureRegulator);
 
 		Command currentCommand = autonomousCommands.peek();
 		if(currentCommand != null) currentCommand.init();
