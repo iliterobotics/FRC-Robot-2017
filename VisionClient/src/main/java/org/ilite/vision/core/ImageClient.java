@@ -16,7 +16,7 @@ public class ImageClient {
 
 	public ImageClient (int port) throws UnknownHostException, IOException, ClassNotFoundException {
 
-	    final Socket aSocket = new Socket("localhost", port);
+	    final Socket aSocket = new Socket("raspberrypi.local", port);
 	    System.out.println("Got socket connection!");
         final ObjectInputStream  anObject = new ObjectInputStream(aSocket.getInputStream());
         System.out.println("Got object inputstream");

@@ -2,6 +2,7 @@ package com.example.christopher.myapplication;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -182,14 +183,17 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 return Double.compare(Imgproc.contourArea(lhs), Imgproc.contourArea(rhs));
             }
         });
-
+        allPoints.clear();
         if(!contours.isEmpty()) {
-            allPoints = Collections.singletonList(contours.get(contours.size()-1));
+            allPoints.add(contours.get(contours.size()-1));
             System.out.println("LOOK AT ME:" + allPoints.get(0).size());
+            if(contours.size() > 1)
+            {
+                allPoints.add(contours.get(contours.size()-2));
+                System.out.println("LOOK AT ME PART 2: " + allPoints.get(1).size());
+            }
             Imgproc.cvtColor(matThresh,matThresh,Imgproc.COLOR_GRAY2RGB);
             Imgproc.drawContours(matThresh, allPoints, -1, new Scalar(255,255,0));
-
-
         }
 
 
