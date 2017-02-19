@@ -10,9 +10,12 @@ import org.usfirst.frc.team1885.robot.autonomous.Command;
 import org.usfirst.frc.team1885.robot.autonomous.DriveStraightVision;
 import org.usfirst.frc.team1885.robot.autonomous.DropOffGear;
 import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
+import org.usfirst.frc.team1885.robot.modules.ArduinoController;
+import org.usfirst.frc.team1885.robot.modules.ArduinoController.LEDColor;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
+import org.usfirst.frc.team1885.robot.modules.LEDController;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.PressureSensor;
@@ -36,6 +39,8 @@ public class Robot extends SampleRobot{
 	private GearManipulator gearManipulator;
 	private Climber climber;
 	private PressureSensor pressureRegulator;
+	private LEDController ledController;
+	private ArduinoController arduinoController;
 	
 	private Queue<Command> autonomousCommands;
 	private List<Module> runningModules;
@@ -56,6 +61,8 @@ public class Robot extends SampleRobot{
 		driveTrain = new DriveTrain();
 		gearManipulator = new GearManipulator();
 		climber = new Climber();
+		arduinoController = new ArduinoController();
+		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, climber, gearManipulator);
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
 	}
 
@@ -105,7 +112,7 @@ public class Robot extends SampleRobot{
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, pressureRegulator);
+		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, pressureRegulator, arduinoController, ledController);
 		while(isOperatorControl() && isEnabled()){
 			updateModules();
 			pause();
