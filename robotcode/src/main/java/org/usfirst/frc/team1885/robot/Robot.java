@@ -7,12 +7,16 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.Command;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraightDistance;
 import org.usfirst.frc.team1885.robot.autonomous.DriveStraightVision;
 import org.usfirst.frc.team1885.robot.autonomous.DropOffGear;
 import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
+import org.usfirst.frc.team1885.robot.modules.ArduinoController;
+import org.usfirst.frc.team1885.robot.modules.ArduinoController.LEDColor;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
+import org.usfirst.frc.team1885.robot.modules.LEDController;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.PressureSensor;
@@ -36,13 +40,15 @@ public class Robot extends SampleRobot{
 	private GearManipulator gearManipulator;
 	private Climber climber;
 	private PressureSensor pressureRegulator;
+	private LEDController ledController;
+	private ArduinoController arduinoController;
 	
 	private Queue<Command> autonomousCommands;
 	private List<Module> runningModules;
 	
 	public Robot(){
-	    CameraServer server = CameraServer.getInstance(); 
-	    UsbCamera camera = server.startAutomaticCapture(); 
+	    //CameraServer server = CameraServer.getInstance(); 
+	    //UsbCamera camera = server.startAutomaticCapture(); 
 	    
 	    String color = DriverStation.getInstance().getAlliance().toString();
 		int location = DriverStation.getInstance().getLocation();
@@ -56,26 +62,32 @@ public class Robot extends SampleRobot{
 		driveTrain = new DriveTrain();
 		gearManipulator = new GearManipulator();
 		climber = new Climber();
+		arduinoController = new ArduinoController();
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
+		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, climber, gearManipulator);
 	}
 
 	public void robotInit(){
 		navx.resetDisplacement();
+    
+		CameraServer server = CameraServer.getInstance();
+		server.startAutomaticCapture(0);
 		while(navx.isCalibrating()){
 			pause();
 		}
 		navx.setInitialAngle(navx.getAngle());
+
 	}
 	
 	public void autonomous()
 	{		
 		autonomousCommands.clear();
-		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 90));
+		autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 90));
 		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 60, 5));
 		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 15));
 		autonomousCommands.add(new DropOffGear(gearManipulator, driveTrain));
 		autonomousCommands.add(new TurnToDegree(driveTrain, navx, -10, 20));
-		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 48));
+		autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 48));
 		
 		setRunningModules(driveTrain, gearManipulator, pressureRegulator);
 
@@ -101,7 +113,7 @@ public class Robot extends SampleRobot{
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, pressureRegulator);
+		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, pressureRegulator, arduinoController, ledController);
 		while(isOperatorControl() && isEnabled()){
 			updateModules();
 			pause();

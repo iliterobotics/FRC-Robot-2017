@@ -131,6 +131,18 @@ public class GearManipulator implements Module{
 		return isLong;
 	}
 
+	public boolean isDown(){
+		return isDown;
+	}
+	
+	public boolean isKicked(){
+		return isKicked;
+	}
+	
+	public boolean isStalled(){
+		return hasIntakeHitLimit;
+	}
+	
 	@Override
 	public void update() {
 		setSingleSolenoid(PistonType.LONG_DOOR, isLong);

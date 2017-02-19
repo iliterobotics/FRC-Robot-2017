@@ -5,39 +5,34 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.usfirst.frc.team1885.visioncode.utils.SimpleImage;
+import org.usfirst.frc.team1885.visioncode.utils.ImageData;
 
 
 public class ImageClient {
 
 	public ImageClient (int port) throws UnknownHostException, IOException, ClassNotFoundException {
-		Socket aSocket = new Socket("localhost", port);
 
-		InputStream inputStream2 = aSocket.getInputStream();
-		ExecutorService exce = Executors.newSingleThreadExecutor();
-		final ObjectInputStream  anObject = new ObjectInputStream(aSocket.getInputStream());
-		exce.submit(new Runnable() {
+	    final Socket aSocket = new Socket("localhost", port);
+        final ObjectInputStream  anObject = new ObjectInputStream(aSocket.getInputStream());
 
-			@Override
-			public void run() {
-			}
-
-		});
 		ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
 		scheduledExecutor.scheduleAtFixedRate(new Runnable() {
 
 			@Override
 			public void run() {
-				Object readObject;
-				try {
+		        
+		        Object readObject;
+				try{
 					readObject = anObject.readObject();
-					if(readObject instanceof SimpleImage) {
-						SimpleImage anObject = (SimpleImage)readObject;
+					System.out.println(readObject);
+					if(readObject instanceof ImageData) {
+						ImageData iObject = (ImageData)readObject;
+						System.out.println("The X value is: " + iObject.getX() + " and the "
+						        + "Y value is: " + iObject.getY());
 						//Do stuff with image
 					}
 				} catch (ClassNotFoundException e) {
@@ -50,6 +45,7 @@ public class ImageClient {
 
 			}
 		}, 0, 100, TimeUnit.MILLISECONDS);
+		System.out.println("Donarino");
 	}
 
 public static void main(String [] args) throws UnknownHostException, ClassNotFoundException, IOException {

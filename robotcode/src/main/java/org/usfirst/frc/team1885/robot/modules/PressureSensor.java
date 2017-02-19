@@ -12,7 +12,7 @@ public class PressureSensor implements Module{
     private Relay relay;
 	private Compressor compressor;
 	private DigitalInput dio;
-
+	private boolean isCompressorOn;
     public PressureSensor() {
         dio = new DigitalInput(CHANNEL);
 		relay = new Relay(RELAY_PORT);
@@ -26,11 +26,17 @@ public class PressureSensor implements Module{
 		if ( !dio.get() )
 		{
 			relay.set(Relay.Value.kForward);
+			isCompressorOn = true;
 		}
 		else
 		{
 			relay.set(Relay.Value.kOff);
+			isCompressorOn = false;
 		}
+	}
+	
+	public boolean isCompressorOn() {
+		return isCompressorOn;
 	}
 
 }
