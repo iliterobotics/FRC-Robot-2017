@@ -131,9 +131,7 @@ public abstract class DriverControl implements Module {
 		}
 		
 		if( !wasClimberPushed && manipulatorController.getRawButton(CLIMBER_OPERATOR_BUTTON)){
-			System.out.println("OPERATOR BUTTON DOWN");
 			if(climber.getClimberState() != ClimberState.INIT || driverController.getRawButton(CLIMBER_DRIVER_BUTTON)){
-				System.out.println("BOTH BUTTONS DOWN");
 				climber.run();
 				wasClimberPushed = true;
 			}

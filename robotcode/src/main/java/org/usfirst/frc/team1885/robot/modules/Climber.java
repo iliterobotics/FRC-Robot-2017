@@ -53,7 +53,6 @@ public class Climber implements Module{
 	}
 	
 	public void run(){
-		System.out.println("RUN");
 		switch(currentState){
 		case INIT:
 			currentState = ClimberState.PULSING;

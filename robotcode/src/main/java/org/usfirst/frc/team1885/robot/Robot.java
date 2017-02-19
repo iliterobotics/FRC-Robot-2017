@@ -19,6 +19,9 @@ import org.usfirst.frc.team1885.robot.modules.PressureSensor;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -38,6 +41,13 @@ public class Robot extends SampleRobot{
 	private List<Module> runningModules;
 	
 	public Robot(){
+	    CameraServer server = CameraServer.getInstance(); 
+	    UsbCamera camera = server.startAutomaticCapture(); 
+	    
+	    String color = DriverStation.getInstance().getAlliance().toString();
+		int location = DriverStation.getInstance().getLocation();
+		System.out.printf("Alliance: %s%d"  , color, location);
+	    
 		runningModules = new ArrayList<>();
 		autonomousCommands = new LinkedList<>();
 		
@@ -58,7 +68,7 @@ public class Robot extends SampleRobot{
 	}
 	
 	public void autonomous()
-	{
+	{		
 		autonomousCommands.clear();
 		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 90));
 		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 60, 5));
