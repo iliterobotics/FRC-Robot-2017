@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.robot.modules;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 
@@ -10,13 +11,13 @@ public class ArduinoController implements Module{
 	private static final int TARGET_ADDRESS = 1;
 	
 	private static final String TERM = ";";
-	private String currentMessage;
-	private String lastMessage;
+	private String currentMessage = "";
+	private String lastMessage = " ";
 	
 	private I2C wire;
 	
 	public enum LEDColor {
-		PURPLE(255, 0, 255), RED(255, 0, 0), WHITE(255, 255, 255), GREEN(0, 255, 0), DEFAULT_COLOR(0, 0, 0);
+		PURPLE(255, 0, 255), RED(255, 0, 0), WHITE(255, 255, 255), GREEN(0, 255, 0), DEFAULT_COLOR(0, 0, 0), GREEN_HSV(84, 255, 255), RED_HSV(0, 255, 255), PURPLE_HSV(212, 255, 255);
 		
 		final int r, g, b;
 		LEDColor(int r, int g, int b) {
@@ -30,7 +31,7 @@ public class ArduinoController implements Module{
 		BLINK("blink", 500), RUN("run", 0), PULSE("pulse", 0), SOLID("solid", 0), CRAZY("crazy", 0), CLEAR("clear", 0);
 		
 		final String command;
-		final int delay;
+		final long delay;
 		LEDPattern( String command, int delay ) {
 			this.command = command;
 			this.delay = delay;
@@ -60,7 +61,7 @@ public class ArduinoController implements Module{
 	}
 	
 	public enum DriverMessage {
-		CURRENT_LIMIT(LEDPattern.RUN, LEDColor.RED), HIGH_GEAR(LEDPattern.RUN, LEDColor.GREEN), LOW_AIR(LEDPattern.PULSE, LEDColor.RED), FLAP_OUT(LEDPattern.SOLID, LEDColor.PURPLE), READY_TO_PLACE(LEDPattern.PULSE, LEDColor.PURPLE), INTAKE_DOWN(LEDPattern.PULSE, LEDColor.GREEN); 
+		CURRENT_LIMIT(LEDPattern.RUN, LEDColor.RED_HSV), HIGH_GEAR(LEDPattern.RUN, LEDColor.GREEN_HSV), LOW_AIR(LEDPattern.PULSE, LEDColor.RED), FLAP_OUT(LEDPattern.SOLID, LEDColor.PURPLE), READY_TO_PLACE(LEDPattern.PULSE, LEDColor.PURPLE), INTAKE_DOWN(LEDPattern.PULSE, LEDColor.GREEN); 
 		
 		final LEDColor color;
 		final LEDPattern pattern;
@@ -86,7 +87,8 @@ public class ArduinoController implements Module{
 	}
 	
 	private void sendMessage(String message){
-		currentMessage = message + TERM;
+		currentMessage = message;
+		DriverStation.reportError(currentMessage, false);
 	}
 	
 	public void send(FeederMessage message)
@@ -110,6 +112,8 @@ public class ArduinoController implements Module{
 			byte[] bytes = currentMessage.getBytes();
 			wire.transaction(bytes, bytes.length, null, 0);
 			lastMessage = currentMessage;
+		} else {
+			DriverStation.reportError("Command already sent", false);
 		}
 	}
 	
