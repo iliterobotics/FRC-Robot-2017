@@ -185,8 +185,10 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         if(!contours.isEmpty()) {
             allPoints = Collections.singletonList(contours.get(contours.size()-1));
+            System.out.println("LOOK AT ME:" + allPoints.get(0).size());
             Imgproc.cvtColor(matThresh,matThresh,Imgproc.COLOR_GRAY2RGB);
             Imgproc.drawContours(matThresh, allPoints, -1, new Scalar(255,255,0));
+
 
         }
 
