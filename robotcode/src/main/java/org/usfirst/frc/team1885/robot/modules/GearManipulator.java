@@ -3,6 +3,8 @@ package org.usfirst.frc.team1885.robot.modules;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.usfirst.frc.team1885.coms.ConstantGetter;
+
 import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -13,22 +15,30 @@ import edu.wpi.first.wpilibj.SolenoidBase;
 
 public class GearManipulator implements Module{
 
-	private static final int FLY_CAN_ID = 7;
+	private static final int FLY_CAN_ID = 9;
 	public static final double DEFAULT_INTAKE_SPEED = 0.8;
 	
 	private Map<PistonType, SolenoidBase> pistonMap;
 	
-	private boolean isOpen;
-	private boolean isTilted;
+	private static final double BAR_WAIT = 100;
+	
+	private boolean isLong;
+	private boolean isShort;
 	private boolean isKicked;
-	private boolean isUp;
+	private boolean isDown;
 	private boolean isDropping;
 	private double intakePower;
 	
 	private CANTalon intakeWheels;
 	
+	private long initBarOpen;
+	
+	private boolean hasIntakeHitLimit;
+	private boolean barOpening;
+	private boolean goingDown;
+	
 	private enum PistonType {
-		DOOR_DOWN(0, false), DOOR_TIPPER(1, false), KICKER(2, false), INTAKE(3, true), DROPPER(5, false);
+		INTAKE(0, true), LONG_DOOR(5, false), SHORT_DOOR(4, false), KICKER(6, false), DROPPER(3, false);
 		
 		public final int port;
 		public final boolean isDouble;
@@ -57,56 +67,89 @@ public class GearManipulator implements Module{
 
 	@Override
 	public void initialize() {
-		isOpen = 
 		isDropping = 
-		isTilted = 
+		isLong = 
+		isShort =
 		isKicked = false;
+		isDown = false;
+		ConstantGetter.addConstant("intake_current", "0");
 	}
 	
-	public void setOpen(boolean open){
-		this.isOpen = open;
+
+	public void setLong(boolean longdown){
+		isLong = longdown;
 	}
-	
-	public void setTilted(boolean tilted){
-		this.isTilted = tilted;
+
+	public void setShort(boolean shortdown){
+		isShort = shortdown;
 	}
 	
 	public void setKick(boolean kicked){
-		if(!isOpen && kicked){
+		if(!(isLong && isShort) && kicked){
 			kicked = false;
 		}
 		isKicked = kicked;
 	}
 	
-	public void setRaised(boolean raised){
-		if(!raised && (isOpen || isTilted || isDropping)){
-			raised = true;
+	public void setLowered(boolean lowered){
+		if(!lowered && (isShort || isLong || isDropping)){
+			lowered = false;
 		}
-		if(raised && (isOpen || isTilted)){
-			raised = false;
+		if(lowered && (isShort || isLong)){
+			lowered = true;
 		}
-		isUp = raised;
+		
+		if(lowered){
+			goingDown = true;
+		}else{
+			isDown = false;
+		}
 	}
 	
 	public void setDropping(boolean drop){
-		if(drop && (!isUp || !isTilted)){
-			drop = false;
+		if(!drop){
+			isDropping = false;
+		} else{
 		}
-		isDropping = drop;
 	}
 	
 	public void setIntakeSpeed(double power){
 		this.intakePower = power;
 	}
+	
+	public boolean getDropping(){
+		return isDropping;
+	}
+	
+	public boolean isShort(){
+		return isShort;
+	}
+	
+	public boolean isLong(){
+		return isLong;
+	}
 
 	@Override
 	public void update() {
-		setSingleSolenoid(PistonType.DOOR_DOWN, isOpen);
-		setSingleSolenoid(PistonType.DOOR_TIPPER, isTilted || isOpen);
+		setSingleSolenoid(PistonType.LONG_DOOR, isLong);
+		setSingleSolenoid(PistonType.SHORT_DOOR, isShort);
 		setSingleSolenoid(PistonType.KICKER, isKicked);
 		setSingleSolenoid(PistonType.DROPPER, isDropping);
-		setDoubleSolenoid(PistonType.INTAKE, isUp?Value.kReverse:Value.kForward);
+		if(goingDown){
+			if(!barOpening){
+				isDropping = true;
+				barOpening = true;
+				initBarOpen = System.currentTimeMillis();
+			}
+			if(System.currentTimeMillis() - initBarOpen >= BAR_WAIT){
+				isDown = true;
+				barOpening = false;
+				goingDown = false;
+			}
+		}			
+		setDoubleSolenoid(PistonType.INTAKE, isDown?Value.kReverse:Value.kForward);
 		intakeWheels.set(intakePower);
+		ConstantGetter.setConstant("intake_current", "" + intakeWheels.getOutputCurrent());
 	}
 	
 	public void setSingleSolenoid(PistonType type, boolean open){
@@ -125,6 +168,10 @@ public class GearManipulator implements Module{
 		}else{
 			DriverStation.reportError("WRONG SOLENOID TYPE", false);
 		}
+	}
+	
+	public boolean hasIntakeHitLimit(){
+		return hasIntakeHitLimit;
 	}
 	
 }

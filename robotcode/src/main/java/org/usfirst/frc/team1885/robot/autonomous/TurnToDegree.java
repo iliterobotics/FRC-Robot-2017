@@ -10,9 +10,10 @@ public class TurnToDegree extends Command {
 	
 	private static final int MIN_ALIGNED_COUNT = 5;
 	private static final double MAX_ERROR = 1;
-	private static final double KP = 0.01; 
-	private static final double KD = 0.3; 
-	private static final double KI = 0.0; 
+	private static final double KP = 0.009; 
+	private static final double KD = 0.0105;
+	private static final double KI = 0.0;
+	private static final double MINIMUM_POWER = 0.05;
 	
 	private double degrees, targetYaw;
 	private double error, lastError, totalError;
@@ -45,6 +46,10 @@ public class TurnToDegree extends Command {
 		if(alignedCount >= MIN_ALIGNED_COUNT) return true;
 		
 		output = ((KP * error) + (KI * totalError) + (KD * (error - lastError)));
+		if(Math.abs(output) < MINIMUM_POWER){
+			double scalar = output>0?1:-1;
+			output = MINIMUM_POWER * scalar;
+		}
 		leftPower = output; 
 		rightPower = -output;
 		

@@ -1,18 +1,20 @@
 package org.usfirst.frc.team1885.robot.modules;
 
-import org.usfirst.frc.team1885.robot.Robot;
+import org.usfirst.frc.team1885.coms.ConstantGetter;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
 public class Climber implements Module{
 
-	private static final double MAX_CURRENT_V_RATIO = 2;
+	private static final double MAX_CURRENT_V_RATIO = 3;
 	private static final double CLIMBER_POWER = 1.0;
+	private static final double PULSE_POWER = 0.75;
+	
 	private static final int[] TALON_IDS = {7, 8};
 	
 	public enum ClimberState{
-		INIT, PULSING, READY_TO_CLIMB, CLIMBING, STALLED, BUMPING;
+		INIT, PULSING, PAUSE, CLIMBING, STALLED, BUMPING;
 	}
 	
 	private ClimberState currentState;
@@ -20,15 +22,19 @@ public class Climber implements Module{
 	private CANTalon masterTalon;
 	private double currentPower;
 	
-	private static final int MAX_STALL_TIME = 200;
+	private static final int MAX_STALL_TIME = 50;
 	private static final int MAX_BUMP_TIME = 100;
-	private static final int MAX_PULSE_TIME = 200;
+	private static final int MAX_PAUSE_TIME = 200;
+	private static final int MAX_PULSE_TIME = 100;
 	
 	private boolean broken;
 	
-	private int stallTime;
-	private int pulseTime;
-	private int bumpTime;
+	private boolean didStall;
+	
+	private long initStallTime;
+	private long initPauseTime;
+	private long initPulseTime;
+	private long initBumpTime;
 	
 	public Climber(){
 		masterTalon = new CANTalon(TALON_IDS[0]);
@@ -42,18 +48,23 @@ public class Climber implements Module{
 	
 	public void initialize() {
 		currentState = ClimberState.INIT;
+		ConstantGetter.addConstant("current", "0");
+		ConstantGetter.addConstant("voltage", "0");
 	}
 	
 	public void run(){
+		System.out.println("RUN");
 		switch(currentState){
 		case INIT:
 			currentState = ClimberState.PULSING;
+			initPulseTime = System.currentTimeMillis();
 			break;
-		case READY_TO_CLIMB:
+		case PAUSE:
 			currentState = ClimberState.CLIMBING;
 			break;
 		case STALLED:
 			currentState = ClimberState.BUMPING;
+			initBumpTime = System.currentTimeMillis();
 			break;
 		default:
 			break;
@@ -64,35 +75,47 @@ public class Climber implements Module{
 		
 		switch(currentState){
 		case INIT:
-		case READY_TO_CLIMB:
 		case STALLED:
 			currentPower = 0;
+			break;
 		case PULSING:
-			currentPower = CLIMBER_POWER;
-			pulseTime += Robot.UPDATE_PERIOD;
-			if(pulseTime >= MAX_PULSE_TIME){
-				currentState = ClimberState.READY_TO_CLIMB;
+			currentPower = PULSE_POWER;
+			if((System.currentTimeMillis() - initPulseTime) >= MAX_PULSE_TIME){
+				currentState = ClimberState.PAUSE;
+				initPauseTime = System.currentTimeMillis();
 			}
+			break;
+		case PAUSE:
+			currentPower = 0;
+			if((System.currentTimeMillis() - initPauseTime) >= MAX_PAUSE_TIME){
+				currentState = ClimberState.CLIMBING;
+			}
+			break;
 		case CLIMBING:
 			currentPower = CLIMBER_POWER;
 			double current = masterTalon.getOutputCurrent();
 			double voltage = masterTalon.getOutputVoltage();
+			ConstantGetter.setConstant("current", "" + current);
+			ConstantGetter.setConstant("voltage", "" + voltage);
 			double ratio = current/voltage;
 			if(ratio > MAX_CURRENT_V_RATIO){
-				stallTime += Robot.UPDATE_PERIOD;
-				if(stallTime >= MAX_STALL_TIME){
+				if(!didStall){
+					initStallTime = System.currentTimeMillis();
+				}
+				if( (System.currentTimeMillis() - initStallTime) >= MAX_STALL_TIME){
 					currentState = ClimberState.STALLED;
 				}
+				didStall = true;
 			} else {
-				stallTime = 0;
+				didStall = false;
 			}
+			break;
 		case BUMPING:
 			currentPower = CLIMBER_POWER;
-			bumpTime += Robot.UPDATE_PERIOD;
-			if(bumpTime >= MAX_BUMP_TIME){
-				currentState = ClimberState.STALLED;
-				bumpTime = 0;
-			}			
+			if((System.currentTimeMillis() - initBumpTime) >= MAX_BUMP_TIME){
+				currentState = ClimberState.PAUSE;
+			}
+			break;
 		}
 		masterTalon.set(currentPower);
 	}

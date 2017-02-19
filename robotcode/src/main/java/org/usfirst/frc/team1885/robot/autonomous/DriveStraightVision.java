@@ -8,7 +8,7 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 
-public class DriveStraightDistance extends Command{
+public class DriveStraightVision extends Command{
 
 	private static final double INITIAL_POWER = 0.4;
 	
@@ -24,7 +24,7 @@ public class DriveStraightDistance extends Command{
 	Joystick testStick;
 
 	
-	public DriveStraightDistance(DriveTrain dt, NavX navx, double footDistance){
+	public DriveStraightVision(DriveTrain dt, NavX navx, double footDistance){
 		this.driveTrain = dt;
 		this.navx = navx;
 		this.distanceToTravel = feetToTicks(footDistance);
@@ -45,6 +45,8 @@ public class DriveStraightDistance extends Command{
 	}
 	
 	public boolean update(){
+		
+		adjustBearing(testStick.getRawAxis(0) * 0.001);
 		
 		if( getAverageDistanceTravel() >= distanceToTravel){
 			driveTrain.setPower(0, 0);

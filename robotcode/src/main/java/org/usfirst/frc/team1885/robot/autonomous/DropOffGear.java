@@ -21,7 +21,8 @@ public class DropOffGear extends Command{
 	public boolean update() {
 		currentTime += Robot.UPDATE_PERIOD;
 		if(currentTime > 750){
-			gearManipulator.setOpen(false);
+			gearManipulator.setLong(false);
+			gearManipulator.setShort(false);
 			return true;
 		}
 		else if(currentTime > 500){
@@ -30,7 +31,8 @@ public class DropOffGear extends Command{
 		else if(currentTime > 250){
 			gearManipulator.setKick(true);
 		}else{
-			gearManipulator.setOpen(true);
+			gearManipulator.setLong(true);
+			gearManipulator.setShort(true);
 		}
 		return false;
 	}

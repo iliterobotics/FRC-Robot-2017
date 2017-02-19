@@ -29,8 +29,15 @@ public abstract class DriverControl implements Module {
 	public static final int GAMEPAD_RIGHT_X = 4;
 	public static final int GAMEPAD_RIGHT_Y = 5;
 	
-	public static final int CLIMBER_OPERATOR_BUTTON = 7;
-	public static final int CLIMBER_DRIVER_BUTTON = 7;
+	public static final int CLIMBER_OPERATOR_BUTTON = 4;
+	public static final int CLIMBER_DRIVER_BUTTON = 1;
+
+	public static final int FLAP_DOWN_AXIS = 3;
+	public static final int FLAP_TILT_BUTTON = 6;
+	public static final int KICK_BUTTON = 2;
+	public static final int UP_BUTTON = 5;
+	public static final int DOWN_AXIS = 2;
+	public static final int DROP_BUTTON = 1;
 	
 	public static final boolean HIGH_GEAR = true;
 	public static final boolean LOW_GEAR = false;
@@ -49,6 +56,7 @@ public abstract class DriverControl implements Module {
 	private IJoystickFactory joystickFactory;
 	
 	private boolean wasClimberPushed;
+	private boolean wasToggleDrop;
 	private boolean isWarping;
 	private boolean isNudging;
 
@@ -76,6 +84,8 @@ public abstract class DriverControl implements Module {
 		for (ControllerType type : ControllerType.values()) {
 			controllerMap.put(type, joystickFactory.createJoystick(type.controllerId));			
 		}
+		wasClimberPushed = false;
+		wasToggleDrop = false;
 	}
 	
 	public void setSpeeds(double left, double right){
@@ -111,20 +121,63 @@ public abstract class DriverControl implements Module {
 		IJoystick manipulatorController = getController(ControllerType.CONTROLLER_2);
 		IJoystick driverController = getController(ControllerType.CONTROLLER);
 		if(manipulatorController.getRawAxis(1) > 0.5){
-			gearManipulator.setIntakeSpeed(-GearManipulator.DEFAULT_INTAKE_SPEED);
+			gearManipulator.setIntakeSpeed(GearManipulator.DEFAULT_INTAKE_SPEED);
 		}
 		else if(manipulatorController.getRawAxis(1) < -0.5){
-			gearManipulator.setIntakeSpeed(GearManipulator.DEFAULT_INTAKE_SPEED);
+			gearManipulator.setIntakeSpeed(-GearManipulator.DEFAULT_INTAKE_SPEED);
+		}
+		else{
+			gearManipulator.setIntakeSpeed(0);			
 		}
 		
 		if( !wasClimberPushed && manipulatorController.getRawButton(CLIMBER_OPERATOR_BUTTON)){
+			System.out.println("OPERATOR BUTTON DOWN");
 			if(climber.getClimberState() != ClimberState.INIT || driverController.getRawButton(CLIMBER_DRIVER_BUTTON)){
+				System.out.println("BOTH BUTTONS DOWN");
 				climber.run();
 				wasClimberPushed = true;
 			}
 		}else if(!manipulatorController.getRawButton(CLIMBER_OPERATOR_BUTTON)){
 			wasClimberPushed = false;
 		}
+
+		if((manipulatorController.getRawAxis(FLAP_DOWN_AXIS) > 0.9) ||
+		    manipulatorController.getRawButton(FLAP_TILT_BUTTON)){
+			gearManipulator.setLong(true);
+		}else{
+			gearManipulator.setLong(false);
+		}
+		
+		if((manipulatorController.getRawAxis(FLAP_DOWN_AXIS) > 0.9) || 
+			manipulatorController.getRawButton(DROP_BUTTON)){
+			gearManipulator.setShort(true);
+		}else{
+			gearManipulator.setShort(false);		
+		}
+		
+		if(manipulatorController.getRawButton(DROP_BUTTON)){
+			gearManipulator.setDropping(false);
+		}
+		
+		if(manipulatorController.getRawButton(UP_BUTTON)){
+			gearManipulator.setLowered(false);
+		}else if(manipulatorController.getRawAxis(DOWN_AXIS) > 0.9){
+			gearManipulator.setLowered(true);	
+		}
+
+		if(manipulatorController.getRawButton(KICK_BUTTON)){
+			gearManipulator.setKick(true);
+		}else{
+			gearManipulator.setKick(false);			
+		}
+		
+		if(!wasToggleDrop && manipulatorController.getRawButton(DROP_BUTTON)){
+			gearManipulator.setDropping(!gearManipulator.getDropping());
+			wasToggleDrop = true;
+		} else if(wasToggleDrop && !manipulatorController.getRawButton(DROP_BUTTON)){
+			wasToggleDrop = false;
+		}
+
 	}
 	
 	public abstract void updateDriveTrain();
@@ -147,8 +200,8 @@ public abstract class DriverControl implements Module {
 		return controllerMap.get(type);
 	}
 		
-	protected void initiateWarpSpeed(){
-		warpSpeedCommand = new DriveStraight(driveTrain, navx, 1.0);
+	protected void initiateWarpSpeed(double direction){
+		warpSpeedCommand = new DriveStraight(driveTrain, navx, direction);
 		warpSpeedCommand.init();
 		setShift(true);
 		injectCommand(warpSpeedCommand);
@@ -180,7 +233,7 @@ public abstract class DriverControl implements Module {
 		List<Command> commandsToRemove = new ArrayList<>();
 		for(Command command : runningCommands){
 			boolean status = command.update();
-			if(!status){
+			if(status){
 				commandsToRemove.add(command);
 			}
 		}

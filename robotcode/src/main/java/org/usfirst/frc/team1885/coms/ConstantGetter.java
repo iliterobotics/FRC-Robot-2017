@@ -9,7 +9,7 @@ import java.net.URL;
 
 public class ConstantGetter {
 	
-	private static final String ADDRESS = "michael-laptop.local";
+	private static final String ADDRESS = "http://michael-laptop.local";
 	
 	public static String getConstant( String var ) {
 		String url = ADDRESS + "/constant/" + var;
@@ -18,8 +18,6 @@ public class ConstantGetter {
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");
 			int responseCode = con.getResponseCode();
-			System.out.println("\nSending 'GET' request to URL : " + url);
-			System.out.println("Response code : " + responseCode);
 			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			String inputLine;
 			StringBuffer response = new StringBuffer();
@@ -30,9 +28,7 @@ public class ConstantGetter {
 			return response.toString();
 			
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return "";
 		
@@ -45,8 +41,6 @@ public class ConstantGetter {
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");
 			int responseCode = con.getResponseCode();
-			System.out.println("\nSending 'GET' request to URL : " + url);
-			System.out.println("Response code : " + responseCode);
 			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			String inputLine;
 			StringBuffer response = new StringBuffer();
@@ -57,9 +51,7 @@ public class ConstantGetter {
 			return response.toString();
 			
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return "";		
 	}
@@ -71,8 +63,6 @@ public class ConstantGetter {
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");
 			int responseCode = con.getResponseCode();
-			System.out.println("\nSending 'GET' request to URL : " + url);
-			System.out.println("Response code : " + responseCode);
 			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			String inputLine;
 			StringBuffer response = new StringBuffer();
@@ -83,9 +73,7 @@ public class ConstantGetter {
 			return response.toString();
 			
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return "";		
 	}

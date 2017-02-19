@@ -6,7 +6,7 @@ import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 public class Nudge extends Command{
 
 	private static final double NUDGE_POWER = 0.5;
-	private static final int NUDGE_TIME = 500;	
+	private static final int NUDGE_TIME = 30;	
 	
 	private final double direction;
 	
@@ -27,7 +27,7 @@ public class Nudge extends Command{
 	@Override
 	public boolean update() {
 		time += Robot.UPDATE_PERIOD;
-		driveTrain.setPower(-(NUDGE_POWER * direction), NUDGE_POWER * direction);
+		driveTrain.setPower(-(NUDGE_POWER * direction), (NUDGE_POWER * direction));
 		if(time >= NUDGE_TIME){
 			driveTrain.setPower(0, 0);
 			return true;

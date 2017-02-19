@@ -12,15 +12,16 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	
 	private static final int TURN_REDUCER_BUTTON = 5;
-	private static final int CASTER_BUTTON = 2;
-	private static final int SHIFTER_AXIS = 3;
+	private static final int CASTER_AXIS = 2;
+	private static final int REDUCER_AXIS = 3;
 	
 	private static final int WARP_SPEED_FORWARD = 0;
+	private static final int WARP_SPEED_BACKWARD = 180;
 
-	private static final int NUDGE_BUTTON_LEFT = 4;
-	private static final int NUDGE_BUTTON_RIGHT = 5;
+	private static final int NUDGE_BUTTON_LEFT = 5;
+	private static final int NUDGE_BUTTON_RIGHT = 6;
 	
-	private static final double TURN_REDUCER = 0.5;
+	private static final double REDUCER = 0.6;
 	private static final double HIGH_GEAR_TURN_REDUCER = 0.2;
 
 	private DriveTrain driveTrain;
@@ -42,13 +43,16 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 		
 		double leftInput, rightInput;
 		
-		if(driverController.getRawButton(TURN_REDUCER_BUTTON)) turn *= TURN_REDUCER;
-		
 		leftInput =  throttle - turn;
 		rightInput = throttle + turn;
 		
-		setCasters(driverController.getRawAxis(CASTER_BUTTON) >= 0.9);
-		setShift(driverController.getRawAxis(SHIFTER_AXIS) >= 0.9);
+		if(driverController.getRawAxis(REDUCER_AXIS) > 0.8){
+			leftInput *= REDUCER;
+			rightInput *= REDUCER;
+		}
+
+		
+		setCasters(driverController.getRawAxis(CASTER_AXIS) >= 0.9);
 		setSpeeds(leftInput, rightInput);
 
 		if(driverController.getRawButton(NUDGE_BUTTON_RIGHT) && !isNudging()){
@@ -59,9 +63,12 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 		}
 		
 		if(driverController.getPOV() == WARP_SPEED_FORWARD && !isWarpSpeed()){
-			initiateWarpSpeed();
+			initiateWarpSpeed(1);
 		}
-		else if( isWarpSpeed() && driverController.getPOV() != WARP_SPEED_FORWARD){
+		if(driverController.getPOV() == WARP_SPEED_BACKWARD && !isWarpSpeed()){
+			initiateWarpSpeed(-1);
+		}
+		else if( isWarpSpeed() && driverController.getPOV() != WARP_SPEED_FORWARD && driverController.getPOV() != WARP_SPEED_BACKWARD){
 			disableWarpSpeed();
 		}
 	}
