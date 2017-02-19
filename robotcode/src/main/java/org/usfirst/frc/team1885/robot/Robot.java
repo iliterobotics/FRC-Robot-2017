@@ -61,10 +61,14 @@ public class Robot extends SampleRobot{
 
 	public void robotInit(){
 		navx.resetDisplacement();
+    
+		CameraServer server = CameraServer.getInstance();
+		server.startAutomaticCapture(0);
 		while(navx.isCalibrating()){
 			pause();
 		}
 		navx.setInitialAngle(navx.getAngle());
+
 	}
 	
 	public void autonomous()
