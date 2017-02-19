@@ -17,7 +17,16 @@ public class ArduinoController implements Module{
 	private I2C wire;
 	
 	public enum LEDColor {
-		PURPLE(255, 0, 255), RED(255, 0, 0), WHITE(255, 255, 255), GREEN(0, 255, 0), DEFAULT_COLOR(0, 0, 0), GREEN_HSV(84, 255, 255), RED_HSV(0, 255, 255), PURPLE_HSV(212, 255, 255);
+		PURPLE(255, 0, 255), 
+		RED(255, 0, 0), 
+		WHITE(255, 255, 255), 
+		GREEN(0, 255, 0),
+		YELLOW(255, 255, 0),
+		DEFAULT_COLOR(0, 0, 0), 
+		GREEN_HSV(84, 255, 255), 
+		RED_HSV(0, 255, 255),
+		YELLOW_HSV(20, 255, 255),
+		PURPLE_HSV(212, 255, 255);
 		
 		final int r, g, b;
 		LEDColor(int r, int g, int b) {
@@ -28,7 +37,12 @@ public class ArduinoController implements Module{
 	}
 	
 	public enum LEDPattern {
-		BLINK("blink", 500), RUN("run", 0), PULSE("pulse", 0), SOLID("solid", 0), CRAZY("crazy", 0), CLEAR("clear", 0);
+		BLINK("blink", 500), 
+		RUN("run", 0), 
+		PULSE("pulse", 0), 
+		SOLID("solid", 0), 
+		CRAZY("crazy", 200), 
+		CLEAR("clear", 0);
 		
 		final String command;
 		final long delay;
@@ -39,7 +53,9 @@ public class ArduinoController implements Module{
 	}
 	
 	public enum FeederMessage {
-		WAIT(LEDPattern.SOLID, LEDColor.WHITE), DROP_TO_GROUND(LEDPattern.SOLID, LEDColor.GREEN), DROP_TO_INTAKE(LEDPattern.SOLID, LEDColor.PURPLE);
+		WAIT(LEDPattern.SOLID, LEDColor.WHITE), 
+		DROP_TO_GROUND(LEDPattern.SOLID, LEDColor.GREEN), 
+		DROP_TO_INTAKE(LEDPattern.SOLID, LEDColor.PURPLE);
 		
 		final LEDColor color;
 		final LEDPattern pattern;
@@ -50,7 +66,9 @@ public class ArduinoController implements Module{
 	}
 	
 	public enum PilotMessage {
-		WAIT(LEDPattern.SOLID, LEDColor.WHITE), GEAR_PLACED(LEDPattern.BLINK, LEDColor.PURPLE), LOOK_FOR_SIGNAL(LEDPattern.CRAZY, LEDColor.DEFAULT_COLOR);
+		WAIT(LEDPattern.SOLID, LEDColor.WHITE), 
+		GEAR_PLACED(LEDPattern.BLINK, LEDColor.PURPLE), 
+		LOOK_FOR_SIGNAL(LEDPattern.CRAZY, LEDColor.DEFAULT_COLOR);
 		
 		final LEDColor color;
 		final LEDPattern pattern;
@@ -61,7 +79,13 @@ public class ArduinoController implements Module{
 	}
 	
 	public enum DriverMessage {
-		CURRENT_LIMIT(LEDPattern.RUN, LEDColor.RED_HSV), HIGH_GEAR(LEDPattern.RUN, LEDColor.GREEN_HSV), LOW_AIR(LEDPattern.PULSE, LEDColor.RED), FLAP_OUT(LEDPattern.SOLID, LEDColor.PURPLE), READY_TO_PLACE(LEDPattern.PULSE, LEDColor.PURPLE), INTAKE_DOWN(LEDPattern.PULSE, LEDColor.GREEN); 
+		CURRENT_LIMIT(LEDPattern.RUN, LEDColor.RED_HSV), 
+		HIGH_GEAR(LEDPattern.RUN, LEDColor.GREEN_HSV), 
+		LOW_AIR(LEDPattern.PULSE, LEDColor.RED), 
+		FLAP_OUT(LEDPattern.SOLID, LEDColor.PURPLE),
+		READY_TO_LIFT(LEDPattern.BLINK, LEDColor.PURPLE), 
+		INTAKE_DOWN(LEDPattern.PULSE, LEDColor.GREEN),
+		IDLE(LEDPattern.RUN, LEDColor.YELLOW_HSV);
 		
 		final LEDColor color;
 		final LEDPattern pattern;
@@ -110,7 +134,8 @@ public class ArduinoController implements Module{
 	public void update() {
 		if(!currentMessage.equals(lastMessage)){
 			byte[] bytes = currentMessage.getBytes();
-			wire.transaction(bytes, bytes.length, null, 0);
+			boolean result = wire.transaction(bytes, bytes.length, null, 0);
+			System.out.println(result);
 			lastMessage = currentMessage;
 		} else {
 			DriverStation.reportError("Command already sent", false);

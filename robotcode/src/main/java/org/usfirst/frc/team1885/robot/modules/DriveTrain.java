@@ -10,6 +10,10 @@ import org.usfirst.frc.team1885.robot.common.impl.ETalonControlMode;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalon;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
 
+import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
+
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
@@ -58,7 +62,7 @@ public class DriveTrain implements Module {
 		}
 	}
 
-	private Map<MotorType, ICanTalon> motorMap;
+	private Map<MotorType, CANTalon> motorMap;
 	private Solenoid gearShifter;
 	private Solenoid casterShifter;
 
@@ -74,13 +78,13 @@ public class DriveTrain implements Module {
 		gearShifter = new Solenoid(SHIFT_SOLENOID_ID);
 		casterShifter = new Solenoid(CASTER_SOLENOID_ID);
 		for (MotorType type : MotorType.values()) {
-			ICanTalon talon = canTalonFactory.getCanTalon(type.talonId);
+			CANTalon talon = new CANTalon(type.talonId);
 			talon.setEncPosition(0);
 			talon.setP(0.5);
-			talon.setFeedbackDevice(EFeedbackDevice.QuadEncoder);
+			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			for (int followerId : type.followerIds) {
-				ICanTalon follower = canTalonFactory.getCanTalon(followerId);
-				follower.setControlMode(ETalonControlMode.Follower);
+				CANTalon follower = new CANTalon(followerId);
+				follower.setControlMode(TalonControlMode.Follower.value);
 				follower.set(type.talonId);
 			}
 			motorMap.put(type, talon);
@@ -94,6 +98,7 @@ public class DriveTrain implements Module {
 		ConstantGetter.addConstant("rightpos", "0");
 		ConstantGetter.addConstant("leftvel", "0");
 		ConstantGetter.addConstant("rightvel", "0");
+		ConstantGetter.addConstant("drive_train_current", "0");
 	}
 
 	private void setMode(DriveMode mode) {
@@ -106,7 +111,7 @@ public class DriveTrain implements Module {
 			actualRightPower = 0;
 			desiredLeftPower = 0;
 			desiredRightPower = 0;
-			setMotorMode(ETalonControlMode.PercentVbus);
+			setMotorMode(TalonControlMode.PercentVbus);
 			setVoltageRampRate(VOLTAGE_RAMP_RATE);
 			break;
 		case TICK_VEL:
@@ -115,9 +120,9 @@ public class DriveTrain implements Module {
 			desiredLeftSpeed = 0;
 			desiredRightSpeed = 0;
 			setVoltageRampRate(Integer.MAX_VALUE);
-			setMotorMode(ETalonControlMode.Speed);
-			motorMap.get(MotorType.LEFT_MOTOR).setFeedbackDevice(EFeedbackDevice.AnalogEncoder);
-			motorMap.get(MotorType.RIGHT_MOTOR).setFeedbackDevice(EFeedbackDevice.AnalogEncoder);
+			setMotorMode(TalonControlMode.Speed);
+			motorMap.get(MotorType.LEFT_MOTOR).setFeedbackDevice(FeedbackDevice.AnalogEncoder);
+			motorMap.get(MotorType.RIGHT_MOTOR).setFeedbackDevice(FeedbackDevice.AnalogEncoder);
 			break;
 		case POSITION:
 			setVoltageRampRate(Integer.MAX_VALUE);
@@ -172,13 +177,13 @@ public class DriveTrain implements Module {
 		motorMap.get(type).set(value * type.modifier);
 	}
 
-	public void setMotorMode(ETalonControlMode talonMode) {
-		for (ICanTalon talon : motorMap.values()) {
-			talon.setControlMode(talonMode);
+	public void setMotorMode(TalonControlMode talonMode) {
+		for (CANTalon talon : motorMap.values()) {
+			talon.setControlMode(talonMode.value);
 		}
 	}
 
-	public ETalonControlMode getMotorMode() {
+	public TalonControlMode getMotorMode() {
 		if (!motorMap.values().isEmpty()) {
 			return motorMap.values().iterator().next().getControlMode();
 		}
@@ -204,11 +209,15 @@ public class DriveTrain implements Module {
 			break;
 		}
 		ConstantGetter.setConstant("leftpos", getLeftPosition() + "");
-		System.out.println(getLeftPosition());
 		ConstantGetter.setConstant("rightpos", getRightPosition() + "");
 		ConstantGetter.setConstant("leftvel", getLeftEncoderVelocity() + "");
 		ConstantGetter.setConstant("rightvel", getRightEncoderVelocity() + "");
+		ConstantGetter.setConstant("drive_train_current",  getCurrentFeedback() + "");
 
+	}
+	
+	public double getCurrentFeedback(){
+		return (motorMap.get(MotorType.LEFT_MOTOR).getOutputCurrent() + motorMap.get(MotorType.RIGHT_MOTOR).getOutputCurrent())/2;
 	}
 
 	public void setCasting(boolean casted) {

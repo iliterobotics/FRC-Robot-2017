@@ -38,6 +38,8 @@ public abstract class DriverControl implements Module {
 	public static final int UP_BUTTON = 5;
 	public static final int DOWN_AXIS = 2;
 	public static final int DROP_BUTTON = 1;
+	public static final int WAIT_BUTTON = 8;
+	public static final int LOOK_FOR_SIGNAL_BUTTON = 7;
 	
 	public static final boolean HIGH_GEAR = true;
 	public static final boolean LOW_GEAR = false;
@@ -60,6 +62,12 @@ public abstract class DriverControl implements Module {
 	private boolean isWarping;
 	private boolean isNudging;
 
+	private boolean isWait;
+	private boolean wasWaitPushed;
+
+	private boolean isLook;
+	private boolean wasLookPushed;
+	
 	public enum ControllerType {
 		CONTROLLER(0), CONTROLLER_2(1), TEST_CONTROLLER(2), LEFT_STICK(3), RIGHT_STICK(4);
 
@@ -86,6 +94,8 @@ public abstract class DriverControl implements Module {
 		}
 		wasClimberPushed = false;
 		wasToggleDrop = false;
+		wasWaitPushed = false;
+		isWait = false;
 	}
 	
 	public void setSpeeds(double left, double right){
@@ -175,6 +185,20 @@ public abstract class DriverControl implements Module {
 		} else if(wasToggleDrop && !manipulatorController.getRawButton(DROP_BUTTON)){
 			wasToggleDrop = false;
 		}
+		
+		if(!wasWaitPushed && manipulatorController.getRawButton(WAIT_BUTTON)){
+			isWait = !isWait;
+			wasWaitPushed = true;
+		} else if(wasWaitPushed && !manipulatorController.getRawButton(WAIT_BUTTON)){
+			wasWaitPushed = false;
+		}
+		
+		if(!wasLookPushed && manipulatorController.getRawButton(LOOK_FOR_SIGNAL_BUTTON)){
+			isLook = !isLook;
+			wasLookPushed = true;
+		} else if(wasLookPushed && !manipulatorController.getRawButton(LOOK_FOR_SIGNAL_BUTTON)){
+			wasLookPushed = false;
+		}
 
 	}
 	
@@ -250,5 +274,13 @@ public abstract class DriverControl implements Module {
 	
 	public boolean isWarping(){
 		return isWarping;
+	}
+	
+	public boolean isWait(){
+		return isWait;
+	}
+	
+	public boolean isLook(){
+		return isLook;
 	}
 }

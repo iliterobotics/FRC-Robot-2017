@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.robot.autonomous.Command;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraightDistance;
 import org.usfirst.frc.team1885.robot.autonomous.DriveStraightVision;
 import org.usfirst.frc.team1885.robot.autonomous.DropOffGear;
 import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
@@ -46,8 +47,8 @@ public class Robot extends SampleRobot{
 	private List<Module> runningModules;
 	
 	public Robot(){
-	    CameraServer server = CameraServer.getInstance(); 
-	    UsbCamera camera = server.startAutomaticCapture(); 
+	    //CameraServer server = CameraServer.getInstance(); 
+	    //UsbCamera camera = server.startAutomaticCapture(); 
 	    
 	    String color = DriverStation.getInstance().getAlliance().toString();
 		int location = DriverStation.getInstance().getLocation();
@@ -62,8 +63,8 @@ public class Robot extends SampleRobot{
 		gearManipulator = new GearManipulator();
 		climber = new Climber();
 		arduinoController = new ArduinoController();
-		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, climber, gearManipulator);
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
+		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, climber, gearManipulator);
 	}
 
 	public void robotInit(){
@@ -81,12 +82,12 @@ public class Robot extends SampleRobot{
 	public void autonomous()
 	{		
 		autonomousCommands.clear();
-		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 90));
+		autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 90));
 		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 60, 5));
 		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 15));
 		autonomousCommands.add(new DropOffGear(gearManipulator, driveTrain));
 		autonomousCommands.add(new TurnToDegree(driveTrain, navx, -10, 20));
-		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 48));
+		autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 48));
 		
 		setRunningModules(driveTrain, gearManipulator, pressureRegulator);
 
