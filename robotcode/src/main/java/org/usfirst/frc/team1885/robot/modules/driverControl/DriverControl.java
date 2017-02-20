@@ -41,6 +41,9 @@ public abstract class DriverControl implements Module {
 	public static final int WAIT_BUTTON = 8;
 	public static final int LOOK_FOR_SIGNAL_BUTTON = 7;
 	
+	public static final double DROP_INTAKE_SPEED = 0.5;
+	public static final double PASSIVE_INTAKE_SPEED = 0.5;
+	
 	public static final boolean HIGH_GEAR = true;
 	public static final boolean LOW_GEAR = false;
 	
@@ -128,17 +131,10 @@ public abstract class DriverControl implements Module {
 	}
 	
 	public void updateManipulator(){
-		IJoystick manipulatorController = getController(ControllerType.CONTROLLER_2);
 		IJoystick driverController = getController(ControllerType.CONTROLLER);
-		if(manipulatorController.getRawAxis(1) > 0.5){
-			gearManipulator.setIntakeSpeed(GearManipulator.DEFAULT_INTAKE_SPEED);
-		}
-		else if(manipulatorController.getRawAxis(1) < -0.5){
-			gearManipulator.setIntakeSpeed(-GearManipulator.DEFAULT_INTAKE_SPEED);
-		}
-		else{
-			gearManipulator.setIntakeSpeed(0);			
-		}
+		IJoystick manipulatorController = getController(ControllerType.CONTROLLER_2);
+		
+		updateIntakeWheels(driverController, manipulatorController);
 		
 		if( !wasClimberPushed && manipulatorController.getRawButton(CLIMBER_OPERATOR_BUTTON)){
 			if(climber.getClimberState() != ClimberState.INIT || driverController.getRawButton(CLIMBER_DRIVER_BUTTON)){
@@ -200,6 +196,23 @@ public abstract class DriverControl implements Module {
 			wasLookPushed = false;
 		}
 
+	}
+	
+	private void updateIntakeWheels(IJoystick driverController, IJoystick manipulatorController) {
+		if(manipulatorController.getRawAxis(1) > 0.5){
+			gearManipulator.setIntakeSpeed(GearManipulator.DEFAULT_INTAKE_SPEED);
+		}
+		else if(manipulatorController.getRawAxis(1) < -0.5){
+			gearManipulator.setIntakeSpeed(-GearManipulator.DEFAULT_INTAKE_SPEED);
+		}
+		else if(manipulatorController.getRawButton(DROP_BUTTON)){
+			gearManipulator.setIntakeSpeed(DROP_INTAKE_SPEED);			
+		} else if(manipulatorController.getRawButton(FLAP_TILT_BUTTON)){
+			gearManipulator.setIntakeSpeed(PASSIVE_INTAKE_SPEED);
+		}
+		else {
+			gearManipulator.setIntakeSpeed(0);
+		}
 	}
 	
 	public abstract void updateDriveTrain();

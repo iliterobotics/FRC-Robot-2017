@@ -143,12 +143,17 @@ public class GearManipulator implements Module{
 		return hasIntakeHitLimit;
 	}
 	
+	public boolean isDropping() {
+		return isDropping;
+	}
+	
 	@Override
 	public void update() {
 		setSingleSolenoid(PistonType.LONG_DOOR, isLong);
 		setSingleSolenoid(PistonType.SHORT_DOOR, isShort);
 		setSingleSolenoid(PistonType.KICKER, isKicked);
 		setSingleSolenoid(PistonType.DROPPER, isDropping);
+		
 		if(goingDown){
 			if(!barOpening){
 				isDropping = true;
@@ -160,13 +165,19 @@ public class GearManipulator implements Module{
 				barOpening = false;
 				goingDown = false;
 			}
-		}			
-		setDoubleSolenoid(PistonType.INTAKE, isDown?Value.kReverse:Value.kForward);
+		}
+		
+		if(isShort && !barOpening) intakeWheels.set(0.5);
+		
+		setDoubleSolenoid(PistonType.INTAKE, isDown ? Value.kReverse : Value.kForward);
+		
+		//Check current limit
 		if(intakePower == 0) hasIntakeHitLimit = false;
 		intakeWheels.set(hasIntakeHitLimit?0:intakePower);
 		if(intakeWheels.getOutputCurrent() >= MAX_INTAKE_AMPERAGE){
 			hasIntakeHitLimit = true;
 		}
+		
 		ConstantGetter.setConstant("intake_current", "" + intakeWheels.getOutputCurrent());
 	}
 	

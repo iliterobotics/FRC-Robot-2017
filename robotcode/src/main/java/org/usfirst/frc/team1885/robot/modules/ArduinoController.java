@@ -19,6 +19,7 @@ public class ArduinoController implements Module{
 	public enum LEDColor {
 		PURPLE(255, 0, 255), 
 		RED(255, 0, 0), 
+		LIGHT_BLUE(0, 100, 255),
 		WHITE(255, 255, 255), 
 		GREEN(0, 255, 0),
 		YELLOW(255, 255, 0),
@@ -81,7 +82,7 @@ public class ArduinoController implements Module{
 	public enum DriverMessage {
 		CURRENT_LIMIT(LEDPattern.RUN, LEDColor.RED_HSV), 
 		HIGH_GEAR(LEDPattern.RUN, LEDColor.GREEN_HSV), 
-		LOW_AIR(LEDPattern.PULSE, LEDColor.RED), 
+		LOW_AIR(LEDPattern.PULSE, LEDColor.LIGHT_BLUE), 
 		FLAP_OUT(LEDPattern.SOLID, LEDColor.PURPLE),
 		READY_TO_LIFT(LEDPattern.BLINK, LEDColor.PURPLE), 
 		INTAKE_DOWN(LEDPattern.PULSE, LEDColor.GREEN),
