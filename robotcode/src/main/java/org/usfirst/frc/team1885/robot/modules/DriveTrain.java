@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.coms.ConstantGetter;
+import org.usfirst.frc.team1885.coms.ConstantUpdater;
 import org.usfirst.frc.team1885.robot.common.impl.DefaultCanTalonFactory;
 import org.usfirst.frc.team1885.robot.common.impl.EFeedbackDevice;
 import org.usfirst.frc.team1885.robot.common.impl.ETalonControlMode;
@@ -208,11 +209,11 @@ public class DriveTrain implements Module {
 		case POSITION:
 			break;
 		}
-		ConstantGetter.setConstant("leftpos", getLeftPosition() + "");
-		ConstantGetter.setConstant("rightpos", getRightPosition() + "");
-		ConstantGetter.setConstant("leftvel", getLeftEncoderVelocity() + "");
-		ConstantGetter.setConstant("rightvel", getRightEncoderVelocity() + "");
-		ConstantGetter.setConstant("drive_train_current",  getCurrentFeedback() + "");
+		ConstantUpdater.getInstance().addToConstant("leftpos", getLeftPosition() + "");
+		ConstantUpdater.getInstance().addToConstant("rightpos", getRightPosition() + "");
+		ConstantUpdater.getInstance().addToConstant("leftvel", getLeftEncoderVelocity() + "");
+		ConstantUpdater.getInstance().addToConstant("rightvel", getRightEncoderVelocity() + "");
+		ConstantUpdater.getInstance().addToConstant("drive_train_current",  getCurrentFeedback() + "");
 
 	}
 	

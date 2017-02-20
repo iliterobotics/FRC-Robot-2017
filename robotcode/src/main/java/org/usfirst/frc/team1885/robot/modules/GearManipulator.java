@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.coms.ConstantGetter;
+import org.usfirst.frc.team1885.coms.ConstantUpdater;
 
 import com.ctre.CANTalon;
 
@@ -178,7 +179,7 @@ public class GearManipulator implements Module{
 			hasIntakeHitLimit = true;
 		}
 		
-		ConstantGetter.setConstant("intake_current", "" + intakeWheels.getOutputCurrent());
+		ConstantUpdater.getInstance().addToConstant("intake_current", "" + intakeWheels.getOutputCurrent());
 	}
 	
 	public void setSingleSolenoid(PistonType type, boolean open){

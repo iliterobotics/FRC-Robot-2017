@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1885.robot.modules;
 
 import org.usfirst.frc.team1885.coms.ConstantGetter;
+import org.usfirst.frc.team1885.coms.ConstantUpdater;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
@@ -94,8 +95,8 @@ public class Climber implements Module{
 			currentPower = CLIMBER_POWER;
 			double current = masterTalon.getOutputCurrent();
 			double voltage = masterTalon.getOutputVoltage();
-			ConstantGetter.setConstant("current", "" + current);
-			ConstantGetter.setConstant("voltage", "" + voltage);
+			ConstantUpdater.getInstance().addToConstant("current", "" + current);
+			ConstantUpdater.getInstance().addToConstant("voltage", "" + voltage);
 			double ratio = current/voltage;
 			if(ratio > MAX_CURRENT_V_RATIO){
 				if(!didStall){
