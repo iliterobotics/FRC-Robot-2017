@@ -27,8 +27,8 @@ public class Nudge extends Command{
 	@Override
 	public boolean update() {
 		time += Robot.UPDATE_PERIOD;
-		if ( direction == -1.0 ) driveTrain.setPower(-(NUDGE_POWER * direction), 0);
-		else driveTrain.setPower(0, (NUDGE_POWER * direction));
+		if ( direction == -1.0 ) driveTrain.setPower((NUDGE_POWER * direction), 0);
+		else driveTrain.setPower(0, -(NUDGE_POWER * direction));
 		if(time >= NUDGE_TIME){
 			driveTrain.setPower(0, 0);
 			return true;
