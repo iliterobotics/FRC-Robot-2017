@@ -167,8 +167,6 @@ public class GearManipulator implements Module{
 			}
 		}
 		
-		if(isShort && !barOpening) intakeWheels.set(0.5);
-		
 		setDoubleSolenoid(PistonType.INTAKE, isDown ? Value.kReverse : Value.kForward);
 		
 		//Check current limit

@@ -148,6 +148,7 @@ public abstract class DriverControl implements Module {
 		if((manipulatorController.getRawAxis(FLAP_DOWN_AXIS) > 0.9) ||
 		    manipulatorController.getRawButton(FLAP_TILT_BUTTON)){
 			gearManipulator.setLong(true);
+			gearManipulator.setDropping(false);
 		}else{
 			gearManipulator.setLong(false);
 		}
