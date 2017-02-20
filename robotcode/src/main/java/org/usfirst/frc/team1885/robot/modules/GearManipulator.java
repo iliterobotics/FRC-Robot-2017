@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.SolenoidBase;
 public class GearManipulator implements Module{
 
 	private static final int FLY_CAN_ID = 9;
-	public static final double DEFAULT_INTAKE_SPEED = 0.8;
+	public static final double DEFAULT_INTAKE_SPEED = 1.0;
 	
 	public static final double MAX_INTAKE_AMPERAGE = 30;
 	
