@@ -6,13 +6,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import org.junit.runners.Parameterized.UseParametersRunnerFactory;
+import org.usfirst.frc.team1885.coms.ConstantGetter;
+import org.usfirst.frc.team1885.coms.ConstantUpdater;
 import org.usfirst.frc.team1885.robot.autonomous.Command;
 import org.usfirst.frc.team1885.robot.autonomous.DriveStraightDistance;
 import org.usfirst.frc.team1885.robot.autonomous.DriveStraightVision;
 import org.usfirst.frc.team1885.robot.autonomous.DropOffGear;
 import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
 import org.usfirst.frc.team1885.robot.modules.ArduinoController;
-import org.usfirst.frc.team1885.robot.modules.ArduinoController.LEDColor;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
@@ -23,7 +25,6 @@ import org.usfirst.frc.team1885.robot.modules.PressureSensor;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
-import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
@@ -42,6 +43,7 @@ public class Robot extends SampleRobot{
 	private PressureSensor pressureRegulator;
 	private LEDController ledController;
 	private ArduinoController arduinoController;
+	private Thread constantUpdaterThread;
 	
 	private Queue<Command> autonomousCommands;
 	private List<Module> runningModules;
@@ -54,6 +56,9 @@ public class Robot extends SampleRobot{
 		int location = DriverStation.getInstance().getLocation();
 		System.out.printf("Alliance: %s%d"  , color, location);
 	    
+		constantUpdaterThread = new Thread(ConstantUpdater.getInstance());
+		constantUpdaterThread.start();
+		
 		runningModules = new ArrayList<>();
 		autonomousCommands = new LinkedList<>();
 		
