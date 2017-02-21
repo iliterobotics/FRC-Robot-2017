@@ -63,18 +63,6 @@ public class ConstantUpdater implements Runnable {
 	}
 	
 	public void addToConstant( String var, String val ){
-		if (val.matches("-?\\d+(\\.\\d+)?"))
-		{
-			SmartDashboard.putNumber(var + ": ", Double.parseDouble(var));
-		}
-		else if(val.equals("False") || val.equals("True"))
-		{
-			SmartDashboard.putBoolean(var + ": ", Boolean.parseBoolean(var));
-		}
-		else
-		{
-			SmartDashboard.putString(var + ": ", val);
-		}
 		update.add(new Update(var, val));
 	}
 	
