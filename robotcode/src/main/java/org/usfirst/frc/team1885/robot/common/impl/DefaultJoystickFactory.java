@@ -65,6 +65,11 @@ public class DefaultJoystickFactory implements IJoystickFactory {
 			
 			return returnVal;
 		}
+
+		@Override
+		public int getPOV() {
+			return realJoystick.getPOV();
+		}
 		
 	}
 

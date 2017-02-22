@@ -6,16 +6,25 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import org.usfirst.frc.team1885.robot.autonomous.AutonomousCommand;
+import org.usfirst.frc.team1885.coms.ConstantUpdater;
+import org.usfirst.frc.team1885.robot.autonomous.Command;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraightDistance;
+import org.usfirst.frc.team1885.robot.autonomous.DriveStraightVision;
+import org.usfirst.frc.team1885.robot.autonomous.DropOffGear;
 import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
+import org.usfirst.frc.team1885.robot.modules.ArduinoController;
+import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
+import org.usfirst.frc.team1885.robot.modules.LEDController;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
+import org.usfirst.frc.team1885.robot.modules.PressureSensor;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -28,17 +37,37 @@ public class Robot extends SampleRobot{
 	private DriverControl driverControl;
 	private NavX navx;
 	private GearManipulator gearManipulator;
+	private Climber climber;
+	private PressureSensor pressureRegulator;
+	private LEDController ledController;
+	private ArduinoController arduinoController;
+	private Thread constantUpdaterThread;
 	
-	private Queue<AutonomousCommand> autonomousCommands;
+	private Queue<Command> autonomousCommands;
 	private List<Module> runningModules;
 	
 	public Robot(){
+	    //CameraServer server = CameraServer.getInstance(); 
+	    //UsbCamera camera = server.startAutomaticCapture(); 
+	    
+	    String color = DriverStation.getInstance().getAlliance().toString();
+		int location = DriverStation.getInstance().getLocation();
+		System.out.printf("Alliance: %s%d"  , color, location);
+	    
+		constantUpdaterThread = new Thread(ConstantUpdater.getInstance());
+		constantUpdaterThread.start();
+		
 		runningModules = new ArrayList<>();
 		autonomousCommands = new LinkedList<>();
-
+		
 		navx = new NavX();
-		driveTrain = new DriveTrain();	
-		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
+		pressureRegulator = new PressureSensor();
+		driveTrain = new DriveTrain();
+		gearManipulator = new GearManipulator();
+		climber = new Climber();
+		arduinoController = new ArduinoController();
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
+		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, climber, gearManipulator);
 	}
 
 	public void robotInit(){
@@ -54,13 +83,18 @@ public class Robot extends SampleRobot{
 	}
 	
 	public void autonomous()
-	{
+	{		
 		autonomousCommands.clear();
-		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 90));
+		autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 90));
+		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 60, 5));
+		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 15));
+		autonomousCommands.add(new DropOffGear(gearManipulator, driveTrain));
+		autonomousCommands.add(new TurnToDegree(driveTrain, navx, -10, 20));
+		autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 48));
 		
-		setRunningModules(driveTrain);
+		setRunningModules(driveTrain, gearManipulator, pressureRegulator);
 
-		AutonomousCommand currentCommand = autonomousCommands.peek();
+		Command currentCommand = autonomousCommands.peek();
 		if(currentCommand != null) currentCommand.init();
 		while(isAutonomous() && isEnabled()){
 				currentCommand = autonomousCommands.peek();
@@ -82,7 +116,7 @@ public class Robot extends SampleRobot{
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, driveTrain);
+		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, pressureRegulator, arduinoController, ledController);
 		while(isOperatorControl() && isEnabled()){
 			updateModules();
 			pause();
@@ -90,8 +124,7 @@ public class Robot extends SampleRobot{
 	}
 	
 	public void test(){
-		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain);
-		setRunningModules(driverControl, driveTrain);
+		setRunningModules(pressureRegulator);
 		while(isTest() && isEnabled()){
 			updateModules();
 			pause();

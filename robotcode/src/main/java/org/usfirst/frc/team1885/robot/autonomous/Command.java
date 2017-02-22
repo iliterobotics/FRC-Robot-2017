@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1885.robot.autonomous;
 
-public abstract class AutonomousCommand {
+public abstract class Command {
 	/**
 	 * Method calls needed to initialize the command go here.
 	 */

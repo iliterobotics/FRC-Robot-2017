@@ -7,5 +7,7 @@ public interface IJoystick {
 	boolean getRawButton(int i);
 
 	double getAxis(EJoystickAxis ky);
+	
+	int getPOV();
 
 }

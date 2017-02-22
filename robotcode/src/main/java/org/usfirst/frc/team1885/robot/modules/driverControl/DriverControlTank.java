@@ -5,7 +5,10 @@ import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
 import org.usfirst.frc.team1885.robot.common.interfaces.EJoystickAxis;
 import org.usfirst.frc.team1885.robot.common.interfaces.IDriverStation;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
+import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
+import org.usfirst.frc.team1885.robot.modules.GearManipulator;
+import org.usfirst.frc.team1885.robot.modules.NavX;
 
 public class DriverControlTank extends DriverControl{
 	
@@ -13,16 +16,21 @@ public class DriverControlTank extends DriverControl{
 	private double reducer;
 	private IDriverStation driveStation;
 	
-	public DriverControlTank(DriveTrain driveTrain) {
-		this(driveTrain, new DefaultJoystickFactory(), new DefaultDriverStation());
+	public DriverControlTank(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) {
+		this(driveTrain, gearManipulator, climber, navx, new DefaultJoystickFactory(), new DefaultDriverStation());
 	}
 
-	public DriverControlTank(DriveTrain driveTrain, IJoystickFactory factory, IDriverStation driveStation) {
-		super(driveTrain, factory);
+	public DriverControlTank(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, IJoystickFactory factory, IDriverStation driveStation) {
+		super(driveTrain, gearManipulator, climber, navx, factory);
 		this.driveStation = driveStation;
 	}
+	
+	public double getReducer(double value) {
+		return (value + 1.0) / 2.0;
+	}
 
-	public void update() {
+	@Override
+	public void updateDriveTrain() {
 		reducer = getReducer(getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kZ));
 		double leftInput = getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kY);
 		double rightInput = getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kY);
@@ -43,10 +51,6 @@ public class DriverControlTank extends DriverControl{
 		driveStation.reportError(String.format("fL:%f fR:%f", leftInput, rightInput), false);
 
 		setSpeeds(leftInput, rightInput);
-	}
-	
-	public double getReducer(double value) {
-		return (value + 1.0) / 2.0;
 	}
 
 }

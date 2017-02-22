@@ -1,42 +1,39 @@
 package org.usfirst.frc.team1885.robot.autonomous;
 
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
+import org.usfirst.frc.team1885.robot.modules.NavX;
 
-import edu.wpi.first.wpilibj.DriverStation;
-
-public class DriveStraight extends AutonomousCommand{
-
-	private static final double INITIAL_POWER = 0.5;
-	private static final double PROPORTION = 0.0001;
+public class DriveStraight extends Command{
+	
+	public final double INITIAL_POWER;
+	public static final double PROPORTION = 0.02;
 	
 	private final DriveTrain driveTrain;
-	private double leftOutput;
-	private double rightOutput;
+	private final NavX navx;
 	
+	private double initialYaw;
 	
-	public DriveStraight(DriveTrain driveTrain){
-		this.driveTrain = driveTrain;
+	public DriveStraight(DriveTrain dt, NavX navx, double initialPower){
+		this.driveTrain = dt;
+		this.navx = navx;
+		this.INITIAL_POWER = initialPower;
 	}
 	
-	@Override
-	public void init() {
-		leftOutput = INITIAL_POWER;
-		rightOutput = INITIAL_POWER;
+	public void init(){
+		initialYaw = navx.getYaw();
 	}
+	
+	public boolean update(){
+		System.out.println("Command printing");
 
-	@Override
-	public boolean update() {
-		double difference = Math.abs(driveTrain.getRightEncoderVelocity()) - Math.abs(driveTrain.getLeftEncoderVelocity());
+		double yawError = navx.getAngleDistance(initialYaw, navx.getYaw());
+		driveTrain.setPower(-(INITIAL_POWER + yawError * PROPORTION), -(INITIAL_POWER - yawError * PROPORTION));
 		
-		DriverStation.reportError(String.format("LeftVel:%d RightVel:%d CiO:%f", driveTrain.getLeftEncoderVelocity(), driveTrain.getRightEncoderVelocity(), difference * PROPORTION), false);
-		
-		rightOutput -= difference * PROPORTION;
-		leftOutput += difference * PROPORTION;
-		
-		//DriverStation.reportError(String.format("Diff:%f, Left:%f Right:%f", difference, leftOutput, rightOutput), false);
-		
-		driveTrain.setPower(-leftOutput, -rightOutput);
 		return false;
 	}
-
+	
+	public void adjustBearing(double angleDiff){
+		initialYaw = navx.getAngleSum(initialYaw, angleDiff);
+	}
+	
 }
