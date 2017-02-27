@@ -1,1 +1,1 @@
-include 'robotcode', 'commscode','VisionClient', 'Androidcode:App:visionUtils'
+include 'robotcode', 'commscode','VisionClient', 'displaycode', 'Androidcode:App:visionUtils'
