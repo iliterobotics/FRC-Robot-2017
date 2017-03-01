@@ -4,28 +4,16 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc.team1885.display.DisplayConfig;
-import org.usfirst.frc.team1885.display.ERobotData;
-import org.usfirst.frc.team1885.display.ESupportedTypes;
-
-import com.sun.xml.internal.ws.api.addressing.AddressingPropertySet;
-
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.IRemote;
 import edu.wpi.first.wpilibj.tables.IRemoteConnectionListener;
 import edu.wpi.first.wpilibj.tables.ITableListener;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.LongProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
 
 /**
  * Converts from the NetworkTables generic data components into 
@@ -40,14 +28,13 @@ public class RobotDataStream {
   
   protected Map<String, ESupportedTypes> mDataToCollect = new HashMap<>();
   
-  protected final Map<String, DoubleProperty> mLatestDoubles = new HashMap<>();
-  protected final Map<String, IntegerProperty> mLatestIntegers = new HashMap<>();
-  protected final Map<String, LongProperty> mLatestLongs = new HashMap<>();
+  protected final Map<String, Property<Number>> mLatestNumbers = new HashMap<>();
   protected final Map<String, Property<String>> mLatestStrings = new HashMap<>();
   protected final Map<String, Property<Boolean>> mLatestBooleans = new HashMap<>();
   protected final Map<String, Property<Object>> mLatestUnknowns = new HashMap<>();
   
   protected RobotDataStream() {
+
     // Initial known set of data
     for(ERobotData data : ERobotData.values()) {
       addDataToCollect(data.comms, data.type);
@@ -57,10 +44,10 @@ public class RobotDataStream {
     for(int i = 0; i < 8; i++) {
       createProperty(ERobotData.PCM.name() + i, ESupportedTypes.BOOLEAN);
     }
-    mLatestIntegers.get(ERobotData.PCM.comms).addListener((obs, old, mew) -> {
+    mLatestNumbers.get(ERobotData.PCM.comms).addListener((obs, old, mew) -> {
       // We could do reverse bit testing on the integer.
       // But why, when BigInteger lets us cheat!?
-      BigInteger bi = BigInteger.valueOf((Integer)mew);
+      BigInteger bi = BigInteger.valueOf((int)mew);
       for(int i = 0; i < 8; i++) {
         mLatestBooleans.get(ERobotData.PCM.name() + i).setValue(bi.testBit(i));
       }
@@ -127,8 +114,23 @@ public class RobotDataStream {
   public <T> T bindOneWay(String pCommsId, Class<T> pType, Property<T> pProperty) {
     Property<?> p = getProperty(pCommsId, ESupportedTypes.fromType(pType));
     if(p != null) {
+      // JIT compiler trick - this ChangeListener will be the same 'type' as T
       p.addListener((obs, old, mew) -> pProperty.setValue(pType.cast(mew)));
-      return pType.cast(p.getValue());
+      if(p.getValue() != null) {
+        return pType.cast(p.getValue());
+      }
+    }
+    return null;
+  }
+  
+  public Double bindOneWay(String pCommsId, DoubleProperty pProperty) {
+    Property<Number> p = mLatestNumbers.get(pCommsId);
+    if(p != null) {
+      // JIT compiler trick - this ChangeListener will be the same 'type' as T
+      p.addListener((obs, old, mew) -> pProperty.setValue(mew));
+      if(p.getValue() != null) {
+        return (double)p.getValue();
+      }
     }
     return null;
   }
@@ -161,14 +163,10 @@ public class RobotDataStream {
     case BOOLEAN:
       mLatestBooleans.put(pCommsId, new SimpleBooleanProperty());
       break;
-    case DOUBLE:
-      mLatestDoubles.put(pCommsId, new SimpleDoubleProperty());
-      break;
     case INTEGER:
-      mLatestIntegers.put(pCommsId, new SimpleIntegerProperty());
-      break;
     case LONG:
-      mLatestLongs.put(pCommsId, new SimpleLongProperty());
+    case DOUBLE:
+      mLatestNumbers.put(pCommsId, new SimpleDoubleProperty());
       break;
     case STRING:
       mLatestStrings.put(pCommsId, new SimpleStringProperty());
@@ -183,9 +181,7 @@ public class RobotDataStream {
 
   private void deleteProperty(String pCommsId) {
     mLatestBooleans.remove(pCommsId);
-    mLatestDoubles.remove(pCommsId);
-    mLatestIntegers.remove(pCommsId);
-    mLatestLongs.remove(pCommsId);
+    mLatestNumbers.remove(pCommsId);
     mLatestStrings.remove(pCommsId);
     mLatestUnknowns.remove(pCommsId);
   }
@@ -205,13 +201,9 @@ public class RobotDataStream {
       mLatestBooleans.get(pCommsId).setValue(mTable.getBoolean(pCommsId, Boolean.FALSE));
       break;
     case INTEGER:
-      mLatestIntegers.get(pCommsId).setValue((int)mTable.getNumber(pCommsId, Integer.MAX_VALUE));
-      break;
     case LONG:
-      mLatestLongs.get(pCommsId).setValue((long)mTable.getNumber(pCommsId, Long.MAX_VALUE));
-      break;
     case DOUBLE:
-      mLatestDoubles.get(pCommsId).setValue(mTable.getNumber(pCommsId, Double.NaN));
+      mLatestNumbers.get(pCommsId).setValue(mTable.getNumber(pCommsId, Double.NaN));
       break;
     case STRING:
       mLatestStrings.get(pCommsId).setValue(mTable.getString(pCommsId, NO_DATA));
@@ -226,11 +218,9 @@ public class RobotDataStream {
     case BOOLEAN:
       return mLatestBooleans.get(pCommsId);
     case DOUBLE:
-      return mLatestDoubles.get(pCommsId);
     case INTEGER:
-      return mLatestIntegers.get(pCommsId);
     case LONG:
-      return mLatestLongs.get(pCommsId);
+      return mLatestNumbers.get(pCommsId);
     case STRING:
       return mLatestStrings.get(pCommsId);
     case UNSUPPORTED:
@@ -248,6 +238,7 @@ public class RobotDataStream {
 
     @Override
     public void connected(IRemote remote) {
+      System.out.println("Network tables Connected");
       mProperty.setValue(true);
     }
 
@@ -261,6 +252,11 @@ public class RobotDataStream {
   /*
    * Singleton junk
    */
-  private static final RobotDataStream inst = new RobotDataStream();
-  public static RobotDataStream inst() { return inst; }
+  private static RobotDataStream inst;
+  public static RobotDataStream inst() {
+    if(inst == null) {
+      inst = new RobotDataStream();
+    }
+    return inst;
+  }
 }

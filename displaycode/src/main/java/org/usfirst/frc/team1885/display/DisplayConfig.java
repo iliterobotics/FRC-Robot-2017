@@ -9,4 +9,7 @@ public class DisplayConfig {
   public static final Property<String> ROBOT_TELEMETRY_TABLE = new SimpleStringProperty("RobotTelemetry");
   
   public static final String NETWORK_TABLES_CONNECTION = "Network Tables Connected";
+  
+  public static final double DEFAULT_TILE_WIDTH = 200;
+  public static final double DEFAULT_TILE_HEIGHT = 200;
 }
