@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.IRemote;
 import edu.wpi.first.wpilibj.tables.IRemoteConnectionListener;
 import edu.wpi.first.wpilibj.tables.ITableListener;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -123,13 +122,17 @@ public class RobotDataStream {
     return null;
   }
   
-  public Double bindOneWay(String pCommsId, DoubleProperty pProperty) {
-    Property<Number> p = mLatestNumbers.get(pCommsId);
+  /**
+   * Adds a basic listener to a value
+   * @return current value of the data
+   */
+  public <T> T addListenerToData(String pCommsId, Class<T> pType, IUpdate<T> pListener) {
+    Property<?> p = getProperty(pCommsId, ESupportedTypes.fromType(pType));
     if(p != null) {
       // JIT compiler trick - this ChangeListener will be the same 'type' as T
-      p.addListener((obs, old, mew) -> pProperty.setValue(mew));
+      p.addListener((obs, old, mew) -> pListener.update(pType.cast(mew)));
       if(p.getValue() != null) {
-        return (double)p.getValue();
+        return pType.cast(p.getValue());
       }
     }
     return null;

@@ -1,5 +1,8 @@
 package org.usfirst.frc.team1885.display;
 
+import org.usfirst.frc.team1885.display.ui.ILITE2017AutoConfigDisplay;
+import org.usfirst.frc.team1885.display.ui.ILITE2017DataDisplay;
+
 import eu.hansolo.tilesfx.Tile;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -21,11 +24,12 @@ public class Test extends Application {
   public void start(Stage stage) throws Exception {
     
     BorderPane pane = new BorderPane();
-    pane.setPadding(new Insets(10));
+    pane.setPadding(new Insets(20));
     pane.setCenterShape(true);
     pane.setPrefSize(1270, 800);
     pane.setBackground(new Background(new BackgroundFill(Tile.BACKGROUND.darker(), CornerRadii.EMPTY, Insets.EMPTY)));
-    pane.setCenter(new ILITE2017DataDisplay().getDisplayComponent());
+    pane.setCenter(new ILITE2017DataDisplay());
+    pane.setTop(new ILITE2017AutoConfigDisplay());
     
     Scene scene = new Scene(pane);
     stage.setTitle("ILITE Dashboard");
