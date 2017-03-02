@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ConstantUpdater implements Runnable {
 	
@@ -42,6 +43,7 @@ public class ConstantUpdater implements Runnable {
 			while (updateQueue.peek() != null ) {
 				Update<?> currentUpdate = updateQueue.poll();
 				pushToNetworkTables(currentUpdate);
+				pushToSmartDashboard(currentUpdate);
 				pushToWebserver(currentUpdate);
 			}
 			try {
@@ -71,22 +73,29 @@ public class ConstantUpdater implements Runnable {
 		catch (IOException e) {}		
 	}
 	
-	private void pushToNetworkTables(Update<?> currentUpdate){
+	private void pushToSmartDashboard(Update<?> currentUpdate){
 		if(currentUpdate.value instanceof Number){
-			double doubleValue = ((Number)(currentUpdate.value)).doubleValue();
-			netTable.putNumber(currentUpdate.variable, doubleValue);
-		}
-		else if(currentUpdate.value instanceof Number[]){
-			Number[] numberArrayValue = ((Number [])(currentUpdate.value));
-			double[] doubleArrayValue = new double[numberArrayValue.length];
-			for(int i = 0; i < numberArrayValue.length; i++){
-				doubleArrayValue[i] = numberArrayValue[i].doubleValue();
-			}
-			netTable.putNumberArray(currentUpdate.variable, doubleArrayValue);
+			Update<Double> numberUpdate = currentUpdate.toDoubleUpdate();
+			SmartDashboard.putNumber(numberUpdate.variable, numberUpdate.value);
 		}
 		else{ //Treat it as a string
-			String stringValue = (currentUpdate.value.toString());
-			netTable.putString(currentUpdate.variable, stringValue);
+			Update<String> stringUpdate = currentUpdate.toStringUpdate();
+			SmartDashboard.putString(stringUpdate.variable, stringUpdate.value);
+		}
+	}
+	
+	private void pushToNetworkTables(Update<?> currentUpdate){
+		if(currentUpdate.value instanceof Number){
+			Update<Double> numberUpdate = currentUpdate.toDoubleUpdate();
+			netTable.putNumber(numberUpdate.variable, numberUpdate.value);
+		}
+		else if(currentUpdate.value instanceof Number[]){
+			Update<double[]> numberArrayUpdate = currentUpdate.toDoubleArrayUpdate();
+			netTable.putNumberArray(numberArrayUpdate.variable, numberArrayUpdate.value);
+		}
+		else{ //Treat it as a string
+			Update<String> stringUpdate = currentUpdate.toStringUpdate();
+			netTable.putString(stringUpdate.variable, stringUpdate.value);
 		}
 	}
 	
@@ -120,12 +129,33 @@ public class ConstantUpdater implements Runnable {
 	}
 	
 	private static class Update<E extends Object>{
-		public String variable;
-		public E value;
+		String variable;
+		E value;
 		Update(String var, E val) {
 			this.variable = var;
 			this.value = val;
 		}
+		Update<Double> toDoubleUpdate(){
+			if(value instanceof Number){
+				return new Update<Double>(variable, ((Number)value).doubleValue());
+			}
+			return null;
+		}
+		Update<double[]> toDoubleArrayUpdate(){
+			if(value instanceof Number[]){
+				Number[] numberArrayValue = ((Number [])(value));
+				double[] doubleArrayValue = new double[numberArrayValue.length];
+				for(int i = 0; i < numberArrayValue.length; i++){
+					doubleArrayValue[i] = numberArrayValue[i].doubleValue();
+				}
+				return new Update<double[]>(variable, doubleArrayValue);
+			}
+			return null;
+		}
+		Update<String> toStringUpdate(){
+			return new Update<String>(variable, value.toString());
+		}
+
 	}	
 	
 }
