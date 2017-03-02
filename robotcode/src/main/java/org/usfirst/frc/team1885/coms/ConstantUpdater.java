@@ -3,11 +3,15 @@ package org.usfirst.frc.team1885.coms;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.Queue;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -42,8 +46,8 @@ public class ConstantUpdater implements Runnable {
 		while ( running ) {
 			while (updateQueue.peek() != null ) {
 				Update<?> currentUpdate = updateQueue.poll();
-				pushToNetworkTables(currentUpdate);
-				pushToSmartDashboard(currentUpdate);
+				//pushToNetworkTables(currentUpdate);
+				//pushToSmartDashboard(currentUpdate);
 				pushToWebserver(currentUpdate);
 			}
 			try {
@@ -55,12 +59,26 @@ public class ConstantUpdater implements Runnable {
 	}
 	
 	private void pushToWebserver(Update<?> currentUpdate){
-		String url = ConstantGetter.ADDRESS + "/constant/" + currentUpdate.variable + "/" + currentUpdate.value;
+		String url = ConstantGetter.ADDRESS + "/logvals/set";
+		System.out.println(url);
 		try {
 			URL obj = new URL(url);
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-			con.setRequestMethod("GET");
-			//int responseCode = con.getResponseCode();
+			con.setRequestMethod("POST");
+			con.setDoOutput(true);
+			con.setDoInput(true);
+			con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+			con.setRequestProperty("Accept", "application/json");
+			
+			OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+			JSONObject object = new JSONObject();
+			object.put("Name", currentUpdate.variable);
+			object.put("Value", currentUpdate.value);
+			System.out.println(object.toString());
+			writer.write(object.toString());
+			writer.flush();
+			writer.close();
+			
 			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			String inputLine;
 			StringBuffer response = new StringBuffer();
@@ -70,7 +88,8 @@ public class ConstantUpdater implements Runnable {
 			in.close();
 		} 
 		catch (MalformedURLException e) {} 
-		catch (IOException e) {}		
+		catch (IOException e) {e.printStackTrace();}
+		catch (JSONException e){e.printStackTrace();}
 	}
 	
 	private void pushToSmartDashboard(Update<?> currentUpdate){
@@ -107,6 +126,7 @@ public class ConstantUpdater implements Runnable {
 	public static void start(){
 		if(instanceThread == null){
 			instanceThread = new Thread(getInstance());
+			instanceThread.start();
 		} else {
 			restart();
 		}
@@ -156,6 +176,18 @@ public class ConstantUpdater implements Runnable {
 			return new Update<String>(variable, value.toString());
 		}
 
-	}	
+	}
+	
+	public static void main(String[] args){
+		start();
+		for(int i = 0; i < 20; i++){
+			putNumber("number", i);
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 }
