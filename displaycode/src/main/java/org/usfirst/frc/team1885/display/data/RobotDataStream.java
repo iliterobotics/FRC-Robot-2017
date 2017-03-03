@@ -8,16 +8,14 @@ import java.util.Queue;
 
 import org.usfirst.frc.team1885.display.DisplayConfig;
 import org.usfirst.frc.team1885.display.IUpdate;
+import org.usfirst.frc.team1885.display.ObservableFX;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.IRemote;
 import edu.wpi.first.wpilibj.tables.IRemoteConnectionListener;
 import edu.wpi.first.wpilibj.tables.ITableListener;
+import javafx.application.Platform;
 import javafx.beans.property.Property;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
@@ -35,10 +33,10 @@ public class RobotDataStream {
   
   protected Map<String, ESupportedTypes> mDataToCollect = new HashMap<>();
   
-  protected final Map<String, Property<Number>> mLatestNumbers = new HashMap<>();
-  protected final Map<String, Property<String>> mLatestStrings = new HashMap<>();
-  protected final Map<String, Property<Boolean>> mLatestBooleans = new HashMap<>();
-  protected final Map<String, Property<Object>> mLatestUnknowns = new HashMap<>();
+  protected final Map<String, ObservableFX<Number>> mLatestNumbers = new HashMap<>();
+  protected final Map<String, ObservableFX<String>> mLatestStrings = new HashMap<>();
+  protected final Map<String, ObservableFX<Boolean>> mLatestBooleans = new HashMap<>();
+  protected final Map<String, ObservableFX<Object>> mLatestUnknowns = new HashMap<>();
   
   protected final ObservableList<String> mRobotLog = FXCollections.observableArrayList();
   private final Queue<String> mRobotLogDump = new LinkedList<>();
@@ -55,10 +53,10 @@ public class RobotDataStream {
     for(int i = 0; i < 8; i++) {
       createProperty(ERobotData.PCM.name() + i, ESupportedTypes.BOOLEAN);
     }
-    mLatestNumbers.get(ERobotData.PCM.comms).addListener((obs, old, mew) -> {
+    mLatestNumbers.get(ERobotData.PCM.comms).addListener(data -> {
       // We could do reverse bit testing on the integer.
       // But why, when BigInteger lets us cheat!?
-      BigInteger bi = BigInteger.valueOf((int)mew);
+      BigInteger bi = BigInteger.valueOf((int)data);
       for(int i = 0; i < 8; i++) {
         mLatestBooleans.get(ERobotData.PCM.name() + i).setValue(bi.testBit(i));
       }
@@ -88,7 +86,7 @@ public class RobotDataStream {
    */
   public void addDataWithGenericListener(String pCommsId, IUpdate<String> pListener) {
     addDataToCollect(pCommsId, ESupportedTypes.STRING);
-    mLatestStrings.get(pCommsId).addListener((obs, old, mew) -> pListener.update(mew));
+    mLatestStrings.get(pCommsId).addListener(pListener);
   }
   
   /**
@@ -123,10 +121,10 @@ public class RobotDataStream {
    * @return the current value of the property - usually this is null on display startup.
    */
   public <T> T bindOneWay(String pCommsId, Class<T> pType, Property<T> pProperty) {
-    Property<?> p = getProperty(pCommsId, ESupportedTypes.fromType(pType));
+    ObservableFX<?> p = getProperty(pCommsId, ESupportedTypes.fromType(pType));
     if(p != null) {
       // JIT compiler trick - this ChangeListener will be the same 'type' as T
-      p.addListener((obs, old, mew) -> pProperty.setValue(pType.cast(mew)));
+      p.addListener(data -> pProperty.setValue(pType.cast(data)));
       if(p.getValue() != null) {
         return pType.cast(p.getValue());
       }
@@ -139,10 +137,10 @@ public class RobotDataStream {
    * @return current value of the data
    */
   public <T> T addListenerToData(String pCommsId, Class<T> pType, IUpdate<T> pListener) {
-    Property<?> p = getProperty(pCommsId, ESupportedTypes.fromType(pType));
+    ObservableFX<?> p = getProperty(pCommsId, ESupportedTypes.fromType(pType));
     if(p != null) {
       // JIT compiler trick - this ChangeListener will be the same 'type' as T
-      p.addListener((obs, old, mew) -> pListener.update(pType.cast(mew)));
+      p.addListener(data -> pListener.update(pType.cast(data)));
       if(p.getValue() != null) {
         return pType.cast(p.getValue());
       }
@@ -155,8 +153,10 @@ public class RobotDataStream {
   }
 
   public void log(String string) {
-    mRobotLogDump.offer(string);
-    mRobotLog.add(string);
+    Platform.runLater(() -> {
+      mRobotLogDump.offer(string);
+      mRobotLog.add(string);
+    });
   }
   
   private void updateRobotLog() {
@@ -170,8 +170,10 @@ public class RobotDataStream {
         mRobotLogDump.offer(newlogs[i]);
       }
       
-      mRobotLog.clear();
-      mRobotLog.addAll(mRobotLogDump);
+      Platform.runLater(() -> {
+        mRobotLog.clear();
+        mRobotLog.addAll(mRobotLogDump);
+      });
     }
   }
   
@@ -201,19 +203,19 @@ public class RobotDataStream {
     
     switch(pType) {
     case BOOLEAN:
-      mLatestBooleans.put(pCommsId, new SimpleBooleanProperty());
+      mLatestBooleans.put(pCommsId, new ObservableFX<>());
       break;
     case INTEGER:
     case LONG:
     case DOUBLE:
-      mLatestNumbers.put(pCommsId, new SimpleDoubleProperty());
+      mLatestNumbers.put(pCommsId, new ObservableFX<>());
       break;
     case STRING:
-      mLatestStrings.put(pCommsId, new SimpleStringProperty());
+      mLatestStrings.put(pCommsId, new ObservableFX<>());
       break;
     case UNSUPPORTED:
     default:
-      mLatestUnknowns.put(pCommsId, new SimpleObjectProperty<Object>());
+      mLatestUnknowns.put(pCommsId, new ObservableFX<>());
       break;
     
     }
@@ -258,7 +260,7 @@ public class RobotDataStream {
     }
   }
   
-  private Property<?> getProperty(String pCommsId, ESupportedTypes pType) {
+  private ObservableFX<?> getProperty(String pCommsId, ESupportedTypes pType) {
     switch(pType) {
     case BOOLEAN:
       return mLatestBooleans.get(pCommsId);
@@ -276,8 +278,8 @@ public class RobotDataStream {
   }
   
   private class ConnectionListener implements IRemoteConnectionListener {
-    private final Property<Boolean> mProperty;
-    ConnectionListener(Property<Boolean> pProperty) {
+    private final ObservableFX<Boolean> mProperty;
+    ConnectionListener(ObservableFX<Boolean> pProperty) {
       mProperty = pProperty;
     }
 

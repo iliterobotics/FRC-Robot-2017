@@ -40,11 +40,14 @@ public class Test extends Application {
     StackPane center = new StackPane();
     pane.setCenter(center);
     
+    // Using a map of integers to keep a proper order
     Map<Integer, Region> panes = new HashMap<>();
     Map<Integer, Button> buttons = new HashMap<>();
+    
     buttons.put(0, new Button("Robot Telemetry"));
-    buttons.put(1, new Button("Log (testing)"));
     panes.put(0, new ILITE2017DataDisplay());
+    
+    buttons.put(1, new Button("Log (testing)"));
     panes.put(1, new ILITE2017RobotLogDisplay());
     
     VBox selectorPane = new VBox();
@@ -52,6 +55,7 @@ public class Test extends Application {
     selectorPane.setSpacing(20d);
     pane.setRight(selectorPane);
 
+    // This sets up the Stack Pane 'on top' functionality.
     for(int i = 0; i < panes.size(); i++) {
       Button b = buttons.get(i);
       Region p = panes.get(i);
