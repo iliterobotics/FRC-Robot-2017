@@ -15,13 +15,27 @@ public class DisplayConfig {
   
   public static final String NETWORK_TABLES_CONNECTION = "Network Tables Connected";
   
+  public static final int MAX_ROBOT_LOG_SIZE = 100;
+  
   public static final double DEFAULT_TILE_WIDTH = 200;
   public static final double DEFAULT_TILE_HEIGHT = 200;
   
+  public static final Color ILITE_PURPLE = Color.valueOf("#5d31b6").darker();
+  public static final Color ILITE_GREEN = Color.valueOf("#00FF00");
+  
+
+  public static final Background ILITE_GREEN_BACKGROUND = new Background(
+    new BackgroundFill(ILITE_GREEN, CornerRadii.EMPTY, Insets.EMPTY));
+  
+  public static final Color PANEL_BACKGROUND_COLOR = ILITE_PURPLE;
   public static final Background PANEL_BACKGROUND = new Background(
-    new BackgroundFill(Color.PURPLE, CornerRadii.EMPTY, Insets.EMPTY));
+    new BackgroundFill(PANEL_BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY));
 
   public static final Color TILE_BACKGROUND = Color.BLACK;
 
-  public static final Color DEFAULT_TILE_TEXT_COLOR = Color.valueOf("#00FF00");
+  public static final Color DEFAULT_TILE_TEXT_COLOR = ILITE_GREEN;
+  
+  public static final Color ERROR_COLOR = Color.RED;
+  
+  public static final String ICON_FONT_AWESOME_TILE_SIZE = "50";
 }

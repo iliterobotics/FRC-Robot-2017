@@ -1,8 +1,13 @@
-package org.usfirst.frc.team1885.display;
+package org.usfirst.frc.team1885.display.data;
 
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
+
+import org.usfirst.frc.team1885.display.DisplayConfig;
+import org.usfirst.frc.team1885.display.IUpdate;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.IRemote;
@@ -13,6 +18,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
 
 /**
  * Converts from the NetworkTables generic data components into 
@@ -32,7 +40,11 @@ public class RobotDataStream {
   protected final Map<String, Property<Boolean>> mLatestBooleans = new HashMap<>();
   protected final Map<String, Property<Object>> mLatestUnknowns = new HashMap<>();
   
+  protected final ObservableList<String> mRobotLog = FXCollections.observableArrayList();
+  private final Queue<String> mRobotLogDump = new LinkedList<>();
+  
   protected RobotDataStream() {
+    mRobotLog.add("CTOR LOG");
 
     // Initial known set of data
     for(ERobotData data : ERobotData.values()) {
@@ -137,6 +149,31 @@ public class RobotDataStream {
     }
     return null;
   }
+
+  public void bindListToRobotLog(ListView<String> list) {
+    list.setItems(mRobotLog); 
+  }
+
+  public void log(String string) {
+    mRobotLogDump.offer(string);
+    mRobotLog.add(string);
+  }
+  
+  private void updateRobotLog() {
+    String[] newlogs = mTable.getStringArray(ERobotData.ROBOT_LOG.comms, new String[]{""});
+    if(newlogs != null && newlogs.length > 0) {
+      int toRemove = Math.max(0, mRobotLogDump.size() + newlogs.length - DisplayConfig.MAX_ROBOT_LOG_SIZE);
+      for(int i = 0; i < toRemove; i++) {
+        mRobotLogDump.remove();
+      }
+      for(int i = 0; i < newlogs.length; i++) {
+        mRobotLogDump.offer(newlogs[i]);
+      }
+      
+      mRobotLog.clear();
+      mRobotLog.addAll(mRobotLogDump);
+    }
+  }
   
   private void updateIp() {
     NetworkTable.setIPAddress(DisplayConfig.ROBOT_IP_ADDRESS.getValue());
@@ -194,25 +231,30 @@ public class RobotDataStream {
    * @param pCommsId
    */
   private void updateData(String pCommsId) {
-    if(!mDataToCollect.containsKey(pCommsId)) {
-      addDataToCollect(pCommsId, ESupportedTypes.UNSUPPORTED);
-    }
     
-    switch(mDataToCollect.get(pCommsId)) {
-    case BOOLEAN:
-   // Bang. Head. On. Desk.  Should be allowed to pass null as the default to signify "no data"...
-      mLatestBooleans.get(pCommsId).setValue(mTable.getBoolean(pCommsId, Boolean.FALSE));
-      break;
-    case INTEGER:
-    case LONG:
-    case DOUBLE:
-      mLatestNumbers.get(pCommsId).setValue(mTable.getNumber(pCommsId, Double.NaN));
-      break;
-    case STRING:
-      mLatestStrings.get(pCommsId).setValue(mTable.getString(pCommsId, NO_DATA));
-      break;
-    default:
-      mLatestUnknowns.get(pCommsId).setValue(mTable.getString(pCommsId, NO_DATA));
+    if(pCommsId.equals(ERobotData.ROBOT_LOG.comms)) {
+      updateRobotLog();
+    } else {
+      if(!mDataToCollect.containsKey(pCommsId)) {
+        addDataToCollect(pCommsId, ESupportedTypes.UNSUPPORTED);
+      }
+      
+      switch(mDataToCollect.get(pCommsId)) {
+      case BOOLEAN:
+     // Bang. Head. On. Desk.  Should be allowed to pass null as the default to signify "no data"...
+        mLatestBooleans.get(pCommsId).setValue(mTable.getBoolean(pCommsId, Boolean.FALSE));
+        break;
+      case INTEGER:
+      case LONG:
+      case DOUBLE:
+        mLatestNumbers.get(pCommsId).setValue(mTable.getNumber(pCommsId, Double.NaN));
+        break;
+      case STRING:
+        mLatestStrings.get(pCommsId).setValue(mTable.getString(pCommsId, NO_DATA));
+        break;
+      default:
+        mLatestUnknowns.get(pCommsId).setValue(mTable.getString(pCommsId, NO_DATA));
+      }
     }
   }
   
@@ -247,6 +289,7 @@ public class RobotDataStream {
 
     @Override
     public void disconnected(IRemote remote) {
+      System.out.println("Network tables Disconnected");
       mProperty.setValue(false);
     }
   }

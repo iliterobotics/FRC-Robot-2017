@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1885.display;
+package org.usfirst.frc.team1885.display.data;
 
 /**
  * This enum is an initial way to do this.  All of the custom data should be put into 
@@ -20,24 +20,21 @@ package org.usfirst.frc.team1885.display;
  *
  */
 public enum ERobotData {
+  ROBOT_LOG("robot_log", ESupportedTypes.STRING),
   PCM("pcm", ESupportedTypes.INTEGER),
   MATCH_PERIOD("match_period", ESupportedTypes.STRING),
   MATCH_TIME_MS("match_time_ms", ESupportedTypes.LONG),
+  GYRO_DEG("gyro_deg", ESupportedTypes.DOUBLE),
   
-  /** @deprecated - put into JSON Config File */
   LEFT_ENCODER_POS("leftpos", ESupportedTypes.LONG),
-
-  /** @deprecated - put into JSON Config File */
   RIGHT_ENCODER_POS("rightpos", ESupportedTypes.LONG),
-
-  /** @deprecated - put into JSON Config File */
   LEFT_ENCODER_VELOCITY("leftvel", ESupportedTypes.DOUBLE),
-
-  /** @deprecated - put into JSON Config File */
   RIGHT_ENCODER_VELOCITY("rightvel", ESupportedTypes.DOUBLE),
-
-  /** @deprecated - put into JSON Config File */
-  DRIVETRAIN_CURRENT("drive_train_current", ESupportedTypes.DOUBLE);
+  DRIVETRAIN_CURRENT("drive_train_current", ESupportedTypes.DOUBLE),
+  INTAKE_CURRENT("intake_current", ESupportedTypes.DOUBLE),
+  CLIMBER_CURRENT("climber_current", ESupportedTypes.DOUBLE);
+  
+  
   
   public final String comms;
   public final ESupportedTypes type;

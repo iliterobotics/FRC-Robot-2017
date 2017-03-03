@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1885.display;
+package org.usfirst.frc.team1885.display.data;
 
 public enum ESupportedTypes {
   LONG(Long.class),
