@@ -5,8 +5,7 @@ import java.util.List;
 
 import org.usfirst.frc.team1885.display.DisplayConfig;
 import org.usfirst.frc.team1885.display.EGameMode;
-import org.usfirst.frc.team1885.display.data.DriverStationDataStream.EDriverStationData;
-import org.usfirst.frc.team1885.display.data.ERobotData;
+import org.usfirst.frc.team1885.display.data.EDriverStationData;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
@@ -74,22 +73,21 @@ public class ILITE2017RobotStatusDisplay extends AbstractTilePane{
       .graphic(modes)
       .build();
     
-    rds.bindOneWay(ERobotData.MATCH_PERIOD.comms, String.class, modeTile.textProperty());
-    dsds.addListener(EDriverStationData.MATCH_MODE, newmode -> {
+    rds.bindOneWay(EDriverStationData.MATCH_MODE.name(), String.class, modeTile.textProperty());
+    rds.addDataWithGenericListener(EDriverStationData.MATCH_MODE.name(), newmode -> {
       texts.forEach(m -> m.setFill(DisplayConfig.TILE_BACKGROUND));
       EGameMode mm = EGameMode.valueOf(newmode);
       texts.get(mm.ordinal()).setFill(mm.color);
       modeTile.setText(mm.toString());
       modeTile.setTextColor(mm.color);
     });
-    
     getChildren().add(modeTile);
     
     
     Tile matchTime = tile("Match Time", SkinType.NUMBER)
       .unit("seconds")
       .build();
-    rds.bindOneWay(ERobotData.MATCH_TIME_MS.comms, Number.class, matchTime.valueProperty());
+    rds.bindOneWay(EDriverStationData.MATCH_TIME_MS.name(), Number.class, matchTime.valueProperty());
     getChildren().add(matchTime);
 
     
@@ -111,7 +109,7 @@ public class ILITE2017RobotStatusDisplay extends AbstractTilePane{
       .textVisible(true)
       .build();
     getChildren().add(battery);
-    dsds.addListener(EDriverStationData.BATTERY_VOLTAGE, 
+    rds.addDataWithGenericListener(EDriverStationData.BATTERY_VOLTAGE.name(), 
       voltage -> batteryGauge.setValue(Double.parseDouble(voltage)));
     
   }

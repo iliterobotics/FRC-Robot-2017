@@ -22,8 +22,6 @@ package org.usfirst.frc.team1885.display.data;
 public enum ERobotData {
   ROBOT_LOG("robot_log", ESupportedTypes.STRING),
   PCM("pcm", ESupportedTypes.INTEGER),
-  MATCH_PERIOD("match_period", ESupportedTypes.STRING),
-  MATCH_TIME_MS("match_time_ms", ESupportedTypes.LONG),
   GYRO_DEG("gyro_deg", ESupportedTypes.DOUBLE),
   
   LEFT_ENCODER_POS("leftpos", ESupportedTypes.LONG),

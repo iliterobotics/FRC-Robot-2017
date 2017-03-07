@@ -49,6 +49,10 @@ public class RobotDataStream {
       addDataToCollect(data.comms, data.type);
     }
     
+    for(EDriverStationData data : EDriverStationData.values()) {
+      addDataToCollect(data.name(), ESupportedTypes.STRING);
+    }
+    
     // Setup conversion from integer to 8 booleans for the PCM
     for(int i = 0; i < 8; i++) {
       createProperty(ERobotData.PCM.name() + i, ESupportedTypes.BOOLEAN);

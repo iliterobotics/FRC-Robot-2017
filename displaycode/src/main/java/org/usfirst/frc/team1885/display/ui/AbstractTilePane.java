@@ -1,14 +1,13 @@
 package org.usfirst.frc.team1885.display.ui;
 
 import org.usfirst.frc.team1885.display.DisplayConfig;
-import org.usfirst.frc.team1885.display.data.DriverStationDataStream;
 import org.usfirst.frc.team1885.display.data.RobotDataStream;
 
-import eu.hansolo.tilesfx.Tile.SkinType;
-import eu.hansolo.tilesfx.Tile.TextSize;
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.GaugeBuilder;
 import eu.hansolo.tilesfx.Tile;
+import eu.hansolo.tilesfx.Tile.SkinType;
+import eu.hansolo.tilesfx.Tile.TextSize;
 import eu.hansolo.tilesfx.TileBuilder;
 import javafx.geometry.Insets;
 import javafx.scene.layout.FlowPane;
@@ -17,7 +16,6 @@ import javafx.scene.layout.Region;
 public abstract class AbstractTilePane extends FlowPane{
 
   protected final RobotDataStream rds = RobotDataStream.inst();
-  protected final DriverStationDataStream dsds = DriverStationDataStream.inst();
   
   public static void decorate(Region pRegion) {
     pRegion.setPadding(new Insets(10));
