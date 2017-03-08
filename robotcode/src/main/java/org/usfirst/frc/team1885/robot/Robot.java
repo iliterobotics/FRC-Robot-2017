@@ -23,6 +23,7 @@ import org.usfirst.frc.team1885.robot.modules.PressureSensor;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
@@ -47,8 +48,8 @@ public class Robot extends SampleRobot{
 	private List<Module> runningModules;
 	
 	public Robot(){
-	    //CameraServer server = CameraServer.getInstance(); 
-	    //UsbCamera camera = server.startAutomaticCapture(); 
+	    CameraServer server = CameraServer.getInstance(); 
+	    UsbCamera camera = server.startAutomaticCapture(); 
 	    	    
 		constantUpdaterThread = new Thread(ConstantUpdater.getInstance());
 		constantUpdaterThread.start();
