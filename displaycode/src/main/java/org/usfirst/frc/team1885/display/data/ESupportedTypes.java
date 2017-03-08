@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1885.display.data;
 
-public enum ESupportedTypes {
+public enum ESupportedTypes  {
   LONG(Long.class),
   DOUBLE(Double.class),
   BOOLEAN(Boolean.class),

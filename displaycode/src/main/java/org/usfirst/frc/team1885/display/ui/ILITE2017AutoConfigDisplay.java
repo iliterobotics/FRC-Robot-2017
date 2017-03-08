@@ -19,13 +19,20 @@ public class ILITE2017AutoConfigDisplay extends AbstractTilePane{
     title.setFill(DisplayConfig.DEFAULT_TILE_TEXT_COLOR);
     getChildren().add(title);
     
-    Tile doAnythingYesNo = tile("Do Anything?", SkinType.SWITCH)
-      .selected(true)
-      .text("Yes")
+    Tile autonModeConfig = tile("Side of Airship", SkinType.SWITCH)
+      .selected(false)
+      .text("Left Side")
       .textVisible(true)
       .build();
-    getChildren().add(doAnythingYesNo);
-    // TODO - send to robot
+    autonModeConfig.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+      if(isSelected) {
+        autonModeConfig.setText("Right Side");
+      } else {
+        autonModeConfig.setText("Left Side");
+      }
+    });
+    getChildren().add(autonModeConfig);
+    // TODO - bind property in robot data sender
     
     Tile autonDelay = tile("Delay", SkinType.SLIDER)
       .minValue(0d)
@@ -42,21 +49,6 @@ public class ILITE2017AutoConfigDisplay extends AbstractTilePane{
       .build();
     getChildren().add(autonGearYesNo);
     // TODO - send to robot
-    
-    Tile autonModeConfig = tile("Side of Airship", SkinType.SWITCH)
-      .selected(false)
-      .text("Left Side")
-      .textVisible(true)
-      .build();
-    autonModeConfig.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-      if(isSelected) {
-        autonModeConfig.setText("Right Side");
-      } else {
-        autonModeConfig.setText("Left Side");
-      }
-    });
-    getChildren().add(autonModeConfig);
-    // TODO - bind property in robot data sender
 
     Tile autonDistanceConfig = tile("Extra Travel", SkinType.PLUS_MINUS)
       .unit("ft")

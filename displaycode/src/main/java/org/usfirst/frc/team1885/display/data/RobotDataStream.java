@@ -77,6 +77,27 @@ public class RobotDataStream {
     updateIp();
   }
   
+  public void sendDataToRobot(String pData, ESupportedTypes pType, String pValue) {
+    if(pValue == null) { 
+      return;
+    }
+    switch(pType) {
+    case BOOLEAN:
+      mTable.putBoolean(pData, Boolean.parseBoolean(pValue));
+      break;
+    case DOUBLE:
+    case INTEGER:
+    case LONG:
+      mTable.putNumber(pData, Double.parseDouble(pValue));
+      break;
+    case STRING:
+    case UNSUPPORTED:
+    default:
+      mTable.putString(pData, pValue);
+      break;
+    }
+  }
+  
   /**
    * Quick method to add a listener for any String data from the robot.  No need to mess
    * with multiple calls, multiple data types, wonky listeners, etc.  Just call this method
