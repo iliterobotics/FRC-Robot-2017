@@ -23,6 +23,7 @@ import org.usfirst.frc.team1885.robot.modules.PressureSensor;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
@@ -47,13 +48,9 @@ public class Robot extends SampleRobot{
 	private List<Module> runningModules;
 	
 	public Robot(){
-	    //CameraServer server = CameraServer.getInstance(); 
-	    //UsbCamera camera = server.startAutomaticCapture(); 
-	    
-	    String color = DriverStation.getInstance().getAlliance().toString();
-		int location = DriverStation.getInstance().getLocation();
-		System.out.printf("Alliance: %s%d"  , color, location);
-	    
+	    CameraServer server = CameraServer.getInstance(); 
+	    UsbCamera camera = server.startAutomaticCapture(); 
+	    	    
 		constantUpdaterThread = new Thread(ConstantUpdater.getInstance());
 		constantUpdaterThread.start();
 		
@@ -84,14 +81,26 @@ public class Robot extends SampleRobot{
 	
 	public void autonomous()
 	{		
-		autonomousCommands.clear();
-		autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 90));
-		autonomousCommands.add(new TurnToDegree(driveTrain, navx, 60, 5));
-		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 15));
-		autonomousCommands.add(new DropOffGear(gearManipulator, driveTrain));
-		autonomousCommands.add(new TurnToDegree(driveTrain, navx, -10, 20));
-		autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 48));
+		String color = DriverStation.getInstance().getAlliance().toString();
+		int location = DriverStation.getInstance().getLocation();
+//		System.out.printf("Alliance: %s %d"  , color, location);
 		
+		
+		//Code with intention that left side is always 1, middle is 2, right is 3
+		switch (location) {
+		case 1:
+			autonomousCommands.clear();
+			autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 90));
+			autonomousCommands.add(new TurnToDegree(driveTrain, navx, 60, 5));
+			autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 15));
+			autonomousCommands.add(new DropOffGear(gearManipulator, driveTrain));
+			autonomousCommands.add(new TurnToDegree(driveTrain, navx, -10, 20));
+			autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 48));
+			break;
+		case 2:
+		case 3:
+		}
+			
 		setRunningModules(driveTrain, gearManipulator, pressureRegulator);
 
 		Command currentCommand = autonomousCommands.peek();

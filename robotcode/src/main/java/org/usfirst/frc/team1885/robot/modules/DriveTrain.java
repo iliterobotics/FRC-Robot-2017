@@ -212,11 +212,11 @@ public class DriveTrain implements Module {
 		case POSITION:
 			break;
 		}
-		ConstantUpdater.getInstance().addToConstant("leftpos", getLeftPosition() + "");
-		ConstantUpdater.getInstance().addToConstant("rightpos", getRightPosition() + "");
-		ConstantUpdater.getInstance().addToConstant("leftvel", getLeftEncoderVelocity() + "");
-		ConstantUpdater.getInstance().addToConstant("rightvel", getRightEncoderVelocity() + "");
-		ConstantUpdater.getInstance().addToConstant("drive_train_current",  getCurrentFeedback() + "");
+		ConstantUpdater.putNumber("leftpos", getLeftPosition());
+		ConstantUpdater.putNumber("rightpos", getRightPosition());
+		ConstantUpdater.putNumber("leftvel", getLeftEncoderVelocity());
+		ConstantUpdater.putNumber("rightvel", getRightEncoderVelocity());
+		ConstantUpdater.putNumber("drive_train_current",  getCurrentFeedback());
 
 	}
 	
