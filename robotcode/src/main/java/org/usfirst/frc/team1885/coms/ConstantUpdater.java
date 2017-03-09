@@ -46,7 +46,7 @@ public class ConstantUpdater implements Runnable {
 		while ( running ) {
 			while (updateQueue.peek() != null ) {
 				Update<?> currentUpdate = updateQueue.poll();
-				//pushToNetworkTables(currentUpdate);
+				pushToNetworkTables(currentUpdate);
 				//pushToSmartDashboard(currentUpdate);
 				pushToWebserver(currentUpdate);
 			}
@@ -177,6 +177,15 @@ public class ConstantUpdater implements Runnable {
 		}
 
 	}
+	
+	public static String getNetworkTablesString(String key){
+		return getInstance().netTable.getString(key, null);
+	}
+
+	public static Double getNetworkTablesNumber(String key){
+		return getInstance().netTable.getNumber(key, new Double(0));
+	}
+
 	
 	public static void main(String[] args){
 		start();

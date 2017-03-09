@@ -95,8 +95,8 @@ public class Climber implements Module{
 			currentPower = CLIMBER_POWER;
 			double current = masterTalon.getOutputCurrent();
 			double voltage = masterTalon.getOutputVoltage();
-			ConstantUpdater.getInstance().addToConstant("current", "" + current);
-			ConstantUpdater.getInstance().addToConstant("voltage", "" + voltage);
+			ConstantUpdater.putNumber("current", current);
+			ConstantUpdater.putNumber("voltage", voltage);
 			double ratio = current/voltage;
 			if(ratio > MAX_CURRENT_V_RATIO){
 				if(!didStall){

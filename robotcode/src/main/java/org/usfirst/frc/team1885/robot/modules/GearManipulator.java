@@ -177,7 +177,7 @@ public class GearManipulator implements Module{
 			hasIntakeHitLimit = true;
 		}
 		
-		ConstantUpdater.getInstance().addToConstant("intake_current", "" + intakeWheels.getOutputCurrent());
+		ConstantUpdater.putNumber("intake_current", intakeWheels.getOutputCurrent());
 	}
 	
 	public void setSingleSolenoid(PistonType type, boolean open){
