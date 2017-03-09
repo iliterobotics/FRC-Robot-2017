@@ -24,8 +24,8 @@ public class DriveTrain implements Module {
 	public static final int SHIFT_SOLENOID_ID = 2;
 	public static final int CASTER_SOLENOID_ID = 7;
 	// Voltage proportion control variables
-	private static final double DEFAULT_RAMP_RATE = 36.0; // in V/sec
-	private static final double HIGH_GEAR_RAMP_RATE = 18.0; // in V/sec
+	private static final double DEFAULT_RAMP_RATE = 18.0; // in V/sec
+	private static final double HIGH_GEAR_RAMP_RATE = 36.0; // in V/sec
 
 	private double desiredLeftPower;
 	private double desiredRightPower;
