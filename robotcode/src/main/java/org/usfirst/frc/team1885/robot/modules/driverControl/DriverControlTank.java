@@ -38,7 +38,7 @@ public class DriverControlTank extends DriverControl{
 		driveStation.reportError(String.format("oL:%f oR:%f", leftInput, rightInput), false);
 		
 		//See if sticks are close enough together to be considered the same
-		if(Math.abs(leftInput - rightInput) < DEADZONE ){
+		if(Math.abs(leftInput - rightInput) < JOYSTICK_DEADZONE ){
 			leftInput = rightInput = (leftInput + rightInput) / 2;
 		}
 		

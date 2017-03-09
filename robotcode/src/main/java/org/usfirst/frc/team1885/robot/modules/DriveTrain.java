@@ -6,9 +6,6 @@ import java.util.Map;
 import org.usfirst.frc.team1885.coms.ConstantGetter;
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
 import org.usfirst.frc.team1885.robot.common.impl.DefaultCanTalonFactory;
-import org.usfirst.frc.team1885.robot.common.impl.EFeedbackDevice;
-import org.usfirst.frc.team1885.robot.common.impl.ETalonControlMode;
-import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalon;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
 
 import com.ctre.CANTalon;
@@ -27,7 +24,8 @@ public class DriveTrain implements Module {
 	public static final int SHIFT_SOLENOID_ID = 2;
 	public static final int CASTER_SOLENOID_ID = 7;
 	// Voltage proportion control variables
-	private static final double VOLTAGE_RAMP_RATE = 36.0; // in V/sec
+	private static final double DEFAULT_RAMP_RATE = 18.0; // in V/sec
+	private static final double HIGH_GEAR_RAMP_RATE = 36.0; // in V/sec
 
 	private double desiredLeftPower;
 	private double desiredRightPower;
@@ -113,7 +111,7 @@ public class DriveTrain implements Module {
 			desiredLeftPower = 0;
 			desiredRightPower = 0;
 			setMotorMode(TalonControlMode.PercentVbus);
-			setVoltageRampRate(VOLTAGE_RAMP_RATE);
+			setVoltageRampRate(DEFAULT_RAMP_RATE);
 			break;
 		case TICK_VEL:
 			actualLeftSpeed = 0;
@@ -133,6 +131,11 @@ public class DriveTrain implements Module {
 
 	public void setShift(boolean shift) {
 		gearShifter.set(shift);
+		if(shift){
+			setVoltageRampRate(HIGH_GEAR_RAMP_RATE);			
+		}else{
+			setVoltageRampRate(DEFAULT_RAMP_RATE);
+		}
 	}
 
 	public void lowerCasters(boolean lowered) {
