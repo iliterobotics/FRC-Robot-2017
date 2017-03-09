@@ -12,7 +12,7 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	
 	private static final int TURN_REDUCER_BUTTON = 5;
-	private static final int CASTER_BUTTON = 9;
+	private static final int CASTER_BUTTON = 6;
 	private static final int REDUCER_AXIS = 3;
 	
 	private static final int WARP_SPEED_FORWARD = 0;
