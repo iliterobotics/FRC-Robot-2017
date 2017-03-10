@@ -3,7 +3,6 @@ package org.usfirst.frc.team1885.robot.modules;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc.team1885.coms.ConstantGetter;
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
 
 import com.ctre.CANTalon;
@@ -75,7 +74,7 @@ public class GearManipulator implements Module{
 		isShort =
 		isKicked = false;
 		isDown = false;
-		ConstantGetter.addConstant("intake_current", "0");
+		ConstantUpdater.putNumber("intake_current", 0);
 	}
 	
 
