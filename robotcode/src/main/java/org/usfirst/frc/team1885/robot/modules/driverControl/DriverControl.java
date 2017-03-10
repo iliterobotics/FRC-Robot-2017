@@ -20,7 +20,8 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 
 public abstract class DriverControl implements Module {
 	
-	public static final double DEADZONE = 0.1;
+	public static final double JOYSTICK_DEADZONE = 0.05;
+	public static final double TRIGGER_DEADZONE = 0.5;
 	public static final double WARP_DEGREES_PER_SECOND = 5;
 	public static final int GAMEPAD_LEFT_X = 0;
 	public static final int GAMEPAD_LEFT_Y = 1;
@@ -118,13 +119,13 @@ public abstract class DriverControl implements Module {
 			return;
 		}
 		
-		if(Math.abs(left - right) < DEADZONE ){
+		if(Math.abs(left - right) < JOYSTICK_DEADZONE ){
 			left = right = (left + right) / 2;
 		}
-		if(Math.abs(left) < DEADZONE){
+		if(Math.abs(left) < JOYSTICK_DEADZONE){
 			left = 0;
 		}
-		if(Math.abs(right) < DEADZONE){
+		if(Math.abs(right) < JOYSTICK_DEADZONE){
 			right = 0;
 		}
 		driveTrain.setPower(left, right);
@@ -145,7 +146,7 @@ public abstract class DriverControl implements Module {
 			wasClimberPushed = false;
 		}
 
-		if((manipulatorController.getRawAxis(FLAP_DOWN_AXIS) > 0.9) ||
+		if((manipulatorController.getRawAxis(FLAP_DOWN_AXIS) > TRIGGER_DEADZONE) ||
 		    manipulatorController.getRawButton(FLAP_TILT_BUTTON)){
 			gearManipulator.setLong(true);
 			gearManipulator.setDropping(false);
@@ -153,7 +154,7 @@ public abstract class DriverControl implements Module {
 			gearManipulator.setLong(false);
 		}
 		
-		if((manipulatorController.getRawAxis(FLAP_DOWN_AXIS) > 0.9) || 
+		if((manipulatorController.getRawAxis(FLAP_DOWN_AXIS) > TRIGGER_DEADZONE) || 
 			manipulatorController.getRawButton(DROP_BUTTON)){
 			gearManipulator.setShort(true);
 		}else{
@@ -166,7 +167,7 @@ public abstract class DriverControl implements Module {
 		
 		if(manipulatorController.getRawButton(UP_BUTTON)){
 			gearManipulator.setLowered(false);
-		}else if(manipulatorController.getRawAxis(DOWN_AXIS) > 0.9){
+		}else if(manipulatorController.getRawAxis(DOWN_AXIS) > TRIGGER_DEADZONE){
 			gearManipulator.setLowered(true);	
 		}
 
