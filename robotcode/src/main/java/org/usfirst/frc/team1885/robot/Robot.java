@@ -23,6 +23,7 @@ import org.usfirst.frc.team1885.robot.modules.PressureSensor;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
@@ -47,8 +48,6 @@ public class Robot extends SampleRobot{
 	private List<Module> runningModules;
 	
 	public Robot(){
-	    //CameraServer server = CameraServer.getInstance(); 
-	    //UsbCamera camera = server.startAutomaticCapture(); 
 	    	    
 		constantUpdaterThread = new Thread(ConstantUpdater.getInstance());
 		constantUpdaterThread.start();
@@ -64,14 +63,16 @@ public class Robot extends SampleRobot{
 		arduinoController = new ArduinoController();
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
 		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, climber, gearManipulator);
+
+		navx.resetDisplacement();
 	}
 
 	public void robotInit(){
-		navx.resetDisplacement();
     
 		CameraServer server = CameraServer.getInstance();
 		server.startAutomaticCapture(0);
 		while(navx.isCalibrating()){
+			System.out.println("CALIBRATING");
 			pause();
 		}
 		navx.setInitialAngle(navx.getAngle());
@@ -101,7 +102,7 @@ public class Robot extends SampleRobot{
 		}
 			
 		setRunningModules(driveTrain, gearManipulator, pressureRegulator);
-
+		autonomousCommands.clear();
 		Command currentCommand = autonomousCommands.peek();
 		if(currentCommand != null) currentCommand.init();
 		while(isAutonomous() && isEnabled()){
