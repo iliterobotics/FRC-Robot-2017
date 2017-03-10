@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class ConstantUpdater implements Runnable {
 	
 	public static final String ADDRESS = "http://michael-laptop.local";
-	public static final String NETWORK_TABLE = "Live values";
+	public static final String NETWORK_TABLE = "RobotTelemetry";
 	
 	public static ConstantUpdater instance;
 	public static Thread instanceThread;

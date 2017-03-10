@@ -13,7 +13,7 @@ public class GetAutonomous extends Command{
 
 	@Override
 	public boolean update() {
-		String position = ConstantUpdater.getNetworkTablesString("position");
+		String position = ConstantUpdater.getNetworkTablesString("");
 		return true;
 	}
 	

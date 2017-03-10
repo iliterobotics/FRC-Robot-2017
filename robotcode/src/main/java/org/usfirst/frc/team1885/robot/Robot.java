@@ -103,6 +103,7 @@ public class Robot extends SampleRobot{
 			
 		setRunningModules(driveTrain, gearManipulator, pressureRegulator);
 		autonomousCommands.clear();
+		autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 24));
 		Command currentCommand = autonomousCommands.peek();
 		if(currentCommand != null) currentCommand.init();
 		while(isAutonomous() && isEnabled()){
