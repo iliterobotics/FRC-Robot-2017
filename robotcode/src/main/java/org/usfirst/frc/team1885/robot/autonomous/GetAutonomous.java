@@ -1,5 +1,9 @@
 package org.usfirst.frc.team1885.robot.autonomous;
 
+import java.util.List;
+
+import org.usfirst.frc.team1885.coms.ConstantUpdater;
+
 public class GetAutonomous extends Command{
 
 	@Override
@@ -9,7 +13,12 @@ public class GetAutonomous extends Command{
 
 	@Override
 	public boolean update() {
-		return false;
+		String position = ConstantUpdater.getNetworkTablesString("position");
+		return true;
+	}
+	
+	public List<Command> getAutonomous(){
+		return null;
 	}
 
 }
