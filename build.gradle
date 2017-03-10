@@ -67,6 +67,11 @@ project(':displaycode'){
   apply plugin: 'eclipse'
   apply plugin: 'java'
   apply plugin: 'jaci.openrio.gradle.GradleRIO'
+  
+  frc{
+    team = "1885"
+    deploy = false
+  }
 
   repositories {
     mavenCentral() // tilesFX & Medusa (gauges)
