@@ -3,7 +3,6 @@ package org.usfirst.frc.team1885.robot.modules;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc.team1885.coms.ConstantGetter;
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
 import org.usfirst.frc.team1885.robot.common.impl.DefaultCanTalonFactory;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
@@ -24,8 +23,8 @@ public class DriveTrain implements Module {
 	public static final int SHIFT_SOLENOID_ID = 2;
 	public static final int CASTER_SOLENOID_ID = 7;
 	// Voltage proportion control variables
-	private static final double DEFAULT_RAMP_RATE = 18.0; // in V/sec
-	private static final double HIGH_GEAR_RAMP_RATE = 36.0; // in V/sec
+	private static final double DEFAULT_RAMP_RATE = 36.0; // in V/sec
+	private static final double HIGH_GEAR_RAMP_RATE = 72.0; // in V/sec
 
 	private double desiredLeftPower;
 	private double desiredRightPower;
@@ -93,11 +92,11 @@ public class DriveTrain implements Module {
 	@Override
 	public void initialize() {
 		setMode(DriveMode.P_VBUS);
-		ConstantGetter.addConstant("leftpos", "0");
-		ConstantGetter.addConstant("rightpos", "0");
-		ConstantGetter.addConstant("leftvel", "0");
-		ConstantGetter.addConstant("rightvel", "0");
-		ConstantGetter.addConstant("drive_train_current", "0");
+		ConstantUpdater.putNumber("leftpos", 0);
+		ConstantUpdater.putNumber("rightpos", 0);
+		ConstantUpdater.putNumber("leftvel", 0);
+		ConstantUpdater.putNumber("rightvel", 0);
+		ConstantUpdater.putNumber("drive_train_current", 0);
 	}
 
 	private void setMode(DriveMode mode) {

@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1885.robot.modules;
 
-import org.usfirst.frc.team1885.coms.ConstantGetter;
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
 
 import com.ctre.CANTalon;
@@ -49,8 +48,8 @@ public class Climber implements Module{
 	
 	public void initialize() {
 		currentState = ClimberState.INIT;
-		ConstantGetter.addConstant("current", "0");
-		ConstantGetter.addConstant("voltage", "0");
+		ConstantUpdater.putNumber("current", 0);
+		ConstantUpdater.putNumber("voltage", 0);
 	}
 	
 	public void run(){
