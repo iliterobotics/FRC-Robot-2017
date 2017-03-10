@@ -59,7 +59,7 @@ public class ConstantUpdater implements Runnable {
 	}
 	
 	private void pushToWebserver(Update<?> currentUpdate){
-		String url = ConstantGetter.ADDRESS + "/logvals/set";
+		String url = ADDRESS + "/logvals/set";
 		System.out.println(url);
 		try {
 			URL obj = new URL(url);
