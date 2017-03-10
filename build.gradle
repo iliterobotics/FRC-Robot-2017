@@ -5,6 +5,26 @@ plugins {
     id "jaci.openrio.gradle.GradleRIO" version "2017.1.0" apply false
 }
 
+project(':commscode'){
+   apply plugin: 'jaci.openrio.gradle.GradleRIO'
+   apply plugin: 'java'
+   apply plugin: 'eclipse' 
+   frc{
+     team = "1885"
+     deploy = false
+   }
+   
+   repositories{
+     jcenter()
+   }   
+
+   dependencies{
+     compile group: 'org.json', name: 'json', version: '20090211'
+     compile wpilib()
+   }
+ }
+
+
 project(':robotcode') {
 
    apply plugin: 'jaci.openrio.gradle.GradleRIO'
@@ -19,15 +39,14 @@ project(':robotcode') {
    }
    repositories {
       jcenter()
-
    }
    dependencies {
        compile wpilib()
        compile talonSrx()
        compile files('res/navx_frc.jar')
        compile group: 'com.google.guava', name: 'guava', version: '19.0'
-       compile group: 'org.json', name: 'json', version: '20090211'
-
+//       compile group: 'org.json', name: 'json', version: '20090211'
+       compile project(':commscode')
 
        testCompile( 'junit:junit:4.12', 'org.codehaus.groovy:groovy-all:2.4.4', 'org.spockframework:spock-core:1.0-groovy-2.4')
    }
@@ -48,17 +67,11 @@ project(':robotcode') {
 
 }
 
-project(':commscode'){
-  apply plugin: 'eclipse'
-  apply plugin: 'java'
-}
-
-project(':VisionClient') {
-  apply plugin: 'eclipse'
-  apply plugin: 'java'
-  dependencies {
-	compile project(':Androidcode:App:visionUtils')
-
-  }
-
-}
+//project(':VisionClient') {
+//  apply plugin: 'eclipse'
+//  apply plugin: 'java'
+//  dependencies {
+//	compile project(':Androidcode:App:visionUtils')
+//
+//  }
+//}
