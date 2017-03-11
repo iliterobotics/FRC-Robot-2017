@@ -2,6 +2,7 @@ package org.usfirst.frc.team1885.robot.autonomous;
 
 import static org.usfirst.frc.team1885.robot.autonomous.DriveStraight.PROPORTION;
 
+import org.usfirst.frc.team1885.coms.ConstantUpdater;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
@@ -46,7 +47,11 @@ public class DriveStraightVision extends Command{
 	
 	public boolean update(){
 		
-		adjustBearing(testStick.getRawAxis(0) * 0.001);
+		double visionAngle = ConstantUpdater.getNetworkTablesNumber("vision-angle");
+		ConstantUpdater.putNumber("vision-angle", visionAngle);
+		System.out.println("VISION ANGLE: " + visionAngle);
+		if(Math.abs(visionAngle) > 30) visionAngle = 0;
+		adjustBearing(visionAngle);
 		
 		if( getAverageDistanceTravel() >= distanceToTravel){
 			driveTrain.setPower(0, 0);

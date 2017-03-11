@@ -138,7 +138,10 @@ public abstract class DriverControl implements Module {
 		updateIntakeWheels(driverController, manipulatorController);
 		
 		if( !wasClimberPushed && manipulatorController.getRawButton(CLIMBER_OPERATOR_BUTTON)){
-			if(climber.getClimberState() != ClimberState.INIT || driverController.getRawButton(CLIMBER_DRIVER_BUTTON)){
+			if(climber.getClimberState() == ClimberState.CLIMBING){
+				climber.halt();
+			}
+			else if(climber.getClimberState() != ClimberState.INIT || driverController.getRawButton(CLIMBER_DRIVER_BUTTON)){
 				climber.run();
 				wasClimberPushed = true;
 			}
