@@ -94,7 +94,7 @@ public class Robot extends SampleRobot{
 		GetAutonomous getAutonomous = new GetAutonomous();
 		getAutonomous.update();
 		autonomousCommands.clear();
-		autonomousCommands.add(getAutonomous.getAutonomous());
+		autonomousCommands.addAll(getAutonomous.getAutonomous(driveTrain, gearManipulator, navx));
 		Command currentCommand = autonomousCommands.peek();
 		if(currentCommand != null) currentCommand.init();
 		while(isAutonomous() && isEnabled()){

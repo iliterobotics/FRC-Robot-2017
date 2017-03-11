@@ -27,7 +27,7 @@ public class GetAutonomous extends Command{
 	public List<Command> getAutonomous(DriveTrain driveTrain, GearManipulator gearManipulator, NavX navx){
 		List<Command> commands = new ArrayList<>();
 		
-		if(position == null) position = "center";
+/*		if(position == null) position = "center";
 		switch(position){
 		case "left":
 			commands.add(new DriveStraightDistance(driveTrain, navx, 90));
@@ -50,7 +50,15 @@ public class GetAutonomous extends Command{
 		default:
 			commands.clear();
 			break;
-		}
+		}*/
+		commands.clear();
+		commands.add(new DriveStraightDistance(driveTrain, navx, 90));
+		commands.add(new TurnToDegree(driveTrain, navx, 65, 10));
+		commands.add(new DriveStraightDistance(driveTrain, navx, 15));
+		commands.add(new DropOffGear(gearManipulator, driveTrain));
+		commands.add(new TurnToDegree(driveTrain, navx, -10, 20));
+		commands.add(new DriveStraightDistance(driveTrain, navx, 48));
+//		commands.add(new DriveStraightVision(driveTrain, navx, 24));
 		
 		return commands;
 	}
