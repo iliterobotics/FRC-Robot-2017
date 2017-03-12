@@ -5,6 +5,8 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 
 public class TurnToDegree extends Command {
 	
+	private static final int TIMEOUT = 3000;
+	
 	private DriveTrain drivetrain;
 	private NavX navx;
 	
@@ -18,6 +20,8 @@ public class TurnToDegree extends Command {
 	private double error, lastError, totalError;
 	private double alignedCount;
 	private final double allowableError;
+	
+	private long startTime;
 	
 	double leftPower, rightPower, output = 0;
 	
@@ -35,6 +39,7 @@ public class TurnToDegree extends Command {
 		this.targetYaw = degrees;  //Calculate the target heading off of # of degrees to turn
 		this.lastError = this.error = getError(); //Calculate the initial error value
 		this.totalError += this.error;
+		startTime = System.currentTimeMillis();
 	}
 	
 	public boolean update()
@@ -45,6 +50,7 @@ public class TurnToDegree extends Command {
 		
 		if((Math.abs(error) < allowableError)) alignedCount++;
 		if(alignedCount >= MIN_ALIGNED_COUNT) return true;
+		if(System.currentTimeMillis() - startTime > TIMEOUT) return true;
 		
 		output = ((KP * error) + (KI * totalError) + (KD * (error - lastError)));
 		if(Math.abs(output) < MINIMUM_POWER){

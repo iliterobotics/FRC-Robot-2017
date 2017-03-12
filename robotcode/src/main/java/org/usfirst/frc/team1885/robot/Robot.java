@@ -8,11 +8,7 @@ import java.util.Queue;
 
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
 import org.usfirst.frc.team1885.robot.autonomous.Command;
-import org.usfirst.frc.team1885.robot.autonomous.DriveStraightDistance;
-import org.usfirst.frc.team1885.robot.autonomous.DriveStraightVision;
-import org.usfirst.frc.team1885.robot.autonomous.DropOffGear;
 import org.usfirst.frc.team1885.robot.autonomous.GetAutonomous;
-import org.usfirst.frc.team1885.robot.autonomous.TurnToDegree;
 import org.usfirst.frc.team1885.robot.modules.ArduinoController;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
@@ -24,9 +20,7 @@ import org.usfirst.frc.team1885.robot.modules.PressureSensor;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
-import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -82,14 +76,6 @@ public class Robot extends SampleRobot{
 	
 	public void autonomous()
 	{		
-//			autonomousCommands.clear();
-//			autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 90));
-//			autonomousCommands.add(new TurnToDegree(driveTrain, navx, 60, 5));
-//			autonomousCommands.add(new DriveStraightVision(driveTrain, navx, 15));
-//			autonomousCommands.add(new DropOffGear(gearManipulator, driveTrain));
-//			autonomousCommands.add(new TurnToDegree(driveTrain, navx, -10, 20));
-//			autonomousCommands.add(new DriveStraightDistance(driveTrain, navx, 48));
-			
 		setRunningModules(driveTrain, gearManipulator, pressureRegulator);
 		GetAutonomous getAutonomous = new GetAutonomous();
 		getAutonomous.update();
