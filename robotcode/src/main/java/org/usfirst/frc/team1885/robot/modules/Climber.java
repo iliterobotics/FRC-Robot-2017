@@ -7,7 +7,7 @@ import com.ctre.CANTalon.TalonControlMode;
 
 public class Climber implements Module{
 
-	private static final double MAX_CURRENT_V_RATIO = 3.2;
+	private static final double MAX_CURRENT_V_RATIO = 3.3;
 	private static final double CLIMBER_POWER = 1.0;
 	private static final double PULSE_POWER = 0.75;
 	
@@ -65,6 +65,8 @@ public class Climber implements Module{
 			currentState = ClimberState.BUMPING;
 			initBumpTime = System.currentTimeMillis();
 			break;
+		case CLIMBING:
+			currentState = ClimberState.STALLED;
 		default:
 			break;
 		}
@@ -112,7 +114,7 @@ public class Climber implements Module{
 		case BUMPING:
 			currentPower = CLIMBER_POWER;
 			if((System.currentTimeMillis() - initBumpTime) >= MAX_BUMP_TIME){
-				currentState = ClimberState.PAUSE;
+				currentState = ClimberState.STALLED;
 			}
 			break;
 		}
@@ -125,11 +127,6 @@ public class Climber implements Module{
 	
 	public ClimberState getClimberState(){
 		return currentState;
-	}
-
-	public void halt() {
-		currentState = ClimberState.STALLED;
-		initBumpTime = System.currentTimeMillis();
 	}
 
 }
