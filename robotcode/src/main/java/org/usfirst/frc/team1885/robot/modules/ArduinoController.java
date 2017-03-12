@@ -117,7 +117,7 @@ public class ArduinoController implements Module{
 	
 	private void sendMessage(String message){
 		currentMessage = message;
-		DriverStation.reportError(currentMessage, false);
+		//DriverStation.reportError(currentMessage, false);
 	}
 	
 	public void send(FeederMessage message)
