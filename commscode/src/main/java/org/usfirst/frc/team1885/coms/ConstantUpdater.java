@@ -46,9 +46,9 @@ public class ConstantUpdater implements Runnable {
 		while ( running ) {
 			while (updateQueue.peek() != null ) {
 				Update<?> currentUpdate = updateQueue.poll();
-				pushToNetworkTables(currentUpdate);
+				//pushToNetworkTables(currentUpdate);
 				//pushToSmartDashboard(currentUpdate);
-				pushToWebserver(currentUpdate);
+				//pushToWebserver(currentUpdate);
 			}
 			try {
 				Thread.sleep(100);
@@ -86,6 +86,7 @@ public class ConstantUpdater implements Runnable {
 				response.append(inputLine);
 			}
 			in.close();
+			con.disconnect();
 		} 
 		catch (MalformedURLException e) {} 
 		catch (IOException e) {e.printStackTrace();}
