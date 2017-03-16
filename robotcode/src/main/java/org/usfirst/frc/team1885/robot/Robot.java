@@ -13,7 +13,7 @@ import org.usfirst.frc.team1885.robot.modules.ArduinoController;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
-import org.usfirst.frc.team1885.robot.modules.LEDController;
+import org.usfirst.frc.team1885.robot.modules.LEDUpdater;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.PressureSensor;
@@ -35,12 +35,14 @@ public class Robot extends SampleRobot{
 	private GearManipulator gearManipulator;
 	private Climber climber;
 	private PressureSensor pressureRegulator;
-	private LEDController ledController;
+	private LEDUpdater ledController;
 	private ArduinoController arduinoController;
 	private Thread constantUpdaterThread;
 	
 	private Queue<Command> autonomousCommands;
 	private List<Module> runningModules;
+	
+	private boolean isCurrentAutoFinished;
 	
 	public Robot(){
 	    	    
@@ -57,8 +59,10 @@ public class Robot extends SampleRobot{
 		climber = new Climber();
 		arduinoController = new ArduinoController();
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
-		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, climber, gearManipulator);
+		ledController = new LEDUpdater(this, arduinoController, driveTrain, driverControl, pressureRegulator, climber, gearManipulator);
 
+		isCurrentAutoFinished = false;
+		
 		navx.resetDisplacement();
 	}
 
@@ -86,7 +90,8 @@ public class Robot extends SampleRobot{
 		while(isAutonomous() && isEnabled()){
 				currentCommand = autonomousCommands.peek();
 				if(currentCommand != null){
-					if(currentCommand.update()){
+					isCurrentAutoFinished = currentCommand.update();
+					if(isCurrentAutoFinished){
 						autonomousCommands.poll();
 						if(autonomousCommands.peek() != null) {
 							autonomousCommands.peek().init();
@@ -99,6 +104,10 @@ public class Robot extends SampleRobot{
 				updateModules();
 				pause();
 		}
+	}
+	
+	public boolean isCurrentAutoFinished() {
+		return isCurrentAutoFinished;
 	}
 	
 	public void operatorControl()

@@ -82,6 +82,7 @@ public class ArduinoController implements Module{
 	}
 	
 	public enum DriverMessage {
+		AUTO_COMMAND_FINISHED(LEDPattern.BLINK, LEDColor.WHITE, 300),
 		CURRENT_LIMIT(LEDPattern.BLINK, LEDColor.RED, 100), 
 		HIGH_GEAR(LEDPattern.RUN, LEDColor.GREEN_HSV, 0), 
 		LOW_AIR(LEDPattern.PULSE, LEDColor.LIGHT_BLUE, 0), 
