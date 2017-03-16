@@ -6,6 +6,8 @@ import org.usfirst.frc.team1885.robot.modules.ArduinoController.FeederMessage;
 import org.usfirst.frc.team1885.robot.modules.ArduinoController.PilotMessage;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class LEDUpdater implements Module{
 
 	private Robot robot;
@@ -17,6 +19,10 @@ public class LEDUpdater implements Module{
 	private GearManipulator gearManipulator;
 	
 	private boolean kicked;
+	private boolean runAutoSignal;
+	private double timeSinceCommandFinished;
+	
+	private static final int AUTO_FINISHED_SIGNAL_TIME = 2000;
 	
 	public LEDUpdater(Robot robot, ArduinoController arduinoController, DriveTrain driveTrain, DriverControl driverControl, PressureSensor pressureSensor, Climber climber, GearManipulator gearManipulator)
 	{
@@ -36,8 +42,15 @@ public class LEDUpdater implements Module{
 
 	@Override
 	public void update() {
+	
+		if(robot.isAutonomous() && robot.isCurrentAutoFinished()) {
+			runAutoSignal = true;
+			timeSinceCommandFinished = Timer.getFPGATimestamp();
+		}
 		
-		if(robot.isAutonomous() && robot.isCurrentAutoFinished()) arduinoController.send(DriverMessage.AUTO_COMMAND_FINISHED);
+		if((Timer.getFPGATimestamp() <= timeSinceCommandFinished + AUTO_FINISHED_SIGNAL_TIME) && runAutoSignal) {
+			arduinoController.send(DriverMessage.AUTO_COMMAND_FINISHED);
+		}
 		
 		if(gearManipulator.isKicked()) kicked = true;
 		else if(!(gearManipulator.isLong() && gearManipulator.isShort())) kicked = false;
