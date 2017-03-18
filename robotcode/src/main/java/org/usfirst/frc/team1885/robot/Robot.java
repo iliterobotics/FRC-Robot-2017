@@ -10,6 +10,7 @@ import org.usfirst.frc.team1885.coms.ConstantUpdater;
 import org.usfirst.frc.team1885.robot.autonomous.Command;
 import org.usfirst.frc.team1885.robot.autonomous.GetAutonomous;
 import org.usfirst.frc.team1885.robot.modules.ArduinoController;
+import org.usfirst.frc.team1885.robot.modules.BeamSensor;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
@@ -35,6 +36,7 @@ public class Robot extends SampleRobot{
 	private GearManipulator gearManipulator;
 	private Climber climber;
 	private PressureSensor pressureRegulator;
+	private BeamSensor beamSensor;
 	private LEDController ledController;
 	private ArduinoController arduinoController;
 	private Thread constantUpdaterThread;
@@ -52,6 +54,8 @@ public class Robot extends SampleRobot{
 		
 		navx = new NavX();
 		pressureRegulator = new PressureSensor();
+		beamSensor = new BeamSensor();
+		
 		driveTrain = new DriveTrain();
 		gearManipulator = new GearManipulator();
 		climber = new Climber();
@@ -103,7 +107,7 @@ public class Robot extends SampleRobot{
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, pressureRegulator, arduinoController, ledController);
+		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, pressureRegulator, beamSensor, arduinoController, ledController);
 		while(isOperatorControl() && isEnabled()){
 			updateModules();
 			pause();

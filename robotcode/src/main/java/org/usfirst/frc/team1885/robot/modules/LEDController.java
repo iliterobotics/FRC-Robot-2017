@@ -11,17 +11,19 @@ public class LEDController implements Module{
 	private DriveTrain driveTrain;
 	private DriverControl driverControl;
 	private PressureSensor pressureSensor;
+	private BeamSensor beamSensor;
 	private Climber climber;
 	private GearManipulator gearManipulator;
 	
 	private boolean kicked;
 	
-	public LEDController(ArduinoController arduinoController, DriveTrain driveTrain, DriverControl driverControl, PressureSensor pressureSensor, Climber climber, GearManipulator gearManipulator)
+	public LEDController(ArduinoController arduinoController, DriveTrain driveTrain, DriverControl driverControl, PressureSensor pressureSensor, BeamSensor beamSensor, Climber climber, GearManipulator gearManipulator)
 	{
 		this.arduinoController = arduinoController;
 		this.driveTrain = driveTrain;
 		this.driverControl = driverControl;
 		this.pressureSensor = pressureSensor;
+		this.beamSensor = beamSensor;
 		this.climber = climber;
 		this.gearManipulator = gearManipulator;
 	}
@@ -40,6 +42,7 @@ public class LEDController implements Module{
 		if(driverControl.isWarping()) arduinoController.send(DriverMessage.HIGH_GEAR);
 		else if(climber.getClimberState() == Climber.ClimberState.STALLED) arduinoController.send(DriverMessage.CURRENT_LIMIT);
 		else if(gearManipulator.isStalled()) arduinoController.send(DriverMessage.CURRENT_LIMIT);
+		//else if(beamSensor.isBroken()) arduinoController.send(DriverMessage.CURRENT_LIMIT);
 		else if(kicked) arduinoController.send(DriverMessage.READY_TO_LIFT);
 		else if(gearManipulator.isLong() && !gearManipulator.isShort()) arduinoController.send(DriverMessage.FLAP_OUT);
 		else if(gearManipulator.isDown()) arduinoController.send(DriverMessage.INTAKE_DOWN);
