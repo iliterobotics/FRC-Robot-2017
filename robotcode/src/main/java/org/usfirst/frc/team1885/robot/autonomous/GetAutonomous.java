@@ -57,7 +57,9 @@ public class GetAutonomous extends Command{
 		commands.add(new DriveStraightDistance(driveTrain, navx, 15));
 		commands.add(new DropOffGear(gearManipulator, driveTrain));
 		commands.add(new TurnToDegree(driveTrain, navx, -10, 20));
-		commands.add(new DriveStraightDistance(driveTrain, navx, 192));
+		commands.add(new DriveStraightDistance(driveTrain, navx, 60));
+		commands.add(new TurnToDegree(driveTrain, navx, 55, 15));
+		commands.add(new DriveStraightDistance(driveTrain, navx, 132));
 		
 		return commands;
 	}
