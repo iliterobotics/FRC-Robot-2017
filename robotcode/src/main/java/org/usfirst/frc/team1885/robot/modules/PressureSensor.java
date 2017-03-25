@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.robot.modules;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;
@@ -8,13 +9,16 @@ public class PressureSensor implements Module{
     
     public static final int CHANNEL = 0;
     public static final int RELAY_PORT = 0;
+    public static final int AIO_PORT = 0;
     
     private Relay relay;
 	private Compressor compressor;
 	private DigitalInput dio;
+	private AnalogInput aio;
 	private boolean isCompressorOn;
     public PressureSensor() {
         dio = new DigitalInput(CHANNEL);
+        aio = new AnalogInput(AIO_PORT);
 		relay = new Relay(RELAY_PORT);
     }
 	
@@ -33,6 +37,7 @@ public class PressureSensor implements Module{
 			relay.set(Relay.Value.kOff);
 			isCompressorOn = false;
 		}
+		System.out.println(aio.getVoltage());
 	}
 	
 	public boolean isCompressorOn() {
