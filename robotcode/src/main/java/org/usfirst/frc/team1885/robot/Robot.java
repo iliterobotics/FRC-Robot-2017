@@ -61,7 +61,7 @@ public class Robot extends SampleRobot{
 		climber = new Climber();
 		arduinoController = new ArduinoController();
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
-		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, climber, gearManipulator);
+		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, beamSensor, climber, gearManipulator);
 
 		navx.resetDisplacement();
 	}
@@ -70,6 +70,7 @@ public class Robot extends SampleRobot{
     
 		CameraServer server = CameraServer.getInstance();
 		server.startAutomaticCapture(0);
+		server.startAutomaticCapture(1);
 		while(navx.isCalibrating()){
 			System.out.println("CALIBRATING");
 			pause();
@@ -107,7 +108,7 @@ public class Robot extends SampleRobot{
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, pressureRegulator, beamSensor, arduinoController, ledController);
+		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, beamSensor, arduinoController, ledController);
 		while(isOperatorControl() && isEnabled()){
 			updateModules();
 			pause();

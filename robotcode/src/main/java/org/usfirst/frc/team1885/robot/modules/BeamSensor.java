@@ -6,7 +6,7 @@ public class BeamSensor implements Module {
 
 	DigitalInput beamInput;
 	
-	private static final int INPUT_CHANNEL = 0;
+	private static final int INPUT_CHANNEL = 1;
 	
 	public BeamSensor() {
 		beamInput = new DigitalInput(INPUT_CHANNEL);
@@ -22,7 +22,7 @@ public class BeamSensor implements Module {
 	@Override
 	public void update() {
 
-
+		System.out.println("BEAM IS " + isBroken());
 		
 	}
 	
