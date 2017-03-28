@@ -14,50 +14,47 @@ public class GetAutonomous extends Command{
 	
 	@Override
 	public void init() {
-		
+		update();
 	}
 
 	@Override
 	public boolean update() {
-		String position = ConstantUpdater.getNetworkTablesString("position");
-		System.out.println("OUR CONFIG IS " + position);
+		try{
+			position = ConstantUpdater.getNetworkTablesString("position");
+		} catch(Exception e){
+			
+		}
 		return true;
 	}
 	
 	public List<Command> getAutonomous(DriveTrain driveTrain, GearManipulator gearManipulator, NavX navx){
 		List<Command> commands = new ArrayList<>();
-		
-/*		if(position == null) position = "center";
+
+		update();
+		commands.clear();
+		System.out.println("POSITION IS " + position);
+		if(position == null || position.equals("center")) position = "left";
 		switch(position){
 		case "left":
 			commands.add(new DriveStraightDistance(driveTrain, navx, 90));
-			commands.add(new TurnToDegree(driveTrain, navx, 60, 5));
-			commands.add(new DriveStraightVision(driveTrain, navx, 15));
+			commands.add(new TurnToDegree(driveTrain, navx, 65, 10));
+			commands.add(new DriveStraightDistance(driveTrain, navx, 15));
 			commands.add(new DropOffGear(gearManipulator, driveTrain));
 			commands.add(new TurnToDegree(driveTrain, navx, -10, 20));
-			commands.add(new DriveStraightDistance(driveTrain, navx, 48));
-			break;
-		case "center":
+			commands.add(new DriveStraightDistance(driveTrain, navx, 192));
 			break;
 		case "right":
-			commands.add(new DriveStraightDistance(driveTrain, navx, 90));
-			commands.add(new TurnToDegree(driveTrain, navx, -60, 5));
-			commands.add(new DriveStraightVision(driveTrain, navx, 15));
+			commands.add(new DriveStraightDistance(driveTrain, navx, 87));
+			commands.add(new TurnToDegree(driveTrain, navx, -65, 10));
+			commands.add(new DriveStraightDistance(driveTrain, navx, 15));
 			commands.add(new DropOffGear(gearManipulator, driveTrain));
 			commands.add(new TurnToDegree(driveTrain, navx, 10, 20));
-			commands.add(new DriveStraightDistance(driveTrain, navx, 48));
+			commands.add(new DriveStraightDistance(driveTrain, navx, 192));
 			break;
 		default:
 			commands.clear();
 			break;
-		}*/
-		commands.clear();
-		commands.add(new DriveStraightDistance(driveTrain, navx, 90));
-		commands.add(new TurnToDegree(driveTrain, navx, 65, 10));
-		commands.add(new DriveStraightDistance(driveTrain, navx, 15));
-		commands.add(new DropOffGear(gearManipulator, driveTrain));
-		commands.add(new TurnToDegree(driveTrain, navx, -10, 20));
-		commands.add(new DriveStraightDistance(driveTrain, navx, 192));
+		}
 		
 		return commands;
 	}
