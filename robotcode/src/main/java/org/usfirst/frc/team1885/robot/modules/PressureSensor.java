@@ -7,6 +7,10 @@ import edu.wpi.first.wpilibj.Relay;
 
 public class PressureSensor implements Module{
     
+	public static final double PSI_PER_VOLTAGE = 1;
+
+	public static final double LOW_VOLTAGE = 2.25;
+	
     public static final int CHANNEL = 0;
     public static final int RELAY_PORT = 0;
     public static final int AIO_PORT = 0;
@@ -16,7 +20,9 @@ public class PressureSensor implements Module{
 	private DigitalInput dio;
 	private AnalogInput aio;
 	private boolean isCompressorOn;
-    public PressureSensor() {
+    private double voltageReadout;
+	
+	public PressureSensor() {
         dio = new DigitalInput(CHANNEL);
         aio = new AnalogInput(AIO_PORT);
 		relay = new Relay(RELAY_PORT);
@@ -37,7 +43,12 @@ public class PressureSensor implements Module{
 			relay.set(Relay.Value.kOff);
 			isCompressorOn = false;
 		}
-		System.out.println(aio.getVoltage());
+		voltageReadout = aio.getVoltage();
+		System.out.println("Voltage: " + aio.getVoltage() + "v");
+	}
+	
+	public boolean isCompressorLow(){
+		return voltageReadout <= LOW_VOLTAGE;
 	}
 	
 	public boolean isCompressorOn() {

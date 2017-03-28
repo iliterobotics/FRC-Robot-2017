@@ -9,7 +9,7 @@ public class Climber implements Module{
 
 	private static final double MAX_CURRENT_V_RATIO = 5;
 	private static final double CLIMBER_POWER = 1.0;
-	private static final double PULSE_POWER = 0.4;
+	private static final double PULSE_POWER = 0.35;
 	
 	private static final int[] TALON_IDS = {7, 8};
 	

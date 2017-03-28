@@ -88,7 +88,8 @@ public class ArduinoController implements Module{
 		FLAP_OUT(LEDPattern.SOLID, LEDColor.PURPLE, 0),
 		READY_TO_LIFT(LEDPattern.BLINK, LEDColor.PURPLE, 0), 
 		INTAKE_DOWN(LEDPattern.PULSE, LEDColor.GREEN, 0),
-		IDLE(LEDPattern.RUN, LEDColor.YELLOW_HSV, 0);
+		IDLE(LEDPattern.RUN, LEDColor.PURPLE_HSV, 0),
+		BEAM_BROKEN(LEDPattern.BLINK, LEDColor.YELLOW, 100);
 		
 		final LEDColor color;
 		final LEDPattern pattern;
