@@ -1,0 +1,41 @@
+PROGRAMMING NOTES FOR THE DEEP RUN COMPETITION
+==============================================
+
+The Original Values for the climber at the begining of the compeition were:	
+	MAX_CURRENT_V_RATIO = 5;
+	CLIMBER_POWER = 1.0;
+	PULSE_POWER = 0.2;
+
+---------------------------------------------------------------------
+
+PULSE_POWER was changed to 0.4 after noticing that the pulse got ~1/2 of the distance that it should have.
+After a test, this appears to be an appropriate value
+
+After another sprocket change to 0.35 
+---------------------------------------------------------------------
+
+Added second camera feed in a new window.
+Made all methods and members in Processsing non-static and simply start two Camera connections on ports 1181 and 1182.
+Also added camera 1 and 0 connection starting in robot code.
+
+---------------------------------------------------------------------
+
+Current limit on the climber is now also triggered by beamSensor.isBroken
+
+'Low pressure' LED signal is now only triggered if the voltage from the pressure sensor is less than 2.25v, which roughly correlates to 90psi
+
+---------------------------------------------------------------------
+
+Camera feed was made in color by simply having the Mat write its data to the buffered image with the BufferedImage having the ImageType of 3BYTE_BGR
+
+Tested to work through the laptop webcam
+
+---------------------------------------------------------------------
+
+Added autonomous selection to the GetAutonomous routine.
+The driver display was already configured to send the correct values to networktables.
+It was as easy as switching the 'position' string from network-tables (defaulting to left) and inverting the angles for turning.
+
+---------------------------------------------------------------------
+
+
