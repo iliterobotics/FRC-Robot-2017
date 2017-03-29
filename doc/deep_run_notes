@@ -1,7 +1,7 @@
 PROGRAMMING NOTES FOR THE DEEP RUN COMPETITION
 ==============================================
 
-The Original Values for the climber at the begining of the compeition were:	
+The original values for the climber at the beginning of the competition were:	
 	MAX_CURRENT_V_RATIO = 5;
 	CLIMBER_POWER = 1.0;
 	PULSE_POWER = 0.2;
