@@ -60,7 +60,7 @@ public class Robot extends SampleRobot{
 		gearManipulator = new GearManipulator();
 		climber = new Climber();
 		arduinoController = new ArduinoController();
-		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx, beamSensor);
 		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, beamSensor, climber, gearManipulator);
 
 		navx.resetDisplacement();

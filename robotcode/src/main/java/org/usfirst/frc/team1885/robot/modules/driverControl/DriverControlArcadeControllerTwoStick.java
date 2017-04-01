@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot.modules.driverControl;
 import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystick;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
+import org.usfirst.frc.team1885.robot.modules.BeamSensor;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
@@ -28,12 +29,12 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 
 	private DriveTrain driveTrain;
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) { 
-		this(driveTrain, gearManipulator, climber, navx, new DefaultJoystickFactory());
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, BeamSensor beamSensor) { 
+		this(driveTrain, gearManipulator, climber, navx, beamSensor, new DefaultJoystickFactory());
 	}
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, IJoystickFactory joystickFactory) {
-		super(driveTrain, gearManipulator, climber, navx, joystickFactory);
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, BeamSensor beamSensor, IJoystickFactory joystickFactory) {
+		super(driveTrain, gearManipulator, climber, navx, beamSensor, joystickFactory);
 		this.driveTrain = driveTrain;
 	}
 

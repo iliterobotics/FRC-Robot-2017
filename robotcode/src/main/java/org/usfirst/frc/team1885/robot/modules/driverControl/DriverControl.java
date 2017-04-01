@@ -11,6 +11,7 @@ import org.usfirst.frc.team1885.robot.autonomous.DriveStraight;
 import org.usfirst.frc.team1885.robot.autonomous.Nudge;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystick;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
+import org.usfirst.frc.team1885.robot.modules.BeamSensor;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.Climber.ClimberState;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
@@ -48,6 +49,8 @@ public abstract class DriverControl implements Module {
 	public static final boolean HIGH_GEAR = true;
 	public static final boolean LOW_GEAR = false;
 	
+	private static final long BEAM_ACTIVATED_THRESHOLD = 1000;
+	
 
 	private Map<ControllerType, IJoystick> controllerMap;
 	private List<Command> runningCommands;
@@ -59,6 +62,7 @@ public abstract class DriverControl implements Module {
 	private final GearManipulator gearManipulator;
 	private final Climber climber;
 	private final NavX navx;
+	private final BeamSensor beamSensor;
 	private IJoystickFactory joystickFactory;
 	
 	private boolean wasClimberPushed;
@@ -82,12 +86,13 @@ public abstract class DriverControl implements Module {
 		}
 	}
 
-	public DriverControl(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, IJoystickFactory created) {
+	public DriverControl(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, BeamSensor beamSensor, IJoystickFactory created) {
 		this.driveTrain = driveTrain;
 		this.joystickFactory = created;
 		this.gearManipulator = gearManipulator;
 		this.climber = climber;
 		this.navx = navx;
+		this.beamSensor = beamSensor;
 		controllerMap = new HashMap<ControllerType, IJoystick>();
 		runningCommands = new ArrayList<>();
 	}
@@ -163,6 +168,10 @@ public abstract class DriverControl implements Module {
 		
 		if(manipulatorController.getRawButton(DROP_BUTTON)){
 			gearManipulator.setDropping(false);
+		}
+		
+		if(beamSensor.isBroken() && beamSensor.getTimeActivated() > BEAM_ACTIVATED_THRESHOLD) {
+			gearManipulator.setLowered(false);
 		}
 		
 		if(manipulatorController.getRawButton(UP_BUTTON)){
