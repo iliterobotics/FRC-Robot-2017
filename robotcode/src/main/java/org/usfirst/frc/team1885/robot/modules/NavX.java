@@ -44,6 +44,10 @@ public class NavX{
 		iahrs.resetDisplacement();
 	}
 	
+	public float getWorldLinearAccelZ() {
+		return iahrs.getWorldLinearAccelZ();
+	}
+	
 	public boolean isCalibrating(){
 		return iahrs.isCalibrating();
 	}

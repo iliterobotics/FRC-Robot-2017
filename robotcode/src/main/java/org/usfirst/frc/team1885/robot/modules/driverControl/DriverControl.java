@@ -48,7 +48,9 @@ public abstract class DriverControl implements Module {
 	public static final boolean HIGH_GEAR = true;
 	public static final boolean LOW_GEAR = false;
 	
-
+	public static final double DROP_LIN_ACCEL_THRESHOLD = 0.3;
+	public static final double DROP_INTAKE_UP_TIME = 3000;
+	
 	private Map<ControllerType, IJoystick> controllerMap;
 	private List<Command> runningCommands;
 	
@@ -159,6 +161,11 @@ public abstract class DriverControl implements Module {
 			gearManipulator.setShort(true);
 		}else{
 			gearManipulator.setShort(false);		
+		}
+		
+		//Auto drop if linear acceleration is greater or equal to the threshold and intake state has been 'up' for a certain time
+		if(navx.getWorldLinearAccelZ() > DROP_LIN_ACCEL_THRESHOLD && (System.currentTimeMillis() - gearManipulator.getIntakeActivatedTime()) > DROP_INTAKE_UP_TIME) {
+			gearManipulator.setDropping(false);
 		}
 		
 		if(manipulatorController.getRawButton(DROP_BUTTON)){

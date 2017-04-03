@@ -34,6 +34,7 @@ public class GearManipulator implements Module{
 	private CANTalon intakeWheels;
 	
 	private long initBarOpen;
+	private long intakeActivatedTime;
 	
 	private boolean hasIntakeHitLimit;
 	private boolean barOpening;
@@ -103,8 +104,10 @@ public class GearManipulator implements Module{
 		
 		if(lowered){
 			goingDown = true;
+			intakeActivatedTime = System.currentTimeMillis();
 		}else{
 			isDown = false;
+			intakeActivatedTime = 0;
 		}
 	}
 	
@@ -195,6 +198,10 @@ public class GearManipulator implements Module{
 		}else{
 			DriverStation.reportError("WRONG SOLENOID TYPE", false);
 		}
+	}
+	
+	public long getIntakeActivatedTime() {
+		return intakeActivatedTime;
 	}
 	
 }

@@ -9,6 +9,8 @@ public interface IAHRS{
 	double getDisplacementY();
 
 	double getDisplacementZ();
+	
+	float getWorldLinearAccelZ();
 
 	void zeroYaw();
 
