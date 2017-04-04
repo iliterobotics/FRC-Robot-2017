@@ -168,15 +168,15 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         Core.inRange(mRgba, lower, upper, matThresh);
 
 
-        int thresh = 100;
-        Imgproc.Canny(matThresh,matThresh,thresh,2*thresh);
+        int thresh = 10;
+        Imgproc.Canny(matThresh,matThresh,thresh,3*thresh, 3, true);
 
         List<MatOfPoint> contours = new ArrayList<>();
 
         Imgproc.findContours(matThresh, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
         List<MatOfPoint>allPoints = new ArrayList<>();
-
+        System.out.println("FOUND THESE GUYS: " + contours.size());
         Collections.sort(contours, new Comparator<MatOfPoint>() {
             @Override
             public int compare(MatOfPoint lhs, MatOfPoint rhs) {
@@ -193,9 +193,9 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 System.out.println("LOOK AT ME PART 2: " + allPoints.get(1).size());
             }
             Imgproc.cvtColor(matThresh,matThresh,Imgproc.COLOR_GRAY2RGB);
+
             Imgproc.drawContours(matThresh, allPoints, -1, new Scalar(255,255,0));
         }
-
 
         return matThresh; // This function must return
     }
