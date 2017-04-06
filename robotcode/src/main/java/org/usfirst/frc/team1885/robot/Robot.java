@@ -67,16 +67,20 @@ public class Robot extends SampleRobot{
 	}
 
 	public void robotInit(){
-    
-		CameraServer server = CameraServer.getInstance();
-		server.startAutomaticCapture(0);
-		server.startAutomaticCapture(1);
+		startCameraFeeds();
 		while(navx.isCalibrating()){
 			System.out.println("CALIBRATING");
 			pause();
 		}
 		navx.setInitialAngle(navx.getAngle());
 
+	}
+	
+	public void startCameraFeeds(){
+		CameraServer server = CameraServer.getInstance();
+		server.startAutomaticCapture(0);
+		server.startAutomaticCapture(1);
+		server.startAutomaticCapture(2);
 	}
 	
 	public void autonomous()
