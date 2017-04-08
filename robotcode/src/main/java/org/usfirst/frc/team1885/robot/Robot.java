@@ -81,7 +81,7 @@ public class Robot extends SampleRobot{
 		CameraServer server = CameraServer.getInstance();
 		UsbCamera camera0 = server.startAutomaticCapture(0);
 		UsbCamera camera1 = server.startAutomaticCapture(1);
-		UsbCamera camera2 = server.startAutomaticCapture(2);
+		//UsbCamera camera2 = server.startAutomaticCapture(2);
 	}
 	
 	public void autonomous()

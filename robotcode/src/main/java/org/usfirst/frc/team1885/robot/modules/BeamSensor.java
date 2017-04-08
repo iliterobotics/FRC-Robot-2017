@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1885.robot.modules;
 
+import org.usfirst.frc.team1885.coms.ConstantUpdater;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class BeamSensor implements Module {
@@ -21,9 +23,7 @@ public class BeamSensor implements Module {
 
 	@Override
 	public void update() {
-
-		System.out.println("BEAM IS " + isBroken());
-		
+		ConstantUpdater.putBoolean("beam-broken", isBroken());
 	}
 	
 	public boolean isBroken() {
