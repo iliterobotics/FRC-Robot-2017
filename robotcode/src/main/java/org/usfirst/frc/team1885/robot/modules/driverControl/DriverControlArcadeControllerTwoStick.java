@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
-import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
+import org.usfirst.frc.team1885.robot.common.impl.Joystick;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystick;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.Climber;
@@ -29,7 +29,7 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	private DriveTrain driveTrain;
 	
 	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) { 
-		this(driveTrain, gearManipulator, climber, navx, new DefaultJoystickFactory());
+		this(driveTrain, gearManipulator, climber, navx, new Joystick());
 	}
 	
 	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, IJoystickFactory joystickFactory) {

@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
-import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
+import org.usfirst.frc.team1885.robot.common.impl.Joystick;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
@@ -12,7 +12,7 @@ public class DriverControlTankController extends DriverControl{
 	private static final double SCALING_EXP = 2;
 
 	public DriverControlTankController(DriveTrain driveTrain, Climber climber, NavX navx, GearManipulator gearManipulator) {
-		this(driveTrain, gearManipulator, climber, navx, new DefaultJoystickFactory());
+		this(driveTrain, gearManipulator, climber, navx, new Joystick());
 	}
 	
 	public DriverControlTankController(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, IJoystickFactory joystickFact) {
