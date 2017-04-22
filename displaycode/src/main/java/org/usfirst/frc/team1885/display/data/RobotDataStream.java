@@ -94,6 +94,7 @@ public class RobotDataStream {
     case UNSUPPORTED:
     default:
       mTable.putString(pData, pValue);
+      System.out.println("Putting string " + pData + " " + pValue);
       break;
     }
   }
