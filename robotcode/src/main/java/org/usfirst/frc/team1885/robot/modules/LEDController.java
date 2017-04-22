@@ -43,13 +43,12 @@ public class LEDController implements Module{
 		else if(climber.getClimberState() == Climber.ClimberState.STALLED) arduinoController.send(DriverMessage.CURRENT_LIMIT);
 		else if(beamSensor.isBroken()) arduinoController.send(DriverMessage.BEAM_BROKEN);
 		else if(gearManipulator.isStalled()) arduinoController.send(DriverMessage.CURRENT_LIMIT);
-		//else if(beamSensor.isBroken()) arduinoController.send(DriverMessage.CURRENT_LIMIT);
 		else if(kicked) arduinoController.send(DriverMessage.READY_TO_LIFT);
 		else if(gearManipulator.isLong() && !gearManipulator.isShort()) arduinoController.send(DriverMessage.FLAP_OUT);
 		else if(gearManipulator.isDown()) arduinoController.send(DriverMessage.INTAKE_DOWN);
 		else if(driverControl.isLook()) arduinoController.send(PilotMessage.LOOK_FOR_SIGNAL);
 		else if(driverControl.isWait()) arduinoController.send(FeederMessage.WAIT);
-		else if(pressureSensor.isCompressorLow()) arduinoController.send(DriverMessage.LOW_AIR);
+		//else if(pressureSensor.isCompressorLow()) arduinoController.send(DriverMessage.LOW_AIR);
 		else arduinoController.send(DriverMessage.IDLE);
 	}
 	

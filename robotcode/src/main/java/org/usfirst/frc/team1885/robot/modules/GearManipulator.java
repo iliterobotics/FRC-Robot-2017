@@ -15,10 +15,11 @@ import edu.wpi.first.wpilibj.SolenoidBase;
 
 public class GearManipulator implements Module{
 
-	private static final int FLY_CAN_ID = 9;
+	private static final int INTAKE_CAN_ID = 9;
+	private static final int SECONDAY_CAN_ID = 10;
 	public static final double DEFAULT_INTAKE_SPEED = 1.0;
 	
-	public static final double MAX_INTAKE_AMPERAGE = 30;
+	public static final double MAX_INTAKE_AMPERAGE = 60;
 	
 	private Map<PistonType, SolenoidBase> pistonMap;
 	
@@ -32,6 +33,7 @@ public class GearManipulator implements Module{
 	private double intakePower;
 	
 	private CANTalon intakeWheels;
+	private CANTalon intakeBar;
 	
 	private long initBarOpen;
 	
@@ -63,8 +65,10 @@ public class GearManipulator implements Module{
 			}
 			pistonMap.put(type, solenoid);
 		}
-		intakeWheels = new CANTalon(FLY_CAN_ID);
+		intakeWheels = new CANTalon(INTAKE_CAN_ID);
+		intakeBar = new CANTalon(SECONDAY_CAN_ID);
 		intakeWheels.setControlMode(CANTalon.TalonControlMode.PercentVbus.value);
+		intakeBar.setControlMode(CANTalon.TalonControlMode.PercentVbus.value);
 	}	
 
 	@Override
@@ -171,7 +175,10 @@ public class GearManipulator implements Module{
 		
 		//Check current limit
 		if(intakePower == 0) hasIntakeHitLimit = false;
+		
 		intakeWheels.set(hasIntakeHitLimit?0:intakePower);
+		intakeBar.set(hasIntakeHitLimit?0:intakePower);
+
 		if(intakeWheels.getOutputCurrent() >= MAX_INTAKE_AMPERAGE){
 			hasIntakeHitLimit = true;
 		}
