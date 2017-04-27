@@ -37,7 +37,7 @@ public class GetAutonomous extends Command{
 		switch(position){
 		case "left":
 			commands.add(new DriveStraightDistance(driveTrain, navx, 90));
-			commands.add(new TurnToDegree(driveTrain, navx, 65, 10));
+			commands.add(new TurnToDegree(driveTrain, navx, 60, 3));
 			commands.add(new DriveStraightDistance(driveTrain, navx, 15));
 			commands.add(new DropOffGear(gearManipulator, driveTrain));
 			commands.add(new TurnToDegree(driveTrain, navx, -10, 20));
@@ -45,7 +45,7 @@ public class GetAutonomous extends Command{
 			break;
 		case "right":
 			commands.add(new DriveStraightDistance(driveTrain, navx, 87));
-			commands.add(new TurnToDegree(driveTrain, navx, -65, 10));
+			commands.add(new TurnToDegree(driveTrain, navx, -60, 3));
 			commands.add(new DriveStraightDistance(driveTrain, navx, 15));
 			commands.add(new DropOffGear(gearManipulator, driveTrain));
 			commands.add(new TurnToDegree(driveTrain, navx, 10, 20));

@@ -29,6 +29,10 @@ public class ConstantUpdater implements Runnable {
 	
 	private NetworkTable netTable;
 	
+	static{
+		start();
+	}
+	
 	private ConstantUpdater() {
 		updateQueue = new LinkedList<>();
 		netTable = NetworkTable.getTable(NETWORK_TABLE);
@@ -45,8 +49,7 @@ public class ConstantUpdater implements Runnable {
 	public void run() {
 		while ( running ) {
 			while (updateQueue.peek() != null ) {
-				Update<?> currentUpdate = updateQueue.poll();
-				//pushToNetworkTables(currentUpdate);
+				pushToNetworkTables(updateQueue.poll());
 				//pushToSmartDashboard(currentUpdate);
 				//pushToWebserver(currentUpdate);
 			}
@@ -113,6 +116,11 @@ public class ConstantUpdater implements Runnable {
 			Update<double[]> numberArrayUpdate = currentUpdate.toDoubleArrayUpdate();
 			netTable.putNumberArray(numberArrayUpdate.variable, numberArrayUpdate.value);
 		}
+		else if(currentUpdate.value instanceof Boolean){
+			Update<Boolean> booleanUpdate = currentUpdate.toBooleanUpdate();
+			netTable.putBoolean(booleanUpdate.variable, booleanUpdate.value);
+			System.out.println(netTable.getBoolean(booleanUpdate.variable, false));
+		}
 		else{ //Treat it as a string
 			Update<String> stringUpdate = currentUpdate.toStringUpdate();
 			netTable.putString(stringUpdate.variable, stringUpdate.value);
@@ -149,6 +157,10 @@ public class ConstantUpdater implements Runnable {
 		getInstance().updateQueue.add(new Update<Number[]>(var, vals));
 	}
 	
+	public static void putBoolean(String var, Boolean val){
+		getInstance().updateQueue.add(new Update<Boolean>(var, val));
+	}
+	
 	private static class Update<E extends Object>{
 		String variable;
 		E value;
@@ -173,6 +185,12 @@ public class ConstantUpdater implements Runnable {
 			}
 			return null;
 		}
+		Update<Boolean> toBooleanUpdate(){
+			if(value instanceof Boolean){
+				return new Update<Boolean>(variable, (Boolean)value);
+			}
+			return null;
+		}
 		Update<String> toStringUpdate(){
 			return new Update<String>(variable, value.toString());
 		}
@@ -186,17 +204,16 @@ public class ConstantUpdater implements Runnable {
 	public static Double getNetworkTablesNumber(String key){
 		return getInstance().netTable.getNumber(key, new Double(0));
 	}
+	
+	public static Boolean getNetworkTablesBoolean(String key){
+		return getInstance().netTable.getBoolean(key, false);
+	}
 
 	
 	public static void main(String[] args){
 		start();
-		for(int i = 0; i < 20; i++){
-			putNumber("number", i);
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+		while(true){
+			getNetworkTablesBoolean("beam-broken");
 		}
 	}
 	

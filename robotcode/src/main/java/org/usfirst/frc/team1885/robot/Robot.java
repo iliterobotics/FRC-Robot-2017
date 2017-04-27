@@ -21,6 +21,7 @@ import org.usfirst.frc.team1885.robot.modules.PressureSensor;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -67,16 +68,20 @@ public class Robot extends SampleRobot{
 	}
 
 	public void robotInit(){
-    
-		CameraServer server = CameraServer.getInstance();
-		server.startAutomaticCapture(0);
-		server.startAutomaticCapture(1);
+		startCameraFeeds();
 		while(navx.isCalibrating()){
 			System.out.println("CALIBRATING");
 			pause();
 		}
 		navx.setInitialAngle(navx.getAngle());
 
+	}
+	
+	public void startCameraFeeds(){
+		CameraServer server = CameraServer.getInstance();
+		UsbCamera camera0 = server.startAutomaticCapture(0);
+		UsbCamera camera1 = server.startAutomaticCapture(1);
+		//UsbCamera camera2 = server.startAutomaticCapture(2);
 	}
 	
 	public void autonomous()
