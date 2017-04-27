@@ -1,6 +1,10 @@
 package org.usfirst.frc.team1885.display.ui;
 
+import javax.naming.AuthenticationNotSupportedException;
+
 import org.usfirst.frc.team1885.display.DisplayConfig;
+import org.usfirst.frc.team1885.display.data.ESupportedTypes;
+import org.usfirst.frc.team1885.display.data.RobotDataStream;
 
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.Tile.SkinType;
@@ -20,18 +24,31 @@ public class ILITE2017AutoConfigDisplay extends AbstractTilePane{
     getChildren().add(title);
     
     Tile autonModeConfig = tile("Side of Airship", SkinType.SWITCH)
-      .selected(false)
       .text("Left Side")
       .textVisible(true)
       .build();
-    autonModeConfig.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-      if(isSelected) {
-        autonModeConfig.setText("Right Side");
-      } else {
-        autonModeConfig.setText("Left Side");
-      }
+    autonModeConfig.selectedProperty().addListener((obs, oldval, newval) -> {
+    	boolean val = newval.booleanValue();
+    	String str = "left";
+    	if(!val){
+    		autonModeConfig.setText("Left Side");
+	        str = "left";
+    	}else{
+    		autonModeConfig.setText("Right Side");
+	        str = "right";
+		}
+        RobotDataStream.inst().sendDataToRobot("position", ESupportedTypes.STRING, str);
     });
+//    autonModeConfig.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+//      if(isSelected) {
+//        autonModeConfig.setText("Right Side");
+//      } else {
+//        autonModeConfig.setText("Left Side");
+//      }
+//      RobotDataStream.inst().sendDataToRobot("position", ESupportedTypes.STRING, isSelected?"right":"left");
+//    });
     getChildren().add(autonModeConfig);
+    RobotDataStream.inst().sendDataToRobot("position", ESupportedTypes.STRING, "left");
     // TODO - bind property in robot data sender
     
     Tile autonDelay = tile("Delay", SkinType.SLIDER)
