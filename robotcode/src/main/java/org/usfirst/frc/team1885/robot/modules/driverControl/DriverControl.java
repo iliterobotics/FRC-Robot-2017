@@ -9,14 +9,14 @@ import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.autonomous.Command;
 import org.usfirst.frc.team1885.robot.autonomous.DriveStraight;
 import org.usfirst.frc.team1885.robot.autonomous.Nudge;
-import org.usfirst.frc.team1885.robot.common.interfaces.IJoystick;
-import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.Climber.ClimberState;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
+
+import edu.wpi.first.wpilibj.Joystick;
 
 public abstract class DriverControl implements Module {
 	
@@ -49,7 +49,7 @@ public abstract class DriverControl implements Module {
 	public static final boolean LOW_GEAR = false;
 	
 
-	private Map<ControllerType, IJoystick> controllerMap;
+	private Map<ControllerType, Joystick> controllerMap;
 	private List<Command> runningCommands;
 	
 	private DriveStraight warpSpeedCommand;
@@ -59,7 +59,6 @@ public abstract class DriverControl implements Module {
 	private final GearManipulator gearManipulator;
 	private final Climber climber;
 	private final NavX navx;
-	private IJoystickFactory joystickFactory;
 	
 	private boolean wasClimberPushed;
 	private boolean wasToggleDrop;
@@ -82,19 +81,18 @@ public abstract class DriverControl implements Module {
 		}
 	}
 
-	public DriverControl(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, IJoystickFactory created) {
+	public DriverControl(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) {
 		this.driveTrain = driveTrain;
-		this.joystickFactory = created;
 		this.gearManipulator = gearManipulator;
 		this.climber = climber;
 		this.navx = navx;
-		controllerMap = new HashMap<ControllerType, IJoystick>();
+		controllerMap = new HashMap<ControllerType, Joystick>();
 		runningCommands = new ArrayList<>();
 	}
 
 	public void initialize() {
 		for (ControllerType type : ControllerType.values()) {
-			controllerMap.put(type, joystickFactory.createJoystick(type.controllerId));			
+			controllerMap.put(type, new Joystick(type.controllerId));			
 		}
 		wasClimberPushed = false;
 		wasToggleDrop = false;
@@ -132,8 +130,8 @@ public abstract class DriverControl implements Module {
 	}
 	
 	public void updateManipulator(){
-		IJoystick driverController = getController(ControllerType.CONTROLLER);
-		IJoystick manipulatorController = getController(ControllerType.CONTROLLER_2);
+		Joystick driverController = getController(ControllerType.CONTROLLER);
+		Joystick manipulatorController = getController(ControllerType.CONTROLLER_2);
 		
 		updateIntakeWheels(driverController, manipulatorController);
 		
@@ -200,7 +198,7 @@ public abstract class DriverControl implements Module {
 
 	}
 	
-	private void updateIntakeWheels(IJoystick driverController, IJoystick manipulatorController) {
+	private void updateIntakeWheels(Joystick driverController, Joystick manipulatorController) {
 		if(manipulatorController.getRawAxis(1) > 0.5){
 			gearManipulator.setIntakeSpeed(GearManipulator.DEFAULT_INTAKE_SPEED);
 		}
@@ -233,7 +231,7 @@ public abstract class DriverControl implements Module {
 		driveTrain.setCasting(casted);
 	}
 	
-	public IJoystick getController(ControllerType type){
+	public Joystick getController(ControllerType type){
 		return controllerMap.get(type);
 	}
 		

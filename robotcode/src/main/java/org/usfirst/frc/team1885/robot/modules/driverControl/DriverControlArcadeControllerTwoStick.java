@@ -1,12 +1,11 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
-import org.usfirst.frc.team1885.robot.common.impl.Joystick;
-import org.usfirst.frc.team1885.robot.common.interfaces.IJoystick;
-import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.NavX;
+
+import edu.wpi.first.wpilibj.Joystick;
 
 
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
@@ -29,17 +28,13 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	private DriveTrain driveTrain;
 	
 	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) { 
-		this(driveTrain, gearManipulator, climber, navx, new Joystick());
-	}
-	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, IJoystickFactory joystickFactory) {
-		super(driveTrain, gearManipulator, climber, navx, joystickFactory);
+		super(driveTrain, gearManipulator, climber, navx);
 		this.driveTrain = driveTrain;
 	}
 
 	@Override
 	public void updateDriveTrain() {
-		IJoystick driverController = getController(ControllerType.CONTROLLER);
+		Joystick driverController = getController(ControllerType.CONTROLLER);
 		double throttle = driverController.getRawAxis(GAMEPAD_LEFT_Y);
 		double turn = driverController.getRawAxis(GAMEPAD_RIGHT_X);
 		

@@ -1,23 +1,19 @@
 package org.usfirst.frc.team1885.robot.modules;
 
-import org.usfirst.frc.team1885.robot.common.impl.AHRS;
-import org.usfirst.frc.team1885.robot.common.interfaces.ESerialPort;
-import org.usfirst.frc.team1885.robot.common.interfaces.IAHRS;
-import org.usfirst.frc.team1885.robot.common.interfaces.IAHRSFactory;
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class NavX{
 	
-	private static final ESerialPort DEFAULT_PORT = ESerialPort.kMXP;
+	private static final SerialPort.Port DEFAULT_PORT = SerialPort.Port.kMXP;
 	private double initialAngle;
-	private final IAHRS iahrs;
+	private final AHRS ahrs;
 	
-	public NavX(){
-		this(new AHRS());
-	}
 	
-	public NavX(IAHRSFactory factory) {
-		this.iahrs = factory.getAHRS(DEFAULT_PORT);
-		initialAngle = iahrs.getYaw();
+	public NavX() {
+		this.ahrs = new AHRS(DEFAULT_PORT);
+		initialAngle = ahrs.getYaw();
 	}
 
 	public double getInitialAngle() {
@@ -25,31 +21,31 @@ public class NavX{
 	}
 
 	public double getYaw() {
-		return iahrs.getYaw();
+		return ahrs.getYaw();
 	}
 
 	public double getDisplacementX() {
-		return iahrs.getDisplacementX();
+		return ahrs.getDisplacementX();
 	}
 	
 	public double getDisplacementY() {
-		return iahrs.getDisplacementY();
+		return ahrs.getDisplacementY();
 	}
 	
 	public double getDisplacementZ() {
-		return iahrs.getDisplacementZ();
+		return ahrs.getDisplacementZ();
 	}
 
 	public void resetDisplacement() {
-		iahrs.resetDisplacement();
+		ahrs.resetDisplacement();
 	}
 	
 	public boolean isCalibrating(){
-		return iahrs.isCalibrating();
+		return ahrs.isCalibrating();
 	}
 		
 	public double getAngle(){
-		return convertTo360(iahrs.getAngle());
+		return convertTo360(ahrs.getAngle());
 	}
 	
 	public double getAngleOffStart(){

@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
-import org.usfirst.frc.team1885.robot.common.impl.CANTalon;
-import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
@@ -64,14 +62,7 @@ public class DriveTrain implements Module {
 	private Solenoid gearShifter;
 	private Solenoid casterShifter;
 
-	private final ICanTalonFactory canTalonFactory;
-
 	public DriveTrain() {
-		this(new CANTalon());
-	}
-
-	public DriveTrain(ICanTalonFactory canTalonFactory) {
-		this.canTalonFactory = canTalonFactory;
 		motorMap = new HashMap<>();
 		gearShifter = new Solenoid(SHIFT_SOLENOID_ID);
 		casterShifter = new Solenoid(CASTER_SOLENOID_ID);

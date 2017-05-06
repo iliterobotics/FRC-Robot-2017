@@ -1,27 +1,21 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
-import org.usfirst.frc.team1885.robot.common.impl.DriverStation;
-import org.usfirst.frc.team1885.robot.common.impl.Joystick;
-import org.usfirst.frc.team1885.robot.common.interfaces.EJoystickAxis;
-import org.usfirst.frc.team1885.robot.common.interfaces.IDriverStation;
-import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
 import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
+
 public class DriverControlTank extends DriverControl{
 	
 	private static final double SCALING_EXP = 2;
 	private double reducer;
-	private IDriverStation driveStation;
+	private DriverStation driveStation;
 	
 	public DriverControlTank(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) {
-		this(driveTrain, gearManipulator, climber, navx, new Joystick(), new DriverStation());
-	}
-
-	public DriverControlTank(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, IJoystickFactory factory, IDriverStation driveStation) {
-		super(driveTrain, gearManipulator, climber, navx, factory);
+		super(driveTrain, gearManipulator, climber, navx);
 		this.driveStation = driveStation;
 	}
 	
@@ -31,9 +25,9 @@ public class DriverControlTank extends DriverControl{
 
 	@Override
 	public void updateDriveTrain() {
-		reducer = getReducer(getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kZ));
-		double leftInput = getController(ControllerType.LEFT_STICK).getAxis(EJoystickAxis.kY);
-		double rightInput = getController(ControllerType.RIGHT_STICK).getAxis(EJoystickAxis.kY);
+		reducer = getReducer(getController(ControllerType.LEFT_STICK).getAxis(Joystick.AxisType.kZ));
+		double leftInput = getController(ControllerType.LEFT_STICK).getAxis(Joystick.AxisType.kY);
+		double rightInput = getController(ControllerType.RIGHT_STICK).getAxis(Joystick.AxisType.kY);
 
 		driveStation.reportError(String.format("oL:%f oR:%f", leftInput, rightInput), false);
 		
