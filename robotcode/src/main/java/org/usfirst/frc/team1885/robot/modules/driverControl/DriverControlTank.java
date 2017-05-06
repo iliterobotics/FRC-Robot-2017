@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
-import org.usfirst.frc.team1885.robot.common.impl.DefaultDriverStation;
-import org.usfirst.frc.team1885.robot.common.impl.DefaultJoystickFactory;
+import org.usfirst.frc.team1885.robot.common.impl.DriverStation;
+import org.usfirst.frc.team1885.robot.common.impl.Joystick;
 import org.usfirst.frc.team1885.robot.common.interfaces.EJoystickAxis;
 import org.usfirst.frc.team1885.robot.common.interfaces.IDriverStation;
 import org.usfirst.frc.team1885.robot.common.interfaces.IJoystickFactory;
@@ -17,7 +17,7 @@ public class DriverControlTank extends DriverControl{
 	private IDriverStation driveStation;
 	
 	public DriverControlTank(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) {
-		this(driveTrain, gearManipulator, climber, navx, new DefaultJoystickFactory(), new DefaultDriverStation());
+		this(driveTrain, gearManipulator, climber, navx, new Joystick(), new DriverStation());
 	}
 
 	public DriverControlTank(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, IJoystickFactory factory, IDriverStation driveStation) {

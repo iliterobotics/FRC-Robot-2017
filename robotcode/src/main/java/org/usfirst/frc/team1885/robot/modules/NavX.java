@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1885.robot.modules;
 
-import org.usfirst.frc.team1885.robot.common.impl.DefaultAHRSFactory;
+import org.usfirst.frc.team1885.robot.common.impl.AHRS;
 import org.usfirst.frc.team1885.robot.common.interfaces.ESerialPort;
 import org.usfirst.frc.team1885.robot.common.interfaces.IAHRS;
 import org.usfirst.frc.team1885.robot.common.interfaces.IAHRSFactory;
@@ -12,7 +12,7 @@ public class NavX{
 	private final IAHRS iahrs;
 	
 	public NavX(){
-		this(new DefaultAHRSFactory());
+		this(new AHRS());
 	}
 	
 	public NavX(IAHRSFactory factory) {

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
-import org.usfirst.frc.team1885.robot.common.impl.DefaultCanTalonFactory;
+import org.usfirst.frc.team1885.robot.common.impl.CANTalon;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
 
 import com.ctre.CANTalon;
@@ -67,7 +67,7 @@ public class DriveTrain implements Module {
 	private final ICanTalonFactory canTalonFactory;
 
 	public DriveTrain() {
-		this(new DefaultCanTalonFactory());
+		this(new CANTalon());
 	}
 
 	public DriveTrain(ICanTalonFactory canTalonFactory) {
