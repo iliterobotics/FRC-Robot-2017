@@ -15,6 +15,7 @@ import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -59,6 +60,7 @@ public abstract class DriverControl implements Module {
 	private final GearManipulator gearManipulator;
 	private final Climber climber;
 	private final NavX navx;
+	private final Shooter shooter;
 	
 	private boolean wasClimberPushed;
 	private boolean wasToggleDrop;
@@ -81,11 +83,12 @@ public abstract class DriverControl implements Module {
 		}
 	}
 
-	public DriverControl(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) {
+	public DriverControl(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, Shooter shooter) {
 		this.driveTrain = driveTrain;
 		this.gearManipulator = gearManipulator;
 		this.climber = climber;
 		this.navx = navx;
+		this.shooter = shooter;
 		controllerMap = new HashMap<ControllerType, Joystick>();
 		runningCommands = new ArrayList<>();
 	}
@@ -126,7 +129,7 @@ public abstract class DriverControl implements Module {
 		if(Math.abs(right) < JOYSTICK_DEADZONE){
 			right = 0;
 		}
-		driveTrain.setPower(left, right);
+		driveTrain.setSpeed(left, right);
 	}
 	
 	public void updateManipulator(){
@@ -224,11 +227,11 @@ public abstract class DriverControl implements Module {
 	}
 	
 	public void setShift(boolean shifted){
-		driveTrain.setShift(shifted);
+		//driveTrain.setShift(shifted);
 	}
 	
-	public void setCasters(boolean casted){
-		driveTrain.setCasting(casted);
+	public void shoot(){
+		shooter.shoot();
 	}
 	
 	public Joystick getController(ControllerType type){
