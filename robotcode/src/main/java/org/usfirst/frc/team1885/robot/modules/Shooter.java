@@ -44,7 +44,7 @@ public class Shooter implements Module {
 	public void update() {
 		
 		if(getPressure() <= LOW_PRESSURE) dump(); 
-		if(shooter.get() && (System.currentTimeMillis() - shotTime) >= SHOT_TIME_MS) setShooterState(false); 
+		if(shooter.get() && (System.currentTimeMillis() - shotTime) >= SHOT_TIME_MS) shooter.set(false); 
 		
 		safety();
 		
