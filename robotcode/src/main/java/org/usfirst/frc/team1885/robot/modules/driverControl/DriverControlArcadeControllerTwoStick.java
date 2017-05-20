@@ -49,8 +49,8 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 			rightInput *= REDUCER;
 		}
 
+		if(driverController.getRawButton(SHOOT_BUTTON)) shoot();
 		
-		shoot(driverController.getRawButton(SHOOT_BUTTON));
 		setSpeeds(leftInput, rightInput);
 		setShift(driverController.getRawAxis(HIGH_GEAR_AXIS) >= TRIGGER_DEADZONE);
 		
