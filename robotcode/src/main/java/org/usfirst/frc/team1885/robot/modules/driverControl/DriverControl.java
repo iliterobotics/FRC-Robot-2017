@@ -230,8 +230,8 @@ public abstract class DriverControl implements Module {
 		//driveTrain.setShift(shifted);
 	}
 	
-	public void shoot(){
-		shooter.shoot();
+	public Shooter getShooter() {
+		return shooter;
 	}
 	
 	public Joystick getController(ControllerType type){

@@ -15,16 +15,10 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	private static final int SHOOT_BUTTON = 6;
 	private static final int REDUCER_AXIS = 3;
 	
-	private static final int WARP_SPEED_FORWARD = 0;
-	private static final int WARP_SPEED_BACKWARD = 180;
+	private static final int SHOOTER_UP_BUTTON = 1;
+	private static final int SHOOTER_DOWN_BUTTON = 0;
 	
-	private static final int HIGH_GEAR_AXIS = 2;
-
-	private static final int NUDGE_BUTTON_LEFT = 3;
-	private static final int NUDGE_BUTTON_RIGHT = 2;
-	
-	private static final double REDUCER = 0.6;
-	private static final double HIGH_GEAR_TURN_REDUCER = 0.2;
+	private static final double ADJUST_AMOUNT = 0;
 
 	private DriveTrain driveTrain;
 	
@@ -44,22 +38,12 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 		leftInput =  throttle - turn;
 		rightInput = throttle + turn;
 		
-		if(driverController.getRawAxis(REDUCER_AXIS) >= TRIGGER_DEADZONE){
-			leftInput *= REDUCER;
-			rightInput *= REDUCER;
-		}
-
-		if(driverController.getRawButton(SHOOT_BUTTON)) shoot();
+		if(driverController.getRawButton(SHOOTER_DOWN_BUTTON)) getShooter().setAngle(getShooter().getAngle() - ADJUST_AMOUNT);
+		if(driverController.getRawButton(SHOOTER_UP_BUTTON)) getShooter().setAngle(getShooter().getAngle() + ADJUST_AMOUNT);
+		
+		if(driverController.getRawButton(SHOOT_BUTTON)) getShooter().shoot();
 		
 		setSpeeds(leftInput, rightInput);
-		setShift(driverController.getRawAxis(HIGH_GEAR_AXIS) >= TRIGGER_DEADZONE);
-		
-		if(driverController.getRawButton(NUDGE_BUTTON_RIGHT) && !isNudging()){
-			nudge(1);
-		}
-		else if(driverController.getRawButton(NUDGE_BUTTON_LEFT) && !isNudging()){
-			nudge(-1);			
-		}
 		
 //		if(driverController.getPOV() == WARP_SPEED_FORWARD && !isWarpSpeed()){
 //			initiateWarpSpeed(1);
