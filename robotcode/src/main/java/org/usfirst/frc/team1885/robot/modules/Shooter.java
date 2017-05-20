@@ -1,20 +1,21 @@
 package org.usfirst.frc.team1885.robot.modules;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.Relay.Value;
 
 public class Shooter implements Module {
 
-	private static final int SHOOTER_RELAY_ID = 0;
-	private static final int DUMP_RELAY_ID = 1;
+	private static final int SHOOTER_ID = 0;
+	private static final int DUMP_ID = 1;
 	private static final int PRESSURE_SENSOR_ID = 2;
 	
 	private static final double LOW_PRESSURE = 5;
 	private static final double SHOT_TIME_MS = 200;
 	
-	private Relay dump, shooter;
+	private DigitalOutput dump, shooter;
 	private AnalogInput pressureSensor;
 	
 	private boolean isShooting, isDumping;
@@ -22,8 +23,8 @@ public class Shooter implements Module {
 	
 	public Shooter() {
 		
-		dump = new Relay(DUMP_RELAY_ID);
-		shooter = new Relay(SHOOTER_RELAY_ID);
+		dump = new DigitalOutput(DUMP_ID);
+		shooter = new DigitalOutput(SHOOTER_ID);
 		pressureSensor = new AnalogInput(PRESSURE_SENSOR_ID);
 		
 		isShooting = isDumping = false;
@@ -33,9 +34,9 @@ public class Shooter implements Module {
 	
 	@Override
 	public void initialize() {
-
-		dump.setDirection(Direction.kForward);
-		shooter.setDirection(Direction.kForward);
+		
+		dump.disablePWM();
+		shooter.disablePWM();
 		
 	}
 
@@ -43,13 +44,13 @@ public class Shooter implements Module {
 	public void update() {
 		
 		if(getPressure() <= LOW_PRESSURE) dump(); 
-		if(getShooterState() && (System.currentTimeMillis() - shotTime) >= SHOT_TIME_MS) setShooterState(false); 
+		if(shooter.get() && (System.currentTimeMillis() - shotTime) >= SHOT_TIME_MS) setShooterState(false); 
 		
 		safety();
 		
-		if(isDumping) setDumpState(true); 
+		if(isDumping) dump.set(true); 
 		if(isShooting) {
-			setShooterState(true);
+			shooter.set(true);
 			shotTime = System.currentTimeMillis();
 		}
 		
@@ -60,9 +61,9 @@ public class Shooter implements Module {
 			isDumping = false;
 			isShooting = false;
 		}
-		if(getDumpState() && getShooterState()) {
-			setDumpState(false);
-			setShooterState(false);
+		if(dump.get() && shooter.get()) {
+			dump.set(false);
+			shooter.set(false);
 		}
 		
 	}
@@ -77,30 +78,6 @@ public class Shooter implements Module {
 	
 	public double getPressure() {
 		return 1.0;
-	}
-	
-	private void setDumpState(boolean state) {
-		if(state) {
-			dump.set(Value.kOn);
-		} else {
-			dump.set(Value.kOff);
-		}
-	}
-	
-	private void setShooterState(boolean state) {
-		if(state) {
-			shooter.set(Value.kOn);
-		} else {
-			shooter.set(Value.kOff);
-		}
-	}
-	
-	public boolean getDumpState() {
-		return (dump.get() == Value.kOn) ? true : false;
-	}
-	
-	public boolean getShooterState() {
-		return (shooter.get() == Value.kOn) ? true : false;
 	}
 
 }
