@@ -18,6 +18,8 @@ import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public abstract class DriverControl implements Module {
 	
 	public static final double JOYSTICK_DEADZONE = 0.05;
@@ -32,6 +34,7 @@ public abstract class DriverControl implements Module {
 	
 	public static final int CLIMBER_OPERATOR_BUTTON = 4;
 	public static final int CLIMBER_DRIVER_BUTTON = 1;
+	public static final int STOP_CLIMBER_BUTTON = 3;
 
 	public static final int FLAP_DOWN_AXIS = 3;
 	public static final int FLAP_TILT_BUTTON = 6;
@@ -132,6 +135,8 @@ public abstract class DriverControl implements Module {
 	}
 	
 	public void updateManipulator(){
+		DriverStation.reportError(Integer.toString(STOP_CLIMBER_BUTTON), false);
+		
 		IJoystick driverController = getController(ControllerType.CONTROLLER);
 		IJoystick manipulatorController = getController(ControllerType.CONTROLLER_2);
 		
@@ -144,6 +149,10 @@ public abstract class DriverControl implements Module {
 			}
 		}else if(!manipulatorController.getRawButton(CLIMBER_OPERATOR_BUTTON)){
 			wasClimberPushed = false;
+		}
+		if(climber.getClimberState() != ClimberState.INIT && manipulatorController.getRawButton(STOP_CLIMBER_BUTTON)) {
+			//wasClimberPushed = true;
+			climber.setClimberState(ClimberState.STALLED);
 		}
 
 		if((manipulatorController.getRawAxis(FLAP_DOWN_AXIS) > TRIGGER_DEADZONE) ||

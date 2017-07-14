@@ -128,5 +128,9 @@ public class Climber implements Module{
 	public ClimberState getClimberState(){
 		return currentState;
 	}
+	
+	public void setClimberState(ClimberState state) {
+		currentState = state;
+	}
 
 }
