@@ -147,7 +147,7 @@ public abstract class DriverControl implements Module {
 				climber.run();
 				wasClimberPushed = true;
 			}
-		}else if(!manipulatorController.getRawButton(CLIMBER_OPERATOR_BUTTON)){
+		}else if(!manipulatorController.getRawButton(CLIMBER_OPERATOR_BUTTON) && (climber.getClimberState() == ClimberState.BUMPING || climber.getClimberState() == ClimberState.STALLED)) {
 			wasClimberPushed = false;
 		}
 		if(climber.getClimberState() != ClimberState.INIT && manipulatorController.getRawButton(STOP_CLIMBER_BUTTON)) {
