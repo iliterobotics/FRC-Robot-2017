@@ -135,7 +135,6 @@ public abstract class DriverControl implements Module {
 	}
 	
 	public void updateManipulator(){
-		DriverStation.reportError(Integer.toString(STOP_CLIMBER_BUTTON), false);
 		
 		IJoystick driverController = getController(ControllerType.CONTROLLER);
 		IJoystick manipulatorController = getController(ControllerType.CONTROLLER_2);
