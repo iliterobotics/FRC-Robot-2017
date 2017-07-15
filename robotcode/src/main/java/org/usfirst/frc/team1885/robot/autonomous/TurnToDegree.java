@@ -11,7 +11,7 @@ public class TurnToDegree extends Command {
 	private NavX navx;
 	
 	private static final int MIN_ALIGNED_COUNT = 5;
-	private static final double KP = 0.0101;
+	private static final double KP = 0.0110;
 	private static final double KD = 0.0105;
 	private static final double KI = 0.0;
 	private static final double MINIMUM_POWER = 0.05;
