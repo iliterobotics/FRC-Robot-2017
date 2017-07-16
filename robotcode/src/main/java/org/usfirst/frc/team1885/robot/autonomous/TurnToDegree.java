@@ -11,11 +11,12 @@ public class TurnToDegree extends Command {
 	private NavX navx;
 	
 	private static final int MIN_ALIGNED_COUNT = 5;
+	private static final double MINIMUM_POWER = 0.05;
 	private static final double KP = 0.0101;
 	private static final double KD = 0.0105;
 	private static final double KI = 0.0;
-	private static final double MINIMUM_POWER = 0.05;
 	
+	private double mP, mI, mD;
 	private double degrees, targetYaw;
 	private double error, lastError, totalError;
 	private double alignedCount;
@@ -25,13 +26,20 @@ public class TurnToDegree extends Command {
 	
 	double leftPower, rightPower, output = 0;
 	
-	public TurnToDegree(DriveTrain drivetrain, NavX navx, double degrees, double allowableError)
+	public TurnToDegree(DriveTrain drivetrain, NavX navx, double degrees, double allowableError, double mP, double mI, double mD)
 	{
 		this.drivetrain = drivetrain;
 		this.navx = navx;
 		this.degrees = degrees;
 		this.alignedCount = 0;
 		this.allowableError = allowableError;
+		this.mP = mP;
+		this.mI = mI;
+		this.mD = mD;
+	}
+	
+	public TurnToDegree(DriveTrain drivetrain, NavX navx, double degrees, double allowableError) {
+		this(drivetrain, navx, degrees, allowableError, KP, KI, KD);
 	}
 	
 	public void init()
