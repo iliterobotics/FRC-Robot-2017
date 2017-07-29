@@ -227,10 +227,6 @@ public abstract class DriverControl implements Module {
 		driveTrain.setShift(shifted);
 	}
 	
-	public void setCasters(boolean casted){
-		driveTrain.setCasting(casted);
-	}
-	
 	public Joystick getController(ControllerType type){
 		return controllerMap.get(type);
 	}

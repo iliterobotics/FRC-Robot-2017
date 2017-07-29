@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.Joystick;
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	
 	private static final int TURN_REDUCER_BUTTON = 5;
-	private static final int CASTER_BUTTON = 6;
 	private static final int REDUCER_AXIS = 3;
 	
 	private static final int WARP_SPEED_FORWARD = 0;
@@ -48,8 +47,6 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 			rightInput *= REDUCER;
 		}
 
-		
-		setCasters(driverController.getRawButton(CASTER_BUTTON));
 		setSpeeds(leftInput, rightInput);
 		setShift(driverController.getRawAxis(HIGH_GEAR_AXIS) >= TRIGGER_DEADZONE);
 		

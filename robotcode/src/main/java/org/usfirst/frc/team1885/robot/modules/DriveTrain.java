@@ -19,7 +19,6 @@ public class DriveTrain implements Module {
 
 	public static final double WHEEL_DIAMETER = 3.98;
 	public static final int SHIFT_SOLENOID_ID = 2;
-	public static final int CASTER_SOLENOID_ID = 7;
 	// Voltage proportion control variables
 	private static final double DEFAULT_RAMP_RATE = 72.0; // in V/sec
 	private static final double HIGH_GEAR_RAMP_RATE = 120.0; // in V/sec
@@ -60,12 +59,10 @@ public class DriveTrain implements Module {
 
 	private Map<MotorType, CANTalon> motorMap;
 	private Solenoid gearShifter;
-	private Solenoid casterShifter;
 
 	public DriveTrain() {
 		motorMap = new HashMap<>();
 		gearShifter = new Solenoid(SHIFT_SOLENOID_ID);
-		casterShifter = new Solenoid(CASTER_SOLENOID_ID);
 		for (MotorType type : MotorType.values()) {
 			CANTalon talon = new CANTalon(type.talonId);
 			talon.setEncPosition(0);
@@ -126,10 +123,6 @@ public class DriveTrain implements Module {
 		}else{
 			setVoltageRampRate(DEFAULT_RAMP_RATE);
 		}
-	}
-
-	public void lowerCasters(boolean lowered) {
-		casterShifter.set(lowered);
 	}
 
 	private void setVoltageRampRate(double rate) {
@@ -212,10 +205,6 @@ public class DriveTrain implements Module {
 	
 	public double getCurrentFeedback(){
 		return (motorMap.get(MotorType.LEFT_MOTOR).getOutputCurrent() + motorMap.get(MotorType.RIGHT_MOTOR).getOutputCurrent())/2;
-	}
-
-	public void setCasting(boolean casted) {
-		casterShifter.set(casted);
 	}
 
 }
