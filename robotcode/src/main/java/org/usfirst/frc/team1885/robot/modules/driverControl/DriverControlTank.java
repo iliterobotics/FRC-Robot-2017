@@ -1,8 +1,6 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
-import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -14,8 +12,8 @@ public class DriverControlTank extends DriverControl{
 	private double reducer;
 	private DriverStation driveStation;
 	
-	public DriverControlTank(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) {
-		super(driveTrain, gearManipulator, climber, navx);
+	public DriverControlTank(DriveTrain driveTrain, NavX navx) {
+		super(driveTrain, navx);
 		this.driveStation = driveStation;
 	}
 	

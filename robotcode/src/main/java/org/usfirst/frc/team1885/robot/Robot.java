@@ -11,9 +11,7 @@ import org.usfirst.frc.team1885.robot.autonomous.Command;
 import org.usfirst.frc.team1885.robot.autonomous.GetAutonomous;
 import org.usfirst.frc.team1885.robot.modules.ArduinoController;
 import org.usfirst.frc.team1885.robot.modules.BeamSensor;
-import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.LEDController;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
@@ -34,8 +32,6 @@ public class Robot extends SampleRobot{
 	private DriveTrain driveTrain;
 	private DriverControl driverControl;
 	private NavX navx;
-	private GearManipulator gearManipulator;
-	private Climber climber;
 	private PressureSensor pressureRegulator;
 	private BeamSensor beamSensor;
 	private LEDController ledController;
@@ -58,11 +54,9 @@ public class Robot extends SampleRobot{
 		beamSensor = new BeamSensor();
 		
 		driveTrain = new DriveTrain();
-		gearManipulator = new GearManipulator();
-		climber = new Climber();
 		arduinoController = new ArduinoController();
-		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
-		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, beamSensor, climber, gearManipulator);
+		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, navx);
+		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, beamSensor);
 
 		navx.resetDisplacement();
 	}
@@ -86,11 +80,11 @@ public class Robot extends SampleRobot{
 	
 	public void autonomous()
 	{		
-		setRunningModules(driveTrain, gearManipulator, pressureRegulator);
+		setRunningModules(driveTrain, pressureRegulator);
 		GetAutonomous getAutonomous = new GetAutonomous();
 		getAutonomous.update();
 		autonomousCommands.clear();
-		autonomousCommands.addAll(getAutonomous.getAutonomous(driveTrain, gearManipulator, navx));
+		autonomousCommands.addAll(getAutonomous.getAutonomous(driveTrain, navx));
 		Command currentCommand = autonomousCommands.peek();
 		if(currentCommand != null) currentCommand.init();
 		while(isAutonomous() && isEnabled()){
@@ -113,7 +107,7 @@ public class Robot extends SampleRobot{
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, beamSensor, arduinoController, ledController);
+		setRunningModules(driverControl, driveTrain, pressureRegulator, beamSensor, arduinoController, ledController);
 		while(isOperatorControl() && isEnabled()){
 			updateModules();
 			pause();

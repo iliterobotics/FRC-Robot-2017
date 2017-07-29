@@ -9,10 +9,7 @@ import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.autonomous.Command;
 import org.usfirst.frc.team1885.robot.autonomous.DriveStraight;
 import org.usfirst.frc.team1885.robot.autonomous.Nudge;
-import org.usfirst.frc.team1885.robot.modules.Climber;
-import org.usfirst.frc.team1885.robot.modules.Climber.ClimberState;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
@@ -56,8 +53,6 @@ public abstract class DriverControl implements Module {
 	private Nudge nudgeCommand;
 	
 	private final DriveTrain driveTrain;
-	private final GearManipulator gearManipulator;
-	private final Climber climber;
 	private final NavX navx;
 	
 	private boolean wasClimberPushed;
@@ -81,10 +76,8 @@ public abstract class DriverControl implements Module {
 		}
 	}
 
-	public DriverControl(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) {
+	public DriverControl(DriveTrain driveTrain, NavX navx) {
 		this.driveTrain = driveTrain;
-		this.gearManipulator = gearManipulator;
-		this.climber = climber;
 		this.navx = navx;
 		controllerMap = new HashMap<ControllerType, Joystick>();
 		runningCommands = new ArrayList<>();
@@ -129,98 +122,11 @@ public abstract class DriverControl implements Module {
 		driveTrain.setPower(left, right);
 	}
 	
-	public void updateManipulator(){
-		Joystick driverController = getController(ControllerType.CONTROLLER);
-		Joystick manipulatorController = getController(ControllerType.CONTROLLER_2);
-		
-		updateIntakeWheels(driverController, manipulatorController);
-		
-		if( !wasClimberPushed && manipulatorController.getRawButton(CLIMBER_OPERATOR_BUTTON)){
-			if(climber.getClimberState() != ClimberState.INIT || driverController.getRawButton(CLIMBER_DRIVER_BUTTON)){
-				climber.run();
-				wasClimberPushed = true;
-			}
-		}else if(!manipulatorController.getRawButton(CLIMBER_OPERATOR_BUTTON)){
-			wasClimberPushed = false;
-		}
-
-		if((manipulatorController.getRawAxis(FLAP_DOWN_AXIS) > TRIGGER_DEADZONE) ||
-		    manipulatorController.getRawButton(FLAP_TILT_BUTTON)){
-			gearManipulator.setLong(true);
-			gearManipulator.setDropping(false);
-		}else{
-			gearManipulator.setLong(false);
-		}
-		
-		if((manipulatorController.getRawAxis(FLAP_DOWN_AXIS) > TRIGGER_DEADZONE) || 
-			manipulatorController.getRawButton(DROP_BUTTON)){
-			gearManipulator.setShort(true);
-		}else{
-			gearManipulator.setShort(false);		
-		}
-		
-		if(manipulatorController.getRawButton(DROP_BUTTON)){
-			gearManipulator.setDropping(false);
-		}
-		
-		if(manipulatorController.getRawButton(UP_BUTTON)){
-			gearManipulator.setLowered(false);
-		}else if(manipulatorController.getRawAxis(DOWN_AXIS) > TRIGGER_DEADZONE){
-			gearManipulator.setLowered(true);	
-		}
-
-		if(manipulatorController.getRawButton(KICK_BUTTON)){
-			gearManipulator.setKick(true);
-		}else{
-			gearManipulator.setKick(false);			
-		}
-		
-		if(!wasToggleDrop && manipulatorController.getRawButton(DROP_BUTTON)){
-			gearManipulator.setDropping(!gearManipulator.getDropping());
-			wasToggleDrop = true;
-		} else if(wasToggleDrop && !manipulatorController.getRawButton(DROP_BUTTON)){
-			wasToggleDrop = false;
-		}
-		
-		if(!wasWaitPushed && manipulatorController.getRawButton(WAIT_BUTTON)){
-			isWait = !isWait;
-			wasWaitPushed = true;
-		} else if(wasWaitPushed && !manipulatorController.getRawButton(WAIT_BUTTON)){
-			wasWaitPushed = false;
-		}
-		
-		if(!wasLookPushed && manipulatorController.getRawButton(LOOK_FOR_SIGNAL_BUTTON)){
-			isLook = !isLook;
-			wasLookPushed = true;
-		} else if(wasLookPushed && !manipulatorController.getRawButton(LOOK_FOR_SIGNAL_BUTTON)){
-			wasLookPushed = false;
-		}
-
-	}
-	
-	private void updateIntakeWheels(Joystick driverController, Joystick manipulatorController) {
-		if(manipulatorController.getRawAxis(1) > 0.5){
-			gearManipulator.setIntakeSpeed(GearManipulator.DEFAULT_INTAKE_SPEED);
-		}
-		else if(manipulatorController.getRawAxis(1) < -0.5){
-			gearManipulator.setIntakeSpeed(-GearManipulator.DEFAULT_INTAKE_SPEED);
-		}
-		else if(manipulatorController.getRawButton(DROP_BUTTON)){
-			gearManipulator.setIntakeSpeed(DROP_INTAKE_SPEED);			
-		} else if(manipulatorController.getRawButton(FLAP_TILT_BUTTON)){
-			gearManipulator.setIntakeSpeed(PASSIVE_INTAKE_SPEED);
-		}
-		else {
-			gearManipulator.setIntakeSpeed(0);
-		}
-	}
-	
 	public abstract void updateDriveTrain();
 	
 	public void update(){
 		updateCommands();
 		updateDriveTrain();
-		updateManipulator();
 	}
 	
 	public void setShift(boolean shifted){

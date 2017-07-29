@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
 public class GetAutonomous extends Command{
@@ -27,7 +26,7 @@ public class GetAutonomous extends Command{
 		return true;
 	}
 	
-	public List<Command> getAutonomous(DriveTrain driveTrain, GearManipulator gearManipulator, NavX navx){
+	public List<Command> getAutonomous(DriveTrain driveTrain, NavX navx){
 		List<Command> commands = new ArrayList<>();
 
 		update();
@@ -39,7 +38,6 @@ public class GetAutonomous extends Command{
 			commands.add(new DriveStraightDistance(driveTrain, navx, 90));
 			commands.add(new TurnToDegree(driveTrain, navx, 60, 3));
 			commands.add(new DriveStraightDistance(driveTrain, navx, 15));
-			commands.add(new DropOffGear(gearManipulator, driveTrain));
 			commands.add(new TurnToDegree(driveTrain, navx, -10, 20));
 			commands.add(new DriveStraightDistance(driveTrain, navx, 224));
 			break;
@@ -47,7 +45,6 @@ public class GetAutonomous extends Command{
 			commands.add(new DriveStraightDistance(driveTrain, navx, 92));
 			commands.add(new TurnToDegree(driveTrain, navx, -60, 3));
 			commands.add(new DriveStraightDistance(driveTrain, navx, 15));
-			commands.add(new DropOffGear(gearManipulator, driveTrain));
 			commands.add(new TurnToDegree(driveTrain, navx, 10, 20));
 			commands.add(new DriveStraightDistance(driveTrain, navx, 224));
 			break;

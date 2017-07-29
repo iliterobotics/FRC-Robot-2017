@@ -1,16 +1,14 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
-import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
 import edu.wpi.first.wpilibj.Joystick;
 
 public class DriverControlArcadeOneStick extends DriverControl {
 	
-	public DriverControlArcadeOneStick(DriveTrain driveTrain, Climber climber, NavX navx, GearManipulator gearManipulator) {
-		super(driveTrain, gearManipulator, climber, navx);
+	public DriverControlArcadeOneStick(DriveTrain driveTrain, NavX navx) {
+		super(driveTrain, navx);
 	}
 	
 	public void updateDriveTrain() {

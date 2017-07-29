@@ -1,8 +1,6 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
-import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -26,8 +24,8 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 
 	private DriveTrain driveTrain;
 	
-	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) { 
-		super(driveTrain, gearManipulator, climber, navx);
+	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, NavX navx) { 
+		super(driveTrain, navx);
 		this.driveTrain = driveTrain;
 	}
 

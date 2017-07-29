@@ -1,16 +1,14 @@
 package org.usfirst.frc.team1885.robot.modules.driverControl;
 
-import org.usfirst.frc.team1885.robot.modules.Climber;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
-import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
 public class DriverControlTankController extends DriverControl{
 
 	private static final double SCALING_EXP = 2;
 
-	public DriverControlTankController(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) {
-		super(driveTrain, gearManipulator, climber, navx);
+	public DriverControlTankController(DriveTrain driveTrain, NavX navx) {
+		super(driveTrain, navx);
 	}
 
 
