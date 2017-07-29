@@ -56,7 +56,7 @@ public class Robot extends SampleRobot{
 		driveTrain = new DriveTrain();
 		arduinoController = new ArduinoController();
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, navx);
-		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, beamSensor);
+		ledController = new LEDController(arduinoController, driverControl, pressureRegulator);
 
 		navx.resetDisplacement();
 	}
