@@ -13,8 +13,6 @@ public class LEDController implements Module{
 	private PressureSensor pressureSensor;
 	private BeamSensor beamSensor;
 	
-	private boolean kicked;
-	
 	public LEDController(ArduinoController arduinoController, DriveTrain driveTrain, DriverControl driverControl, PressureSensor pressureSensor, BeamSensor beamSensor)
 	{
 		this.arduinoController = arduinoController;
@@ -33,10 +31,6 @@ public class LEDController implements Module{
 	public void update() {
 		
 		if(driverControl.isWarping()) arduinoController.send(DriverMessage.HIGH_GEAR);
-		else if(beamSensor.isBroken()) arduinoController.send(DriverMessage.BEAM_BROKEN);
-		else if(kicked) arduinoController.send(DriverMessage.READY_TO_LIFT);
-		else if(driverControl.isWait()) arduinoController.send(FeederMessage.WAIT);
-		else if(driverControl.isLook()) arduinoController.send(PilotMessage.LOOK_FOR_SIGNAL);		
 		//else if(pressureSensor.isCompressorLow()) arduinoController.send(DriverMessage.LOW_AIR);
 		else arduinoController.send(DriverMessage.IDLE);
 	}

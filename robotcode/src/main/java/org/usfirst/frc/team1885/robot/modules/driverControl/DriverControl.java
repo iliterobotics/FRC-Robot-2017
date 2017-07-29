@@ -27,25 +27,9 @@ public abstract class DriverControl implements Module {
 	public static final int GAMEPAD_RIGHT_X = 4;
 	public static final int GAMEPAD_RIGHT_Y = 5;
 	
-	public static final int CLIMBER_OPERATOR_BUTTON = 4;
-	public static final int CLIMBER_DRIVER_BUTTON = 1;
-
-	public static final int FLAP_DOWN_AXIS = 3;
-	public static final int FLAP_TILT_BUTTON = 6;
-	public static final int KICK_BUTTON = 2;
-	public static final int UP_BUTTON = 5;
-	public static final int DOWN_AXIS = 2;
-	public static final int DROP_BUTTON = 1;
-	public static final int WAIT_BUTTON = 8;
-	public static final int LOOK_FOR_SIGNAL_BUTTON = 7;
-	
-	public static final double DROP_INTAKE_SPEED = 0.5;
-	public static final double PASSIVE_INTAKE_SPEED = 0.5;
-	
 	public static final boolean HIGH_GEAR = true;
 	public static final boolean LOW_GEAR = false;
 	
-
 	private Map<ControllerType, Joystick> controllerMap;
 	private List<Command> runningCommands;
 	
@@ -54,17 +38,9 @@ public abstract class DriverControl implements Module {
 	
 	private final DriveTrain driveTrain;
 	private final NavX navx;
-	
-	private boolean wasClimberPushed;
-	private boolean wasToggleDrop;
+
 	private boolean isWarping;
 	private boolean isNudging;
-
-	private boolean isWait;
-	private boolean wasWaitPushed;
-
-	private boolean isLook;
-	private boolean wasLookPushed;
 	
 	public enum ControllerType {
 		CONTROLLER(0), CONTROLLER_2(1), TEST_CONTROLLER(2), LEFT_STICK(3), RIGHT_STICK(4);
@@ -87,10 +63,6 @@ public abstract class DriverControl implements Module {
 		for (ControllerType type : ControllerType.values()) {
 			controllerMap.put(type, new Joystick(type.controllerId));			
 		}
-		wasClimberPushed = false;
-		wasToggleDrop = false;
-		wasWaitPushed = false;
-		isWait = false;
 	}
 	
 	public void setSpeeds(double left, double right){
@@ -189,13 +161,5 @@ public abstract class DriverControl implements Module {
 	
 	public boolean isWarping(){
 		return isWarping;
-	}
-	
-	public boolean isWait(){
-		return isWait;
-	}
-	
-	public boolean isLook(){
-		return isLook;
 	}
 }
