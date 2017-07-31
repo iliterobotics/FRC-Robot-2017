@@ -126,8 +126,8 @@ public class DriveTrain implements Module {
 	}
 
 	private void setVoltageRampRate(double rate) {
-		motorMap.get(MotorType.LEFT_MOTOR).setVoltageRampRate(rate);
-		motorMap.get(MotorType.RIGHT_MOTOR).setVoltageRampRate(rate);
+//		motorMap.get(MotorType.LEFT_MOTOR).setVoltageRampRate(rate);
+//		motorMap.get(MotorType.RIGHT_MOTOR).setVoltageRampRate(rate);
 	}
 
 	public int getLeftPosition() {
@@ -181,7 +181,7 @@ public class DriveTrain implements Module {
 
 	@Override
 	public void update() {
-		System.out.println("Enc Vel: " + getRightEncoderVelocity());
+		System.out.println("Enc Vel: " + getRightEncoderVelocity() + " Mode: " + currentMode);
 		switch (currentMode) {
 		case P_VBUS:
 			System.out.println("Updating speeds");
