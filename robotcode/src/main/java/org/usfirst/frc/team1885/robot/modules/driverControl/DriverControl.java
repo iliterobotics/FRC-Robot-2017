@@ -73,12 +73,16 @@ public abstract class DriverControl implements Module {
 			isWarping = false;
 		}
 		
-		if(isNudging) return;
+		if(isNudging) {
+			System.out.println("Nudging. Exiting setSpeeds().");
+			return;
+		}
 		if(isWarping){
 			double powerDiff = left - right;
 			double degreesPerUpdate = ((1000.0 / Robot.UPDATE_PERIOD) / WARP_DEGREES_PER_SECOND);
 			double angleDiff = powerDiff * degreesPerUpdate;
 			warpSpeedCommand.adjustBearing(angleDiff);
+			System.out.println("Warping. Exiting setSpeeds().");
 			return;
 		}
 		
@@ -86,10 +90,12 @@ public abstract class DriverControl implements Module {
 			left = right = (left + right) / 2;
 		}
 		if(Math.abs(left) < JOYSTICK_DEADZONE){
+			System.out.println("Left under deadzone, left = 0");
 			left = 0;
 		}
 		if(Math.abs(right) < JOYSTICK_DEADZONE){
 			right = 0;
+			System.out.println("Right under deadzone, right = 0");
 		}
 		driveTrain.setPower(left, right);
 	}

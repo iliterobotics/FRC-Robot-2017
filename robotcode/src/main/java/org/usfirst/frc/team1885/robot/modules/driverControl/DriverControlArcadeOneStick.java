@@ -12,6 +12,7 @@ public class DriverControlArcadeOneStick extends DriverControl {
 	}
 	
 	public void updateDriveTrain() {
+		System.out.println("Updating DriveTrain");
 		double throttle = getController(ControllerType.LEFT_STICK).getAxis(Joystick.AxisType.kY);
 		double turn = getController(ControllerType.LEFT_STICK).getAxis(Joystick.AxisType.kX);
 		

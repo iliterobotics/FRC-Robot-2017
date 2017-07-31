@@ -7,6 +7,8 @@ import org.usfirst.frc.team1885.coms.ConstantUpdater;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class GetAutonomous extends Command{
 
 	private String position;
@@ -29,12 +31,13 @@ public class GetAutonomous extends Command{
 	public List<Command> getAutonomous(DriveTrain driveTrain, NavX navx){
 		List<Command> commands = new ArrayList<>();
 
-		update();
+		//update();
 		commands.clear();
 		System.out.println("POSITION IS " + position);
 		if(position == null || position.equals("center")) position = "left";
 		switch(position){
 		case "left":
+			System.out.println("gg");
 			commands.add(new DriveStraightDistance(driveTrain, navx, 90));
 			commands.add(new TurnToDegree(driveTrain, navx, 60, 3));
 			commands.add(new DriveStraightDistance(driveTrain, navx, 15));

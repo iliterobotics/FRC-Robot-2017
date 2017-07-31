@@ -18,6 +18,7 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.PressureSensor;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
+import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeOneStick;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -55,14 +56,14 @@ public class Robot extends SampleRobot{
 		
 		driveTrain = new DriveTrain();
 		arduinoController = new ArduinoController();
-		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, navx);
+		driverControl = new DriverControlArcadeOneStick(driveTrain, navx);
 		ledController = new LEDController(arduinoController, driverControl, pressureRegulator);
 
 		navx.resetDisplacement();
 	}
 
 	public void robotInit(){
-		startCameraFeeds();
+		//startCameraFeeds();
 		while(navx.isCalibrating()){
 			System.out.println("CALIBRATING");
 			pause();
@@ -74,12 +75,11 @@ public class Robot extends SampleRobot{
 	public void startCameraFeeds(){
 		CameraServer server = CameraServer.getInstance();
 		UsbCamera camera0 = server.startAutomaticCapture(0);
-		UsbCamera camera1 = server.startAutomaticCapture(1);
-		//UsbCamera camera2 = server.startAutomaticCapture(2);
 	}
 	
 	public void autonomous()
 	{		
+		System.out.println("starting auto");
 		setRunningModules(driveTrain, pressureRegulator);
 		GetAutonomous getAutonomous = new GetAutonomous();
 		getAutonomous.update();

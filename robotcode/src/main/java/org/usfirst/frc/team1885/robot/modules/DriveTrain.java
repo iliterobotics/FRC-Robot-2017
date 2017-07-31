@@ -44,7 +44,7 @@ public class DriveTrain implements Module {
 	}
 
 	private enum MotorType {
-		LEFT_MOTOR(-1, 1, 3, 5), RIGHT_MOTOR(1, 2, 4, 6);
+		LEFT_MOTOR(-1, 2, 4), RIGHT_MOTOR(1, 3, 1);
 
 		final int talonId;
 		final int followerIds[];
@@ -161,6 +161,8 @@ public class DriveTrain implements Module {
 	}
 
 	private void setMotor(MotorType type, double value) {
+		System.out.println("Setting " + type.name() + " " + type.talonId + ": " + value + ", " + type.modifier);
+		System.out.println("Motor Mode:" + motorMap.get(type).getControlMode());
 		motorMap.get(type).set(value * type.modifier);
 	}
 
@@ -179,8 +181,10 @@ public class DriveTrain implements Module {
 
 	@Override
 	public void update() {
+		System.out.println("Enc Vel: " + getRightEncoderVelocity());
 		switch (currentMode) {
 		case P_VBUS:
+			System.out.println("Updating speeds");
 			actualLeftPower = desiredLeftPower;
 			actualRightPower = desiredRightPower;
 			setMotor(MotorType.LEFT_MOTOR, actualLeftPower);
@@ -195,11 +199,6 @@ public class DriveTrain implements Module {
 		case POSITION:
 			break;
 		}
-		ConstantUpdater.putNumber("leftpos", getLeftPosition());
-		ConstantUpdater.putNumber("rightpos", getRightPosition());
-		ConstantUpdater.putNumber("leftvel", getLeftEncoderVelocity());
-		ConstantUpdater.putNumber("rightvel", getRightEncoderVelocity());
-		ConstantUpdater.putNumber("drive_train_current",  getCurrentFeedback());
 
 	}
 	
