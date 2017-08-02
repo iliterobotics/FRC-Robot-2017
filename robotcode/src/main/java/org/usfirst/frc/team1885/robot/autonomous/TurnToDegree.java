@@ -45,6 +45,7 @@ public class TurnToDegree extends Command implements PIDOutput {
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(allowableError);
 		turnController.setContinuous(true);
+		turnController.startLiveWindowMode();
 	    LiveWindow.addActuator("DriveSystem", "RotateController", turnController);
 
 	}
