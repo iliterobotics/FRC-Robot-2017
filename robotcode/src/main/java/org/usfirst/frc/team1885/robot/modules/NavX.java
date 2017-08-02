@@ -74,5 +74,9 @@ public class NavX{
 	public double getAngleDistance(double angle1, double angle2){
 		return getAngleSum(angle1, -angle2);
 	}
+	
+	public AHRS getAHRS() {
+		return ahrs;
+	}
 
 }
