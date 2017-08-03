@@ -16,9 +16,9 @@ public class TurnToDegree extends Command implements PIDOutput {
 	private PIDController turnController;
 	
 	private static final int MIN_ALIGNED_COUNT = 5;
-	private static final double KP = 0.0101;
-	private static final double KD = 0.0105;
-	private static final double KI = 0.0;
+	private static final double KP = 0.0020;
+	private static final double KD = 0;
+	private static final double KI = 0;
 	
 	private double mP, mI, mD;
 	private double degrees, targetYaw;
@@ -45,8 +45,10 @@ public class TurnToDegree extends Command implements PIDOutput {
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(allowableError);
 		turnController.setContinuous(true);
-		turnController.startLiveWindowMode();
-	    LiveWindow.addActuator("DriveSystem", "RotateController", turnController);
+		turnController.setSetpoint(degrees);
+		turnController.enable();
+//		turnController.startLiveWindowMode();
+//	    LiveWindow.addActuator("DriveSystem", "RotateController", turnController);
 
 	}
 	
@@ -66,12 +68,14 @@ public class TurnToDegree extends Command implements PIDOutput {
 		System.out.println(error);
 		
 		if(turnController.onTarget()) alignedCount++;
-		if(alignedCount >= MIN_ALIGNED_COUNT) return true;
-		if(System.currentTimeMillis() - startTime > TIMEOUT) return true;
+		if((alignedCount >= MIN_ALIGNED_COUNT) || (System.currentTimeMillis() - startTime > TIMEOUT)) {
+			turnController.disable();
+			return true;
+		}
 
 		leftPower = output; 
 		rightPower = -output;
-		
+		System.out.println("Left: " + leftPower + " Right: " + rightPower);
 		drivetrain.setPower(leftPower, rightPower);
 		
 		return false;

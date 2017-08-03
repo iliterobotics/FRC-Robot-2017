@@ -113,11 +113,7 @@ public class Robot extends SampleRobot{
 	}
 	
 	public void test(){
-		setRunningModules(pressureRegulator);
-		while(isTest() && isEnabled()){
-			updateModules();
-			pause();
-		}
+		autonomous();
 	}
 	
 	private void initializeRunningModules(){
