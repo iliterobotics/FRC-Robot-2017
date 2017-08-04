@@ -1,6 +1,6 @@
-package org.usfirst.frc.team1885.robot.autonomous;
+package org.usfirst.frc.team1885.robot.commands;
 
-import static org.usfirst.frc.team1885.robot.autonomous.DriveStraight.PROPORTION;
+import static org.usfirst.frc.team1885.robot.commands.DriveStraight.PROPORTION;
 
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;

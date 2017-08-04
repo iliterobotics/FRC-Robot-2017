@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.14" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
-  <class id="1" language="java" name="org.usfirst.frc.team1885.robot.autonomous.Command" project="robotcode" 
-    file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/autonomous/Command.java" binary="false" 
+  <class id="1" language="java" name="org.usfirst.frc.team1885.robot.commands.Command" project="robotcode" 
+    file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/commands/Command.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1580" y="531"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -11,9 +11,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="org.usfirst.frc.team1885.robot.autonomous.DriveStraightDistance" 
-    project="robotcode" 
-    file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/autonomous/DriveStraightDistance.java" binary="false" 
+  <class id="2" language="java" name="org.usfirst.frc.team1885.robot.commands.DriveStraightDistance" project="robotcode" 
+    file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/commands/DriveStraightDistance.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="820" y="1233"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -22,8 +21,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="org.usfirst.frc.team1885.robot.autonomous.DriveStraightVision" project="robotcode" 
-    file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/autonomous/DriveStraightVision.java" binary="false" 
+  <class id="3" language="java" name="org.usfirst.frc.team1885.robot.commands.DriveStraightVision" project="robotcode" 
+    file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/commands/DriveStraightVision.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1137" y="1233"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -32,18 +31,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="org.usfirst.frc.team1885.robot.autonomous.DropOffGear" project="robotcode" 
-    file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/autonomous/DropOffGear.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1439" y="1197"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="5" language="java" name="org.usfirst.frc.team1885.robot.autonomous.DriveStraight" project="robotcode" 
-    file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/autonomous/DriveStraight.java" binary="false" 
+  <class id="4" language="java" name="org.usfirst.frc.team1885.robot.commands.DriveStraight" project="robotcode" 
+    file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/commands/DriveStraight.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1725" y="1188"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -52,8 +41,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="org.usfirst.frc.team1885.robot.autonomous.TurnToDegree" project="robotcode" 
-    file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/autonomous/TurnToDegree.java" binary="false" 
+  <class id="5" language="java" name="org.usfirst.frc.team1885.robot.commands.TurnToDegree" project="robotcode" 
+    file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/commands/TurnToDegree.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2016" y="1148"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -62,7 +51,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="org.usfirst.frc.team1885.robot.autonomous.Nudge" project="robotcode" 
+  <class id="6" language="java" name="org.usfirst.frc.team1885.robot.autonomous.Nudge" project="robotcode" 
     file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/autonomous/Nudge.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2304" y="1191"/>    
@@ -72,7 +61,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="org.usfirst.frc.team1885.robot.modules.DriveTrain" project="robotcode" 
+  <class id="7" language="java" name="org.usfirst.frc.team1885.robot.modules.DriveTrain" project="robotcode" 
     file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/modules/DriveTrain.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1534" y="1706"/>    
@@ -82,94 +71,84 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="org.usfirst.frc.team1885.robot.modules.GearManipulator" project="robotcode" 
-    file="/robotcode/src/main/java/org/usfirst/frc/team1885/robot/modules/GearManipulator.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1130" y="1752"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <generalization id="10">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <generalization id="11">    
+  <generalization id="8">    
     <end type="SOURCE" refId="5"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
-  <association id="12">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="13" name="driveTrain"/>      
-      <multiplicity id="14" minimum="0" maximum="1"/>    
+  <association id="9">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="10" name="driveTrain">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="11" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <generalization id="12">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="13">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="14">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
   <association id="15">    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="16" name="gearManipulator"/>      
-      <multiplicity id="17" minimum="0" maximum="1"/>    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="16" name="drivetrain">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="17" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <generalization id="18">    
-    <end type="SOURCE" refId="3"/>    
+    <end type="SOURCE" refId="2"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
   <association id="19">    
     <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="20" name="driveTrain"/>      
-      <multiplicity id="21" minimum="0" maximum="1"/>    
+      <attribute id="20" name="driveTrain">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="21" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="22">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <association id="23">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="24" name="drivetrain"/>      
-      <multiplicity id="25" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="26">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="27" name="driveTrain"/>      
-      <multiplicity id="28" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="29">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <generalization id="30">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <association id="31">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="32" name="driveTrain"/>      
-      <multiplicity id="33" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="34">    
+  <association id="22">    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="35" name="driveTrain"/>      
-      <multiplicity id="36" minimum="0" maximum="1"/>    
+      <attribute id="23" name="driveTrain">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="24" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="25">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="26" name="driveTrain">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="27" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

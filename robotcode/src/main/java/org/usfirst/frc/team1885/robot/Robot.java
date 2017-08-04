@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Queue;
 
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
-import org.usfirst.frc.team1885.robot.autonomous.Command;
-import org.usfirst.frc.team1885.robot.autonomous.GetAutonomous;
+import org.usfirst.frc.team1885.robot.commands.Command;
+import org.usfirst.frc.team1885.robot.commands.GetAutonomous;
 import org.usfirst.frc.team1885.robot.modules.ArduinoController;
 import org.usfirst.frc.team1885.robot.modules.BeamSensor;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;

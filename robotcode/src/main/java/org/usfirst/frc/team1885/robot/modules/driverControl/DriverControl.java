@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.robot.Robot;
-import org.usfirst.frc.team1885.robot.autonomous.Command;
-import org.usfirst.frc.team1885.robot.autonomous.DriveStraight;
-import org.usfirst.frc.team1885.robot.autonomous.Nudge;
+import org.usfirst.frc.team1885.robot.commands.Command;
+import org.usfirst.frc.team1885.robot.commands.DriveStraight;
+import org.usfirst.frc.team1885.robot.commands.Nudge;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;

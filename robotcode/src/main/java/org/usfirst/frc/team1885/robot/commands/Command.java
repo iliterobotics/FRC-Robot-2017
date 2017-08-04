@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1885.robot.autonomous;
+package org.usfirst.frc.team1885.robot.commands;
 
 public abstract class Command {
 	/**

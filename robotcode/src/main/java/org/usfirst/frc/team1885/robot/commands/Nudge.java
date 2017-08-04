@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1885.robot.autonomous;
+package org.usfirst.frc.team1885.robot.commands;
 
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
