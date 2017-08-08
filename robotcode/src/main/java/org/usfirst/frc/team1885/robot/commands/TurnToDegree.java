@@ -12,8 +12,8 @@ public class TurnToDegree extends Command {
 	
 	private static final int MIN_ALIGNED_COUNT = 5;
 	private static final double MINIMUM_POWER = 0.05;
-	private static final double KP = 0.0101;
-	private static final double KD = 0.0105;
+	private static final double KP = 0.0111;
+	private static final double KD = 0.0085;
 	private static final double KI = 0.0;
 	
 	private double mP, mI, mD;
@@ -44,6 +44,7 @@ public class TurnToDegree extends Command {
 	
 	public void init()
 	{
+		navx.setInitialAngle(navx.getYaw());
 		this.targetYaw = degrees;  //Calculate the target heading off of # of degrees to turn
 		this.lastError = this.error = getError(); //Calculate the initial error value
 		this.totalError += this.error;
@@ -53,7 +54,6 @@ public class TurnToDegree extends Command {
 	public boolean update()
 	{
 		error = getError(); //Update error value
-		System.out.println(error);
 		this.totalError += this.error; //Update running error total
 		
 		if((Math.abs(error) < allowableError)) alignedCount++;
@@ -67,7 +67,8 @@ public class TurnToDegree extends Command {
 		}
 		leftPower = output; 
 		rightPower = -output;
-		
+
+		System.out.println("Error: " + getError() + " Angle: " + navx.getAngleOffStart() + " Output: " + output);
 		drivetrain.setPower(leftPower, rightPower);
 		
 		lastError = error;

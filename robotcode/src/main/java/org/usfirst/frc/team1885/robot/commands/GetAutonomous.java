@@ -35,11 +35,10 @@ public class GetAutonomous extends Command{
 		if(position == null || position.equals("center")) position = "left";
 		switch(position){
 		case "left":
-			commands.add(new DriveStraightDistance(driveTrain, navx, 90));
-			commands.add(new TurnToDegree(driveTrain, navx, 60, 3));
-			commands.add(new DriveStraightDistance(driveTrain, navx, 15));
-			commands.add(new TurnToDegree(driveTrain, navx, -10, 20));
-			commands.add(new DriveStraightDistance(driveTrain, navx, 224));
+			commands.add(new TurnToDegree(driveTrain, navx, 90, 3));
+			commands.add(new TurnToDegree(driveTrain, navx, -90, 3));
+			commands.add(new TurnToDegree(driveTrain, navx, 180, 3));
+			commands.add(new TurnToDegree(driveTrain, navx, -180, 3));
 			break;
 		case "right":
 			commands.add(new DriveStraightDistance(driveTrain, navx, 92));
