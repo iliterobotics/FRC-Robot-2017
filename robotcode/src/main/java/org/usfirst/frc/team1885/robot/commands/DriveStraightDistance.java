@@ -53,7 +53,7 @@ public class DriveStraightDistance extends Command{
 			return true;
 		}
 
-		double yawError = navx.getAngleDistance(initialYaw, navx.getYaw());
+		double yawError = navx.getAngleDiff(initialYaw, navx.getYaw());
 		driveTrain.setPower(-(INITIAL_POWER + yawError * PROPORTION), -(INITIAL_POWER - yawError * PROPORTION));
 		
 		return false;

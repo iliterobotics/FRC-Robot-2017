@@ -44,7 +44,7 @@ public class TurnToDegree extends Command {
 	
 	public void init()
 	{
-		navx.setInitialAngle(navx.getYaw());
+		navx.resetInitialAngle();
 		this.targetYaw = degrees;  //Calculate the target heading off of # of degrees to turn
 		this.lastError = this.error = getError(); //Calculate the initial error value
 		this.totalError += this.error;
@@ -62,13 +62,13 @@ public class TurnToDegree extends Command {
 		
 		output = ((KP * error) + (KI * totalError) + (KD * (error - lastError)));
 		if(Math.abs(output) < MINIMUM_POWER){
-			double scalar = output>0?1:-1;
-			output = MINIMUM_POWER * scalar;
+			double direction = output>0?1:-1;
+			output = MINIMUM_POWER * direction;
 		}
 		leftPower = output; 
 		rightPower = -output;
 
-		System.out.println("Error: " + getError() + " Angle: " + navx.getAngleOffStart() + " Output: " + output);
+		System.out.println("Error: " + getError() + " Angle: " + navx.getAngleFromInitial() + " Output: " + output);
 		drivetrain.setPower(leftPower, rightPower);
 		
 		lastError = error;
@@ -76,7 +76,7 @@ public class TurnToDegree extends Command {
 	}
 	
 	public double getError(){
-		return navx.getAngleDistance(navx.getAngleOffStart(), targetYaw);
+		return navx.getAngleDiff(navx.getAngleFromInitial(), targetYaw);
 	}
 	
 }

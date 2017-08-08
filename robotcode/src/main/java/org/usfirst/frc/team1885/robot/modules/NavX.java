@@ -48,12 +48,16 @@ public class NavX{
 		return convertTo360(ahrs.getAngle());
 	}
 	
-	public double getAngleOffStart(){
+	public double getAngleFromInitial(){
 		return getAngleSum(getAngle(), -initialAngle);
 	}
 	
 	public void setInitialAngle(double yaw){
 		initialAngle = yaw;
+	}
+	
+	public void resetInitialAngle() {
+		initialAngle = getYaw();
 	}
 
 	private double convertTo360(double angle){
@@ -71,7 +75,7 @@ public class NavX{
 		return sum;
 	}
 	
-	public double getAngleDistance(double angle1, double angle2){
+	public double getAngleDiff(double angle1, double angle2){
 		return getAngleSum(angle1, -angle2);
 	}
 
