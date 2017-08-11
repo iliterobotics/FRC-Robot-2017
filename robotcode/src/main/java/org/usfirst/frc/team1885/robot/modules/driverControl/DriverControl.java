@@ -43,7 +43,7 @@ public abstract class DriverControl implements Module {
 	private boolean isNudging;
 	
 	public enum ControllerType {
-		CONTROLLER(0), CONTROLLER_2(1), TEST_CONTROLLER(2), LEFT_STICK(3), RIGHT_STICK(4);
+		CONTROLLER(0), CONTROLLER_2(1), TEST_CONTROLLER(2), LEFT_STICK(3), RIGHT_STICK(4), WIIMOTE(5);
 
 		final int controllerId;
 
