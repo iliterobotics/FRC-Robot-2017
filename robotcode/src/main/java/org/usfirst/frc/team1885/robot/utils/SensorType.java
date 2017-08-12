@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1885.robot.utils;
 
 public enum SensorType {
-	ENCODER(Double.MIN_VALUE, Double.MAX_VALUE, false), GYRO(-180, 180, true);
+	ENCODER(Double.MIN_VALUE, Double.MAX_VALUE, false), GYRO(0, 360, true);
 	
 	double minValue, maxValue;
 	boolean continuous;

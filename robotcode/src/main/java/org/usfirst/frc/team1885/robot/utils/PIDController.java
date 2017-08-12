@@ -13,7 +13,6 @@ public class PIDController {
 	private double setpoint;
 	private double error, lastError, totalError;
 	
-	private boolean onTarget;
 	private double onTargetCount;
 	private final double allowableError;
 	private double mTimeout;
@@ -22,6 +21,7 @@ public class PIDController {
 	private double output, mMinOutput, mMaxOutput;
 	
 	private long startTime;
+	private boolean isTimedOut;
 	
 	public PIDController(double setpoint, double allowableError, double timeout, double minInput, double maxInput, boolean continuous, double minOutput, double maxOutput, double mP, double mI, double mD)
 	{
@@ -29,7 +29,6 @@ public class PIDController {
 		this.mI = mI;
 		this.mD = mD;
 		this.setpoint = setpoint;
-		this.onTarget = false;
 		this.onTargetCount = 0;
 		this.allowableError = allowableError;
 		this.mTimeout = timeout;
@@ -39,6 +38,7 @@ public class PIDController {
 		this.mMinOutput = minOutput;
 		this.mMaxOutput = maxOutput;
 		this.output = 0;
+		this.isTimedOut = false;
 	}
 	
 	public PIDController(double setpoint, double allowableError, SensorType sensorType, double timeout, double mP, double mI, double mD)
@@ -57,6 +57,9 @@ public class PIDController {
 	
 	public double update(double currentInput)
 	{
+		
+		if(System.currentTimeMillis() - startTime > mTimeout) isTimedOut = true;
+		
 		error = getError(setpoint, currentInput); //Update error value
 		this.totalError += error; //Update running error total
 		
@@ -94,8 +97,9 @@ public class PIDController {
 	}
 	
 	public boolean onTarget() {
-		if(onTargetCount >= MIN_ON_TARGET_COUNT) onTarget = true;
-		if(System.currentTimeMillis() - startTime > mTimeout) onTarget = true;
-		return onTarget;
+		if(isTimedOut) return true;
+		if(onTargetCount >= MIN_ON_TARGET_COUNT) return true;
+		if(System.currentTimeMillis() - startTime > mTimeout) return true;
+		return false;
 	}
 }
