@@ -19,6 +19,7 @@ public class DriverControlWiimote extends DriverControl{
 	private static final int TWO_BUTTON = 2;
 	
 	private static final double WHEEL_ROLL_DEADBAND = 0.05;
+	private static final double DPAD_DEADBAND = 0.05;
 	
 	//Axes could've been put in an enum with values that describes how they're flipped, but this is quicker
 	private static final int WHEEL_DPAD_X_AXIS = 0;
@@ -43,15 +44,17 @@ public class DriverControlWiimote extends DriverControl{
 		double throttle = 0;
 		double turn = 0;
 		
-		if(driverController.getRawAxis(DPAD_Y_AXIS) > 0) {
+		if(driverController.getRawButton(A_BUTTON)) {
 			double wheelPitch = driverController.getRawAxis(WHEEL_PITCH_AXIS);
 			if(wheelPitch < 0) wheelPitch = 0;
 			wheelPitch = 1 - wheelPitch;
+			throttle = wheelPitch;
 		}
-		if(driverController.getRawAxis(DPAD_Y_AXIS) < 0) {
+		if(driverController.getRawButton(B_BUTTON)) {
 			double wheelPitch = driverController.getRawAxis(WHEEL_PITCH_AXIS);
 			if(wheelPitch < 0) wheelPitch = 0;
 			wheelPitch = wheelPitch - 1;
+			throttle = wheelPitch;
 		}
 		if(driverController.getRawButton(TWO_BUTTON)) {
 			double wheelRoll = driverController.getRawAxis(WHEEL_ROLL_AXIS);
