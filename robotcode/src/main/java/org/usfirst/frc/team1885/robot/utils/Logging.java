@@ -12,7 +12,7 @@
 	public class Logging
 	{
 
-		private static final String FILENAME = "/var/logs/log.txt";
+		private static final String FILENAME = "/home/lvuser/katelog.txt";
 		private DriveTrain drivetrain;
 		private NavX nav;
 
@@ -22,14 +22,14 @@
 			this.nav = nav;
 		}
 			
-		public void LogData()
+		public void logData()
 		{
 			BufferedWriter bw = null;
 			FileWriter fw = null;
 			List<String> valueList = new ArrayList<String>();
-			valueList.add(drivetrain.getLeftEncoderVelocity()+"");
-			valueList.add(drivetrain.getRightEncoderVelocity()+"");
-			valueList.add(nav.getYaw()+"");
+			valueList.add("Left Velocity: " + drivetrain.getLeftEncoderVelocity()+" ");
+			valueList.add("Right Velocity: " + drivetrain.getRightEncoderVelocity()+" ");
+			valueList.add("Yaw: " + nav.getYaw()+" ");
 			
 			try {
 				fw = new FileWriter(FILENAME);
@@ -37,7 +37,7 @@
 				
 				for(int x = 0; x < valueList.size(); x++)
 				{
-				bw.write(valueList.get(x) + "/n");
+				bw.write(valueList.get(x) + "\n");
 				}
 				System.out.println("Done");
 

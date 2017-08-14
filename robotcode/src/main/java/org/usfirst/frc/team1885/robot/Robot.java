@@ -17,8 +17,8 @@ import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.PressureSensor;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
-import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeOneStick;
+import org.usfirst.frc.team1885.robot.utils.Logging;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -38,6 +38,7 @@ public class Robot extends SampleRobot{
 	private LEDController ledController;
 	private ArduinoController arduinoController;
 	private Thread constantUpdaterThread;
+	private Logging log;
 	
 	private Queue<Command> autonomousCommands;
 	private List<Module> runningModules;
@@ -58,7 +59,8 @@ public class Robot extends SampleRobot{
 		arduinoController = new ArduinoController();
 		driverControl = new DriverControlArcadeOneStick(driveTrain, navx);
 		ledController = new LEDController(arduinoController, driverControl, pressureRegulator);
-
+		log = new Logging(driveTrain, navx);
+		
 		navx.resetDisplacement();
 	}
 
@@ -108,6 +110,7 @@ public class Robot extends SampleRobot{
 	{
 		setRunningModules(driverControl, driveTrain, pressureRegulator, beamSensor, arduinoController, ledController);
 		while(isOperatorControl() && isEnabled()){
+			log.logData();
 			updateModules();
 			pause();
 		}
