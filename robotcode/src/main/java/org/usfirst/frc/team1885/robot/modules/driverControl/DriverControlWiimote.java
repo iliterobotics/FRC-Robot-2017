@@ -43,10 +43,15 @@ public class DriverControlWiimote extends DriverControl{
 		double throttle = 0;
 		double turn = 0;
 		
-		if(driverController.getRawButton(A_BUTTON)) {
+		if(driverController.getRawAxis(DPAD_Y_AXIS) > 0) {
 			double wheelPitch = driverController.getRawAxis(WHEEL_PITCH_AXIS);
 			if(wheelPitch < 0) wheelPitch = 0;
 			wheelPitch = 1 - wheelPitch;
+		}
+		if(driverController.getRawAxis(DPAD_Y_AXIS) < 0) {
+			double wheelPitch = driverController.getRawAxis(WHEEL_PITCH_AXIS);
+			if(wheelPitch < 0) wheelPitch = 0;
+			wheelPitch = wheelPitch - 1;
 		}
 		if(driverController.getRawButton(TWO_BUTTON)) {
 			double wheelRoll = driverController.getRawAxis(WHEEL_ROLL_AXIS);
