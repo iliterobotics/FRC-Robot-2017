@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
+import org.usfirst.frc.team1885.robot.modules.Lidar;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
 public class GetAutonomous extends Command{
@@ -26,7 +27,7 @@ public class GetAutonomous extends Command{
 		return true;
 	}
 	
-	public List<Command> getAutonomous(DriveTrain driveTrain, NavX navx){
+	public List<Command> getAutonomous(DriveTrain driveTrain, NavX navx, Lidar lidar){
 		List<Command> commands = new ArrayList<>();
 
 		update();
@@ -35,10 +36,13 @@ public class GetAutonomous extends Command{
 		if(position == null || position.equals("center")) position = "left";
 		switch(position){
 		case "left":
+			/**
 			commands.add(new TurnToDegree(driveTrain, navx, 90, 3));
 			commands.add(new TurnToDegree(driveTrain, navx, -90, 3));
 			commands.add(new TurnToDegree(driveTrain, navx, 180, 3));
 			commands.add(new TurnToDegree(driveTrain, navx, -180, 3));
+			**/
+			commands.add(new AlignWIthWallLidar2 (driveTrain, navx, 1, lidar, 25));
 			break;
 		case "right":
 			commands.add(new DriveStraightDistance(driveTrain, navx, 92));
