@@ -4,17 +4,17 @@ import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.Lidar;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
-public class AlignWIthWallLidar2 extends Command{
-
+public class AlignWithWallLidar extends Command {
+	
 	private int targetDistFromWall;
 	private int currentDistFromWall;
 	private DriveTrain dt;
 	private NavX navx;
 	private double initialPower;
 	private Lidar lidar;
-	
 	private final double PROPORTION = 0.03;
-	public AlignWIthWallLidar2(DriveTrain dt, NavX navx, double initialPower, Lidar lidar, int target) {
+	
+	public AlignWithWallLidar(DriveTrain dt, NavX navx, double initialPower, Lidar lidar, int target) {
 		
 		this.lidar = lidar;
 		this.dt = dt;
@@ -26,9 +26,13 @@ public class AlignWIthWallLidar2 extends Command{
 	
 	public void init()
 	{
-		currentDistFromWall = lidar.getCentimeters();
+		currentDistFromWall = lidar.getCentimeters(); // Returns the current distance from the wall.
 	}
 	
+	/**
+	 * This method returns how far the robot is from the target distance to the wall using the law of sines. 
+	 * @return The actual distance from the wall - the target distance to the wall.
+	 */
 	public int getRealDistance()
 	{
 		currentDistFromWall = lidar.getCentimeters();
@@ -38,10 +42,7 @@ public class AlignWIthWallLidar2 extends Command{
 	
 	public boolean update()
 	{
-		
 		dt.setPower(initialPower - (PROPORTION * getRealDistance() ), initialPower + (PROPORTION * getRealDistance() ));
 		return false;
 	}
-	
-
 }

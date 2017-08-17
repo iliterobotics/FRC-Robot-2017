@@ -42,7 +42,7 @@ public class GetAutonomous extends Command{
 			commands.add(new TurnToDegree(driveTrain, navx, 180, 3));
 			commands.add(new TurnToDegree(driveTrain, navx, -180, 3));
 			**/
-			commands.add(new AlignWIthWallLidar2 (driveTrain, navx, 1, lidar, 25));
+			commands.add(new AlignWithWallLidar(driveTrain, navx, 1, lidar, 25));
 			break;
 		case "right":
 			commands.add(new DriveStraightDistance(driveTrain, navx, 92));

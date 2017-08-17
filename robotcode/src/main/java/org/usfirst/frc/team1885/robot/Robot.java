@@ -13,11 +13,11 @@ import org.usfirst.frc.team1885.robot.modules.ArduinoController;
 import org.usfirst.frc.team1885.robot.modules.BeamSensor;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.LEDController;
+import org.usfirst.frc.team1885.robot.modules.Lidar;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 import org.usfirst.frc.team1885.robot.modules.PressureSensor;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
-import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeOneStick;
 
 import edu.wpi.cscore.UsbCamera;
@@ -38,6 +38,7 @@ public class Robot extends SampleRobot{
 	private LEDController ledController;
 	private ArduinoController arduinoController;
 	private Thread constantUpdaterThread;
+	private Lidar lidar;
 	
 	private Queue<Command> autonomousCommands;
 	private List<Module> runningModules;
@@ -83,7 +84,7 @@ public class Robot extends SampleRobot{
 		GetAutonomous getAutonomous = new GetAutonomous();
 		getAutonomous.update();
 		autonomousCommands.clear();
-		autonomousCommands.addAll(getAutonomous.getAutonomous(driveTrain, navx));
+		autonomousCommands.addAll(getAutonomous.getAutonomous(driveTrain, navx, lidar));
 		Command currentCommand = autonomousCommands.peek();
 		if(currentCommand != null) currentCommand.init();
 		while(isAutonomous() && isEnabled()){
