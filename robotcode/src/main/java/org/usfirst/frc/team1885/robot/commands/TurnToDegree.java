@@ -10,6 +10,7 @@ public class TurnToDegree extends Command {
 	private DriveTrain drivetrain;
 	private NavX navx;
 	
+	private static final double GYRO_TURN_THRESHOLD_TICKS = 1024;
 	private static final int MIN_ALIGNED_COUNT = 5;
 	private static final double MINIMUM_POWER = 0.05;
 	private static final double KP = 0.0111;
@@ -18,9 +19,12 @@ public class TurnToDegree extends Command {
 	
 	private double mP, mI, mD;
 	private double degrees, targetYaw;
-	private double error, lastError, totalError;
+	private double error, avgTickError, lastError, totalError;
 	private double alignedCount;
 	private final double allowableError;
+	
+	private double turnDistanceTicks;
+	private boolean finished, gyroTurnStarted;
 	
 	private long startTime;
 	
@@ -33,6 +37,8 @@ public class TurnToDegree extends Command {
 		this.degrees = degrees;
 		this.alignedCount = 0;
 		this.allowableError = allowableError;
+		this.finished = false;
+		this.gyroTurnStarted = false;
 		this.mP = mP;
 		this.mI = mI;
 		this.mD = mD;
@@ -44,6 +50,12 @@ public class TurnToDegree extends Command {
 	
 	public void init()
 	{
+		double inchesPerDegree = (Math.PI * DriveTrain.DIAMETER) / 360 * degrees;
+		double targetWheelRotations  = (inchesPerDegree / DriveTrain.WHEEL_DIAMETER);
+		turnDistanceTicks = targetWheelRotations * 1024;
+	}
+	
+	private void initGyroTurn() {
 		navx.resetInitialAngle();
 		this.targetYaw = degrees;  //Calculate the target heading off of # of degrees to turn
 		this.lastError = this.error = getError(); //Calculate the initial error value
@@ -54,6 +66,24 @@ public class TurnToDegree extends Command {
 	public boolean update()
 	{
 		error = getError(); //Update error value
+		avgTickError = (drivetrain.getLeftClosedLoopError() + (-1 * drivetrain.getRightClosedLoopError())) / 2;
+		
+		drivetrain.changeTrapezoidalPosition(-turnDistanceTicks, turnDistanceTicks);
+		turnDistanceTicks = 0; //Don't change our position after initial call
+		
+		if(Math.abs(avgTickError) < GYRO_TURN_THRESHOLD_TICKS) { //Start closed-loop w/ gyro if within certain degree threshold
+			if(!gyroTurnStarted) {
+				gyroTurnStarted = true;
+				initGyroTurn();
+			}
+			finished = updateGyroTurn(error);
+			return finished;
+		}
+		
+		return false;
+	}
+	
+	private boolean updateGyroTurn(double error) {
 		this.totalError += this.error; //Update running error total
 		
 		if((Math.abs(error) < allowableError)) alignedCount++;

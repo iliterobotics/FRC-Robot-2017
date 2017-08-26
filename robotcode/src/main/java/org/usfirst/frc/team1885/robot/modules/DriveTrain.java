@@ -39,6 +39,7 @@ public class DriveTrain implements Module {
 	public static final double RIGHT_kF = 0;
 	
 	public static final double WHEEL_DIAMETER = 3.98;
+	public static final double DIAMETER = 0; //Drivetrain Diameter from wheel center to wheel center
 	public static final int SHIFT_SOLENOID_ID = 2;
 	// Voltage proportion control variables
 	private static final double DEFAULT_RAMP_RATE = 72.0; // in V/sec- 2017 ramp rate
@@ -213,6 +214,14 @@ public class DriveTrain implements Module {
 	
 	public void changeTrapezoidalPosition(double leftDelta, double rightDelta) {
 		setTrapezoidalPosition((getLeftPosition() + leftDelta) % 1024, (getRightPosition() + rightDelta) % 1024);
+	}
+	
+	public double getLeftClosedLoopError() {
+		return motorMap.get(MotorType.LEFT_MOTOR).getClosedLoopError();
+	}
+	
+	public double getRightClosedLoopError() {
+		return motorMap.get(MotorType.RIGHT_MOTOR).getClosedLoopError();
 	}
 
 	private void setMotor(MotorType type, double value) {
