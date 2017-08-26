@@ -39,7 +39,10 @@ public class DriveTrain implements Module {
 	public static final double RIGHT_kF = 0;
 	
 	public static final double WHEEL_DIAMETER = 3.98;
-	public static final double DIAMETER = 0; //Drivetrain Diameter from wheel center to wheel center
+	public static final double DIAMETER = 0; //Drivetrain Diameter from wheel center to wheel center in inches
+	public static final double INCHES_PER_DEGREE = (Math.PI * DriveTrain.DIAMETER) / 360;
+	public static final double ROTATIONS_PER_DEGREE = INCHES_PER_DEGREE / WHEEL_DIAMETER;
+	public static final double TICKS_PER_DEGREE = ROTATIONS_PER_DEGREE * 1024;
 	public static final int SHIFT_SOLENOID_ID = 2;
 	// Voltage proportion control variables
 	private static final double DEFAULT_RAMP_RATE = 72.0; // in V/sec- 2017 ramp rate

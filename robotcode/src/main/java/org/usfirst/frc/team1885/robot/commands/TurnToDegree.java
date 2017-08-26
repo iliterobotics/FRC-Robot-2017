@@ -50,9 +50,7 @@ public class TurnToDegree extends Command {
 	
 	public void init()
 	{
-		double inchesPerDegree = (Math.PI * DriveTrain.DIAMETER) / 360 * degrees;
-		double targetWheelRotations  = (inchesPerDegree / DriveTrain.WHEEL_DIAMETER);
-		turnDistanceTicks = targetWheelRotations * 1024;
+		turnDistanceTicks = DriveTrain.TICKS_PER_DEGREE * degrees;
 	}
 	
 	private void initGyroTurn() {

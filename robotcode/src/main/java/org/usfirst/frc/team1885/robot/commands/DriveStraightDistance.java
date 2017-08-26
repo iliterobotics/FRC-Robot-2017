@@ -18,6 +18,7 @@ public class DriveStraightDistance extends Command{
 	
 	private int initialLeftPosition;
 	private int initialRightPosition;
+	private double tickDelta;
 	
 	private double initialYaw;
 	
@@ -40,11 +41,15 @@ public class DriveStraightDistance extends Command{
 		initialYaw = navx.getYaw();
 		initialLeftPosition = driveTrain.getLeftPosition();
 		initialRightPosition = driveTrain.getRightPosition();
+		tickDelta = distanceToTravel;
 		System.out.println("Initial Yaw:" + navx.getYaw());
 		System.out.printf("InitL:%d InitR:%d\n", driveTrain.getLeftPosition(), driveTrain.getRightPosition());
 	}
 	
 	public boolean update(){
+		
+		driveTrain.changeTrapezoidalPosition(tickDelta, tickDelta);
+		tickDelta = 0; //Don't change our setpoint again
 		
 		if( getAverageDistanceTravel() >= distanceToTravel){
 			driveTrain.setPower(0, 0);
@@ -54,7 +59,8 @@ public class DriveStraightDistance extends Command{
 		}
 
 		double yawError = navx.getAngleDiff(initialYaw, navx.getYaw());
-		driveTrain.setPower(-(INITIAL_POWER + yawError * PROPORTION), -(INITIAL_POWER - yawError * PROPORTION));
+		double tickAngleError = DriveTrain.TICKS_PER_DEGREE * yawError;
+		driveTrain.changeTrapezoidalPosition(distanceToTravel - tickAngleError, distanceToTravel + tickAngleError);
 		
 		return false;
 	}
