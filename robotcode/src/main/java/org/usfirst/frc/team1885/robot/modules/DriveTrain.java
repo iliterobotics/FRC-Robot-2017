@@ -17,6 +17,27 @@ import edu.wpi.first.wpilibj.Solenoid;
  */
 public class DriveTrain implements Module {
 
+	public static final double MAX_VELOCITY_RPM = 0;
+	
+	//Motion Magic (Velocity) constants
+	public static final double MAGIC_ACCEL = 0; //RPM per second
+	public static final double MAGIC_CRUISE_VEL = 0; //RPM
+	public static final int MAGIC_PROFILE_SLOT = 0;
+	
+	public static final double LEFT_RAMPRATE = 0;
+	public static final int LEFT_IZONE = 0; //Encoder Ticks
+	public static final double LEFT_kP = 0;
+	public static final double LEFT_kI = 0;
+	public static final double LEFT_kD = 0;
+	public static final double LEFT_kF = 0;
+	
+	public static final double RIGHT_RAMPRATE = 0;
+	public static final int RIGHT_IZONE = 0; //Encoder Ticks
+	public static final double RIGHT_kP = 0;
+	public static final double RIGHT_kI = 0;
+	public static final double RIGHT_kD = 0;
+	public static final double RIGHT_kF = 0;
+	
 	public static final double WHEEL_DIAMETER = 3.98;
 	public static final int SHIFT_SOLENOID_ID = 2;
 	// Voltage proportion control variables
@@ -36,11 +57,16 @@ public class DriveTrain implements Module {
 	private int actualRightSpeed;
 
 	// Position control variables
+	
+	private double desiredLeftPosition;
+	private double desiredRightPosition;
+	private double actualLeftPosition;
+	private double actualRightPosition;
 
 	private DriveMode currentMode;
 
 	public enum DriveMode {
-		P_VBUS, POSITION, TICK_VEL;
+		P_VBUS, POSITION, MOTION_MAGIC, TICK_VEL;
 	}
 
 	private enum MotorType {
@@ -107,11 +133,30 @@ public class DriveTrain implements Module {
 			desiredRightSpeed = 0;
 			//setVoltageRampRate(Integer.MAX_VALUE);
 			setMotorMode(TalonControlMode.Speed);
-			motorMap.get(MotorType.LEFT_MOTOR).setFeedbackDevice(FeedbackDevice.AnalogEncoder);
-			motorMap.get(MotorType.RIGHT_MOTOR).setFeedbackDevice(FeedbackDevice.AnalogEncoder);
+			setFeedbackDevice(FeedbackDevice.AnalogEncoder);
 			break;
 		case POSITION:
+			actualLeftPosition = 0;
+			actualRightPosition = 0;
+			desiredLeftPosition = 0;
+			desiredRightPosition = 0;
 			setVoltageRampRate(Integer.MAX_VALUE);
+			break;
+		case MOTION_MAGIC:
+			actualLeftPosition = 0;
+			actualRightPosition = 0;
+			desiredLeftPosition = 0;
+			desiredRightPosition = 0;
+			setFeedbackDevice(FeedbackDevice.QuadEncoder);
+			setMotorMode(TalonControlMode.MotionMagic);
+			CANTalon leftMotor = motorMap.get(MotorType.LEFT_MOTOR);
+			CANTalon rightMotor = motorMap.get(MotorType.RIGHT_MOTOR);
+			leftMotor.setPID(LEFT_kP, LEFT_kI, LEFT_kD, LEFT_kF, LEFT_IZONE, LEFT_RAMPRATE, MAGIC_PROFILE_SLOT);
+			leftMotor.setMotionMagicAcceleration(MAGIC_ACCEL);
+			leftMotor.setMotionMagicCruiseVelocity(MAGIC_CRUISE_VEL);
+			rightMotor.setPID(RIGHT_kP, RIGHT_kI, RIGHT_kD, RIGHT_kF, RIGHT_IZONE, RIGHT_RAMPRATE, MAGIC_PROFILE_SLOT);
+			rightMotor.setMotionMagicAcceleration(MAGIC_ACCEL);
+			rightMotor.setMotionMagicCruiseVelocity(MAGIC_CRUISE_VEL);
 			break;
 		}
 	}
@@ -159,6 +204,16 @@ public class DriveTrain implements Module {
 	public void setPosition(double left, double right) {
 		setMode(DriveMode.POSITION);
 	}
+	
+	public void setTrapezoidalPosition(double left, double right) {
+		setMode(DriveMode.MOTION_MAGIC);
+		desiredLeftPosition = left;
+		desiredRightPosition = right;
+	}
+	
+	public void changeTrapezoidalPosition(double leftDelta, double rightDelta) {
+		setTrapezoidalPosition((getLeftPosition() + leftDelta) % 1024, (getRightPosition() + rightDelta) % 1024);
+	}
 
 	private void setMotor(MotorType type, double value) {
 		motorMap.get(type).set(value * type.modifier);
@@ -194,6 +249,12 @@ public class DriveTrain implements Module {
 			break;
 		case POSITION:
 			break;
+		case MOTION_MAGIC:
+			actualLeftPosition = desiredLeftPosition;
+			actualRightPosition = desiredRightPosition;
+			setMotor(MotorType.LEFT_MOTOR, actualLeftPosition);
+			setMotor(MotorType.RIGHT_MOTOR, actualRightPosition);
+			break;
 		}
 		ConstantUpdater.putNumber("leftpos", getLeftPosition());
 		ConstantUpdater.putNumber("rightpos", getRightPosition());
@@ -201,6 +262,12 @@ public class DriveTrain implements Module {
 		ConstantUpdater.putNumber("rightvel", getRightEncoderVelocity());
 		ConstantUpdater.putNumber("drive_train_current",  getCurrentFeedback());
 
+	}
+	
+	private void setFeedbackDevice(FeedbackDevice device) {
+		for(MotorType m : MotorType.values()) {
+			motorMap.get(m).setFeedbackDevice(device);
+		}
 	}
 	
 	public double getCurrentFeedback(){
