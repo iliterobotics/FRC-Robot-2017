@@ -7,8 +7,6 @@ import org.usfirst.frc.team1885.robot.common.interfaces.IAHRSFactory;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.PIDSourceType;
-
 public class DefaultAHRSFactory implements IAHRSFactory{
 
 	public IAHRS getAHRS(ESerialPort port) {

@@ -18,8 +18,6 @@ import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
-import edu.wpi.first.wpilibj.DriverStation;
-
 public abstract class DriverControl implements Module {
 	
 	public static final double JOYSTICK_DEADZONE = 0.05;

@@ -2,7 +2,7 @@ package org.usfirst.frc.team1885.robot.common.impl.converters;
 
 import org.usfirst.frc.team1885.robot.common.impl.ETalonControlMode;
 
-import com.ctre.CANTalon.TalonControlMode;
+import com.ctre.MotorControl.SmartMotorController.TalonControlMode;
 import com.google.common.base.Converter;
 
 public class TalonControlModeConverter extends Converter<ETalonControlMode, TalonControlMode>{

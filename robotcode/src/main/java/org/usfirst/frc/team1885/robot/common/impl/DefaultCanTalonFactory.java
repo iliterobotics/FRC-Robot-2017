@@ -5,11 +5,9 @@ import org.usfirst.frc.team1885.robot.common.impl.converters.TalonControlModeCon
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalon;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
 
-import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
-
-import edu.wpi.first.wpilibj.Talon;
+import com.ctre.MotorControl.CANTalon;
+import com.ctre.MotorControl.SmartMotorController.FeedbackDevice;
+import com.ctre.MotorControl.SmartMotorController.TalonControlMode;
 
 public class DefaultCanTalonFactory implements ICanTalonFactory {
 

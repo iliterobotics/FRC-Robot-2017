@@ -7,9 +7,9 @@ import org.usfirst.frc.team1885.coms.ConstantUpdater;
 import org.usfirst.frc.team1885.robot.common.impl.DefaultCanTalonFactory;
 import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
 
-import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
+import com.ctre.MotorControl.CANTalon;
+import com.ctre.MotorControl.SmartMotorController.FeedbackDevice;
+import com.ctre.MotorControl.SmartMotorController.TalonControlMode;
 
 import edu.wpi.first.wpilibj.Solenoid;
 

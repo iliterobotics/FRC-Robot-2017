@@ -2,7 +2,7 @@ package org.usfirst.frc.team1885.robot.common.impl.converters;
 
 import org.usfirst.frc.team1885.robot.common.impl.EFeedbackDevice;
 
-import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.MotorControl.SmartMotorController.FeedbackDevice;
 import com.google.common.base.Converter;
 
 public class FeedbackConverter extends Converter<FeedbackDevice, EFeedbackDevice>{

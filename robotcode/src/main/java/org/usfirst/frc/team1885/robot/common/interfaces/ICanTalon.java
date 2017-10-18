@@ -3,8 +3,6 @@ package org.usfirst.frc.team1885.robot.common.interfaces;
 import org.usfirst.frc.team1885.robot.common.impl.EFeedbackDevice;
 import org.usfirst.frc.team1885.robot.common.impl.ETalonControlMode;
 
-import com.ctre.CANTalon.FeedbackDevice;
-
 public interface ICanTalon {
 
 	void setEncPosition(int i);

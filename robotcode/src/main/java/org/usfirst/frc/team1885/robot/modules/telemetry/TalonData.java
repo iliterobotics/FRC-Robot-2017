@@ -2,7 +2,7 @@ package org.usfirst.frc.team1885.robot.modules.telemetry;
 
 import org.usfirst.frc.team1885.robot.modules.Module;
 
-import com.ctre.CANTalon;
+import com.ctre.MotorControl.CANTalon;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
