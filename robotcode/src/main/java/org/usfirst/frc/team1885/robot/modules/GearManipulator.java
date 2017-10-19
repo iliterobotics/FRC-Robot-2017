@@ -73,9 +73,9 @@ public class GearManipulator implements Module{
 
 	@Override
 	public void initialize() {
-		isDropping = 
-		isLong = 
-		isShort =
+		isDropping = false;
+		isLong = false;
+		isShort = false;
 		isKicked = false;
 		isDown = false;
 		ConstantUpdater.putNumber("intake_current", 0);
@@ -190,6 +190,7 @@ public class GearManipulator implements Module{
 		SolenoidBase base = pistonMap.get(type);
 		if(base instanceof Solenoid){
 			((Solenoid)base).set(open);
+			DriverStation.reportError("Setting " + type.toString() + " to: " + new Boolean(open), false);
 		}else{
 			DriverStation.reportError("WRONG SOLENOID TYPE", false);
 		}
@@ -199,6 +200,7 @@ public class GearManipulator implements Module{
 		SolenoidBase base = pistonMap.get(type);
 		if(base instanceof DoubleSolenoid){
 			((DoubleSolenoid)base).set(value);
+			DriverStation.reportError("Setting " + type.toString() + " to: " + value.toString(), false);
 		}else{
 			DriverStation.reportError("WRONG SOLENOID TYPE", false);
 		}
