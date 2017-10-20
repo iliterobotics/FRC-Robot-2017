@@ -27,7 +27,6 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	private static final double HIGH_GEAR_TURN_REDUCER = 0.2;
 
 	private DriveTrain driveTrain;
-	private IJoystick driverController;
 	
 	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx) { 
 		this(driveTrain, gearManipulator, climber, navx, new DefaultJoystickFactory());
@@ -36,12 +35,12 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	public DriverControlArcadeControllerTwoStick(DriveTrain driveTrain, GearManipulator gearManipulator, Climber climber, NavX navx, IJoystickFactory joystickFactory) {
 		super(driveTrain, gearManipulator, climber, navx, joystickFactory);
 		this.driveTrain = driveTrain;
-		driverController = getController(ControllerType.CONTROLLER);
 	}
 	double throttle, turn, leftInput, rightInput;
 	int scalar;
 	@Override
 	public void updateDriveTrain() {
+		IJoystick driverController = getController(ControllerType.CONTROLLER);
 		throttle = driverController.getRawAxis(GAMEPAD_LEFT_Y);
 		turn = driverController.getRawAxis(GAMEPAD_RIGHT_X);
 		scalar = (turn < 0) ? -1 : 1;
