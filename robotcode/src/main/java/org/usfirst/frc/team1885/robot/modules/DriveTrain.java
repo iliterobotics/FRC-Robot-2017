@@ -47,7 +47,7 @@ public class DriveTrain implements Module {
 	}
 
 	private enum MotorType {
-		LEFT_MOTOR(-1, 1, 3, 5), RIGHT_MOTOR(1, 2, 4, 6);
+		LEFT_MOTOR(-1, 2, 4), RIGHT_MOTOR(1, 3, 1);
 
 		final int talonId;
 		final int followerIds[];
