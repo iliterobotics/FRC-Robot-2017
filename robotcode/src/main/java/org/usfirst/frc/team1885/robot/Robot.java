@@ -113,7 +113,8 @@ public class Robot extends SampleRobot{
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, beamSensor, arduinoController, ledController);
+		//setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, beamSensor, arduinoController, ledController);
+		setRunningModules(driverControl, driveTrain);
 		while(isOperatorControl() && isEnabled()){
 			updateModules();
 			pause();
