@@ -4,12 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
-import org.usfirst.frc.team1885.robot.common.impl.DefaultCanTalonFactory;
-import org.usfirst.frc.team1885.robot.common.interfaces.ICanTalonFactory;
 
-import com.ctre.MotorControl.CANTalon;
-import com.ctre.MotorControl.SmartMotorController.FeedbackDevice;
-import com.ctre.MotorControl.SmartMotorController.TalonControlMode;
+import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.Solenoid;
 
@@ -64,14 +62,15 @@ public class DriveTrain implements Module {
 	private Solenoid gearShifter;
 	private Solenoid casterShifter;
 
-	private final ICanTalonFactory canTalonFactory;
+	//private final ICanTalonFactory canTalonFactory;
 
+	//public DriveTrain() {
+	//	this(new DefaultCanTalonFactory());
+	//}
+
+//	public DriveTrain(ICanTalonFactory canTalonFactory) {
+		//this.canTalonFactory = canTalonFactory;
 	public DriveTrain() {
-		this(new DefaultCanTalonFactory());
-	}
-
-	public DriveTrain(ICanTalonFactory canTalonFactory) {
-		this.canTalonFactory = canTalonFactory;
 		motorMap = new HashMap<>();
 		gearShifter = new Solenoid(SHIFT_SOLENOID_ID);
 		casterShifter = new Solenoid(CASTER_SOLENOID_ID);

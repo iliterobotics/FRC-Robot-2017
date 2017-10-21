@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
 
-import com.ctre.MotorControl.CANTalon;
+import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;

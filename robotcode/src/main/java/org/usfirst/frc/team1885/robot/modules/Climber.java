@@ -2,8 +2,10 @@ package org.usfirst.frc.team1885.robot.modules;
 
 import org.usfirst.frc.team1885.coms.ConstantUpdater;
 
-import com.ctre.MotorControl.CANTalon;
-import com.ctre.MotorControl.SmartMotorController.TalonControlMode;
+import com.ctre.CANTalon;
+import com.ctre.CANTalon.TalonControlMode;
+
+
 
 public class Climber implements Module{
 

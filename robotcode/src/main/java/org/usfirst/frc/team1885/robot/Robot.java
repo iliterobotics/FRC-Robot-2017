@@ -114,7 +114,13 @@ public class Robot extends SampleRobot{
 	public void operatorControl()
 	{
 		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, beamSensor, arduinoController, ledController);
+		long startTime = System.currentTimeMillis();
 		while(isOperatorControl() && isEnabled()){
+//			if(System.currentTimeMillis() - startTime > 5000) {
+//				System.out.printf("Heap Max: %s Heap Free: %s Heap Current: %s\n", 
+//									Runtime.getRuntime().maxMemory(), Runtime.getRuntime().freeMemory(), Runtime.getRuntime().totalMemory());
+//				startTime = System.currentTimeMillis();
+//			}
 			updateModules();
 			pause();
 		}
@@ -134,7 +140,7 @@ public class Robot extends SampleRobot{
 		}
 	}
 	
-	private void setRunningModules(Module ... modules){
+	private void setRunningModules(Module...modules){
 		runningModules.clear();
 		for(Module mod : modules){
 			runningModules.add(mod);

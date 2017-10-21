@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1885.robot.modules;
+ package org.usfirst.frc.team1885.robot.modules;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
@@ -44,7 +44,8 @@ public class PressureSensor implements Module{
 			isCompressorOn = false;
 		}
 		voltageReadout = aio.getVoltage();
-		System.out.println("Voltage: " + aio.getVoltage() + "v");
+		//System.out.println("Voltage: " + aio.getVoltage() + "v");
+		//System.out.println("Pressure: " + ((250 * ( voltageReadout/5 )) - 25));
 	}
 	
 	public boolean isCompressorLow(){
