@@ -3,11 +3,15 @@ package org.usfirst.frc.team1885.robot.autonomous;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.NavX;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
+
 public class TurnToDegree extends Command {
 	
 	private static final int TIMEOUT = 3000;
 	
 	private DriveTrain drivetrain;
+	private PowerDistributionPanel pdp;
+	private final double MAX_OUTPUT = 1;
 	private NavX navx;
 	
 	private static final int MIN_ALIGNED_COUNT = 5;
@@ -36,6 +40,7 @@ public class TurnToDegree extends Command {
 	
 	public void init()
 	{
+		pdp = new PowerDistributionPanel();
 		this.targetYaw = degrees;  //Calculate the target heading off of # of degrees to turn
 		this.lastError = this.error = getError(); //Calculate the initial error value
 		this.totalError += this.error;
@@ -57,6 +62,12 @@ public class TurnToDegree extends Command {
 			double scalar = output>0?1:-1;
 			output = MINIMUM_POWER * scalar;
 		}
+		
+		if(Math.abs(output) < MAX_OUTPUT){
+			double scalar = output>0?1:-1;
+			output = MAX_OUTPUT * scalar;
+		}
+		
 		leftPower = output; 
 		rightPower = -output;
 		
