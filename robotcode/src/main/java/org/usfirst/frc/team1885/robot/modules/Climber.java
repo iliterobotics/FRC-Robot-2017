@@ -101,7 +101,8 @@ public class Climber implements Module{
 			ConstantUpdater.putNumber("current", current);
 			ConstantUpdater.putNumber("voltage", voltage);
 			double ratio = current/voltage;
-			if(ratio > MAX_CURRENT_V_RATIO){
+			System.out.println("Ratio: " + ratio );
+			/*if(ratio > MAX_CURRENT_V_RATIO){
 				if(!didStall){
 					initStallTime = System.currentTimeMillis();
 				}
@@ -111,7 +112,7 @@ public class Climber implements Module{
 				didStall = true;
 			} else {
 				didStall = false;
-			}
+			}*/
 			break;
 		case BUMPING:
 			currentPower = CLIMBER_POWER;
