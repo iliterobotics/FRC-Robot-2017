@@ -7,31 +7,32 @@ import com.flybotix.hfr.codex.CodexOf;
 
 public class CodexModule implements Module {
 	private Codex codex;
+	private CodexSender sender;
 	private NavX navX;
 	private ArduinoController arduinoController;
 	private BeamSensor beamSensor;
 	private DriveTrain driveTrain;
 	private GearManipulator gearManipulator;
-	private PressureSensor pressurenSensor;
-	private UltraSonic ultraSonic;
+	private PressureSensor pressureSensor;
+
 	
 
 	public CodexModule(NavX navX, ArduinoController arduinoController, BeamSensor beamSensor, DriveTrain driveTrain,
-			GearManipulator gearManipulator, PressureSensor pressurenSensor, UltraSonic ultraSonic, Codex codex) {
+			GearManipulator gearManipulator, PressureSensor pressurenSensor,  Codex codex, CodexSender sender) {
 		this.navX = navX;
 		this.arduinoController = arduinoController;
 		this.beamSensor = beamSensor;
 		this.driveTrain = driveTrain;
 		this.gearManipulator = gearManipulator;
-		this.pressurenSensor = pressurenSensor;
-		this.ultraSonic = ultraSonic;
+		this.pressureSensor = pressurenSensor;
 		this.codex = codex;
+		this.sender = sender;
 	}
 
 	public enum RobotData implements CodexOf<Double>{
 	  gyroAngle,
-	  voltageLeftDriveTrain,
-	  voltageRightDriveTrain,
+	  //voltageLeftDriveTrain,
+	  //voltageRightDriveTrain,
 	  leftEncoderPos,
 	  rightEncoderPos,
 	  leftVelocity,
@@ -40,32 +41,25 @@ public class CodexModule implements Module {
 	
 	@Override
 	public void initialize() {
-		CodexSender<Double, RobotData> sender = new CodexSender<>(RobotData.class, true);
-		sender.initConnection(EProtocol.UDP, 8500, 8501, "localhost");
+		data.reset();
 		
 	}
 
 	@Override
 	public void update() {
-		Codex<Double, RobotData> data = Codex.of.thisEnum(RobotData.class);
-
-		// Reset the codex at the beginning of each cycle.  This effectively sets each value to 'null'.  Fill out data throughout each cycle.
-		data.reset(); // beginning of the cycle
-		
-		data.put(RobotData., -23.3d);
-		data.put(RobotData.gyro, mxp.getGyroRelative());
-
-		// Use the data throughout the robot cycle after it's gathered
-		double degrees = data.get(RobotData.gyro);
-
-		// Send the data back to the laptop at the end of each cycle
+		updateCodex();
 		sender.send(data);
 		
 	}
 	
 	public void updateCodex()
 	{
-		
+		data.reset();
+		data.put(RobotData.gyroAngle, navX.getAngle());
+		data.put(RobotData.leftEncoderPos, driveTrain.getLeftPosition());
+		data.put(RobotData.rightEncoderPos, driveTrain.getRightPosition());
+		data.put(RobotData.leftVelocity, driveTrain.getLeftEncoderVelocity());
+		data.put(RobotData.rightVelocity, driveTrain.getRightEncoderVelocity());
 	}
 	
 

@@ -45,6 +45,7 @@ public class Robot extends SampleRobot{
 	
 	private Queue<Command> autonomousCommands;
 	private List<Module> runningModules;
+	private Codex codex;
 	
 	public Robot(){
 	    	    
@@ -62,21 +63,19 @@ public class Robot extends SampleRobot{
 		gearManipulator = new GearManipulator();
 		climber = new Climber();
 		arduinoController = new ArduinoController();
+		codex = new CodexModule(navx, arduinoController, beamSensor, driveTrain, gearManipulator, pressureRegulator, codex, sender);
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
 		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, beamSensor, climber, gearManipulator);
-		 
-		CodexSender<Double, RobotData> sender = new CodexSender<>(RobotData.class, true);
-		sender.initConnection(EProtocol.UDP, 7778, 7777, "localhost");
+		
+		
 		navx.resetDisplacement();
 	}
 
 	public void robotInit(){
-		Codex<Double, RobotData> data = Codex.of.thisEnum(RobotData.class);
-		data.reset(); // beginning of the cycle
-		//data.put(RobotData.dataType, defaultValue);
-
-		sender.send(data);
 		
+		CodexSender<Double, RobotData> sender = new CodexSender<>(RobotData.class, true);
+		Codex<Double, RobotData> data = Codex.of.thisEnum(RobotData.class);
+		sender.initConnection(EProtocol.UDP, 5800, 5801, "localhost");
 		startCameraFeeds();
 		while(navx.isCalibrating()){
 			System.out.println("CALIBRATING");
@@ -95,7 +94,7 @@ public class Robot extends SampleRobot{
 	
 	public void autonomous()
 	{		
-		setRunningModules(driveTrain, gearManipulator, pressureRegulator);
+		setRunningModules(driveTrain, gearManipulator, pressureRegulator, codex);
 		GetAutonomous getAutonomous = new GetAutonomous();
 		getAutonomous.update();
 		autonomousCommands.clear();
@@ -122,7 +121,7 @@ public class Robot extends SampleRobot{
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, beamSensor, arduinoController, ledController);
+		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, beamSensor, arduinoController, ledController, codex);
 		long startTime = System.currentTimeMillis();
 		while(isOperatorControl() && isEnabled()){
 //			if(System.currentTimeMillis() - startTime > 5000) {
