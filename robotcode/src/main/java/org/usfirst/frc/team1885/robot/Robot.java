@@ -25,6 +25,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
+import com.flybotix.hfr.codex.CodexOf;
 
 public class Robot extends SampleRobot{
 	
@@ -63,11 +64,19 @@ public class Robot extends SampleRobot{
 		arduinoController = new ArduinoController();
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
 		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, beamSensor, climber, gearManipulator);
-
+		 
+		CodexSender<Double, RobotData> sender = new CodexSender<>(RobotData.class, true);
+		sender.initConnection(EProtocol.UDP, 7778, 7777, "localhost");
 		navx.resetDisplacement();
 	}
 
 	public void robotInit(){
+		Codex<Double, RobotData> data = Codex.of.thisEnum(RobotData.class);
+		data.reset(); // beginning of the cycle
+		//data.put(RobotData.dataType, defaultValue);
+
+		sender.send(data);
+		
 		startCameraFeeds();
 		while(navx.isCalibrating()){
 			System.out.println("CALIBRATING");

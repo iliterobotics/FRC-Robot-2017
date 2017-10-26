@@ -47,8 +47,10 @@ project(':robotcode') {
    }
    repositories {
       jcenter()
+      mavenLocal()
    }
    dependencies {
+       compile 'com.flybotix:HighFrequencyRobots:0.0.1'
        compile wpilib()
        // compile talonSrx()
        compile files('res/navx_frc.jar')
@@ -99,6 +101,7 @@ project(':displaycode'){
   repositories {
     mavenCentral() // tilesFX & Medusa (gauges)
     jcenter() // fontawesomeFX
+    
   }
   wpi {
 		opencvVersion = "3.1.0"
