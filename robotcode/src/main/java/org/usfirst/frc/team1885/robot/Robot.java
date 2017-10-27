@@ -12,6 +12,8 @@ import org.usfirst.frc.team1885.robot.autonomous.GetAutonomous;
 import org.usfirst.frc.team1885.robot.modules.ArduinoController;
 import org.usfirst.frc.team1885.robot.modules.BeamSensor;
 import org.usfirst.frc.team1885.robot.modules.Climber;
+import org.usfirst.frc.team1885.robot.modules.Logger;
+import org.usfirst.frc.team1885.robot.modules.Logger.RobotData;
 import org.usfirst.frc.team1885.robot.modules.DriveTrain;
 import org.usfirst.frc.team1885.robot.modules.GearManipulator;
 import org.usfirst.frc.team1885.robot.modules.LEDController;
@@ -21,11 +23,14 @@ import org.usfirst.frc.team1885.robot.modules.PressureSensor;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControl;
 import org.usfirst.frc.team1885.robot.modules.driverControl.DriverControlArcadeControllerTwoStick;
 
+import com.flybotix.hfr.codex.Codex;
+import com.flybotix.hfr.codex.CodexSender;
+import com.flybotix.hfr.io.Protocols.EProtocol;
+
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
-import com.flybotix.hfr.codex.CodexOf;
 
 public class Robot extends SampleRobot{
 	
@@ -45,7 +50,8 @@ public class Robot extends SampleRobot{
 	
 	private Queue<Command> autonomousCommands;
 	private List<Module> runningModules;
-	private Codex codex;
+	private Logger codexModule;
+	private Codex<Double, RobotData> codex;
 	
 	public Robot(){
 	    	    
@@ -63,7 +69,6 @@ public class Robot extends SampleRobot{
 		gearManipulator = new GearManipulator();
 		climber = new Climber();
 		arduinoController = new ArduinoController();
-		codex = new CodexModule(navx, arduinoController, beamSensor, driveTrain, gearManipulator, pressureRegulator, codex, sender);
 		driverControl = new DriverControlArcadeControllerTwoStick(driveTrain, gearManipulator, climber, navx);
 		ledController = new LEDController(arduinoController, driveTrain, driverControl, pressureRegulator, beamSensor, climber, gearManipulator);
 		
@@ -74,7 +79,8 @@ public class Robot extends SampleRobot{
 	public void robotInit(){
 		
 		CodexSender<Double, RobotData> sender = new CodexSender<>(RobotData.class, true);
-		Codex<Double, RobotData> data = Codex.of.thisEnum(RobotData.class);
+		codex = Codex.of.thisEnum(RobotData.class);
+		codexModule = new Logger(navx, arduinoController, beamSensor, driveTrain, gearManipulator, pressureRegulator, codex, sender);
 		sender.initConnection(EProtocol.UDP, 5800, 5801, "localhost");
 		startCameraFeeds();
 		while(navx.isCalibrating()){
@@ -94,7 +100,7 @@ public class Robot extends SampleRobot{
 	
 	public void autonomous()
 	{		
-		setRunningModules(driveTrain, gearManipulator, pressureRegulator, codex);
+		setRunningModules(driveTrain, gearManipulator, pressureRegulator, codexModule);
 		GetAutonomous getAutonomous = new GetAutonomous();
 		getAutonomous.update();
 		autonomousCommands.clear();
@@ -121,8 +127,8 @@ public class Robot extends SampleRobot{
 	
 	public void operatorControl()
 	{
-		setRunningModules(driverControl, gearManipulator, driveTrain, climber, pressureRegulator, beamSensor, arduinoController, ledController, codex);
-		long startTime = System.currentTimeMillis();
+		setRunningModules(codexModule, driverControl, gearManipulator, driveTrain, climber, pressureRegulator, beamSensor, arduinoController, ledController);
+//		long startTime = System.currentTimeMillis();
 		while(isOperatorControl() && isEnabled()){
 //			if(System.currentTimeMillis() - startTime > 5000) {
 //				System.out.printf("Heap Max: %s Heap Free: %s Heap Current: %s\n", 

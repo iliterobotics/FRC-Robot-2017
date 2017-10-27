@@ -1,13 +1,13 @@
 package org.usfirst.frc.team1885.robot.modules;
-import org.usfirst.frc.team1885.robot.Codex;
-import org.usfirst.frc.team1885.robot.CodexSender;
-import org.usfirst.frc.team1885.robot.RobotData;
-
+import com.flybotix.hfr.codex.Codex;
 import com.flybotix.hfr.codex.CodexOf;
+import com.flybotix.hfr.codex.CodexSender;
 
-public class CodexModule implements Module {
-	private Codex codex;
-	private CodexSender sender;
+public class Logger implements Module {
+	
+	private Codex<Double, RobotData> codex;
+	private CodexSender<Double, RobotData> sender;
+	
 	private NavX navX;
 	private ArduinoController arduinoController;
 	private BeamSensor beamSensor;
@@ -17,8 +17,8 @@ public class CodexModule implements Module {
 
 	
 
-	public CodexModule(NavX navX, ArduinoController arduinoController, BeamSensor beamSensor, DriveTrain driveTrain,
-			GearManipulator gearManipulator, PressureSensor pressurenSensor,  Codex codex, CodexSender sender) {
+	public Logger(NavX navX, ArduinoController arduinoController, BeamSensor beamSensor, DriveTrain driveTrain,
+			GearManipulator gearManipulator, PressureSensor pressurenSensor,  Codex<Double, RobotData> codex, CodexSender<Double, RobotData> sender) {
 		this.navX = navX;
 		this.arduinoController = arduinoController;
 		this.beamSensor = beamSensor;
@@ -41,25 +41,25 @@ public class CodexModule implements Module {
 	
 	@Override
 	public void initialize() {
-		data.reset();
+		codex.reset();
 		
 	}
 
 	@Override
 	public void update() {
 		updateCodex();
-		sender.send(data);
+		sender.send(codex);
 		
 	}
 	
 	public void updateCodex()
 	{
-		data.reset();
-		data.put(RobotData.gyroAngle, navX.getAngle());
-		data.put(RobotData.leftEncoderPos, driveTrain.getLeftPosition());
-		data.put(RobotData.rightEncoderPos, driveTrain.getRightPosition());
-		data.put(RobotData.leftVelocity, driveTrain.getLeftEncoderVelocity());
-		data.put(RobotData.rightVelocity, driveTrain.getRightEncoderVelocity());
+		codex.reset();
+		codex.set(RobotData.gyroAngle, navX.getAngle());
+		codex.set(RobotData.leftEncoderPos, driveTrain.getLeftPosition());
+		codex.set(RobotData.rightEncoderPos, driveTrain.getRightPosition());
+		codex.set(RobotData.leftVelocity, driveTrain.getLeftEncoderVelocity());
+		codex.set(RobotData.rightVelocity, driveTrain.getRightEncoderVelocity());
 	}
 	
 

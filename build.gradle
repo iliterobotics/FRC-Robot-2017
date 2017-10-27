@@ -47,10 +47,10 @@ project(':robotcode') {
    }
    repositories {
       jcenter()
-      mavenLocal()
+      //mavenLocal()
+	  mavenCentral()
    }
    dependencies {
-       compile 'com.flybotix:HighFrequencyRobots:0.0.1'
        compile wpilib()
        // compile talonSrx()
        compile files('res/navx_frc.jar')
@@ -61,6 +61,7 @@ project(':robotcode') {
        compile project(':commscode')
 
        testCompile( 'junit:junit:4.12', 'org.codehaus.groovy:groovy-all:2.4.4', 'org.spockframework:spock-core:1.0-groovy-2.4')
+       compile 'com.flybotix:HighFrequencyRobots:0.0.1'
    }
 
    def robotManifest = {
