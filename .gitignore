@@ -19,9 +19,8 @@ hs_err_pid*
 .gradle/*
 **/build/**
 /build/
-<<<<<<< HEAD
 **/bin/**
 /.gradle/
 **/.idea/**
-
+/.metadata/
 /bin/
