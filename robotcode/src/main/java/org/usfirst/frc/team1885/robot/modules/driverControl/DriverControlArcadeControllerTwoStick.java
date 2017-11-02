@@ -11,14 +11,14 @@ import org.usfirst.frc.team1885.robot.modules.NavX;
 
 public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	
-	private static final int TURN_REDUCER_BUTTON = 5;
-	private static final int CASTER_BUTTON = 6;
-	private static final int REDUCER_AXIS = 3;
+	private static final int HIGH_GEAR_BUTTON = 5;
+	private static final int REDUCER_BUTTON = 6;
+	private static final int FORWARD_THROTTLE_AXIS = 2;
 	
 	private static final int WARP_SPEED_FORWARD = 0;
 	private static final int WARP_SPEED_BACKWARD = 180;
 	
-	private static final int HIGH_GEAR_AXIS = 2;
+	private static final int REVERSE_THROTTLE_AXIS = 3;
 
 	private static final int NUDGE_BUTTON_LEFT = 3;
 	private static final int NUDGE_BUTTON_RIGHT = 2;
@@ -41,23 +41,22 @@ public class DriverControlArcadeControllerTwoStick extends DriverControl{
 	@Override
 	public void updateDriveTrain() {
 		IJoystick driverController = getController(ControllerType.CONTROLLER);
-		throttle = driverController.getRawAxis(GAMEPAD_LEFT_Y);
-		turn = driverController.getRawAxis(GAMEPAD_RIGHT_X);
+		throttle = driverController.getRawAxis(FORWARD_THROTTLE_AXIS) - driverController.getRawAxis(REVERSE_THROTTLE_AXIS);
+		turn = driverController.getRawAxis(GAMEPAD_LEFT_X);
 		scalar = (turn < 0) ? -1 : 1;
 		turn = Math.pow(turn, 2) * scalar;
 		
 		leftInput =  throttle - turn;
 		rightInput = throttle + turn;
 		
-		if(driverController.getRawAxis(REDUCER_AXIS) >= TRIGGER_DEADZONE){
+		if(driverController.getRawButton(REDUCER_BUTTON)){
 			leftInput *= REDUCER;
 			rightInput *= REDUCER;
 		}
 
 		
-		setCasters(driverController.getRawButton(CASTER_BUTTON));
 		setSpeeds(leftInput, rightInput);
-		setShift(driverController.getRawAxis(HIGH_GEAR_AXIS) >= TRIGGER_DEADZONE);
+		setShift(driverController.getRawButton(HIGH_GEAR_BUTTON));
 		
 		if(driverController.getRawButton(NUDGE_BUTTON_RIGHT) && !isNudging()){
 			nudge(1);
