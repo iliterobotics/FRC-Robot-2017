@@ -45,8 +45,8 @@ public class DriveTrain implements Module {
 	}
 
 	private enum MotorType {
-		LEFT_MOTOR(-1, 1, 3, 5), RIGHT_MOTOR(1, 2, 4, 6);
-
+		//LEFT_MOTOR(-1, 1, 3, 5), RIGHT_MOTOR(1, 2, 4, 6);
+		LEFT_MOTOR(-1, 2, 4), RIGHT_MOTOR(1, 3, 1); 
 		final int talonId;
 		final int followerIds[];
 		final double modifier;
@@ -109,7 +109,7 @@ public class DriveTrain implements Module {
 			desiredLeftPower = 0;
 			desiredRightPower = 0;
 			setMotorMode(TalonControlMode.PercentVbus);
-			setVoltageRampRate(DEFAULT_RAMP_RATE);
+			//setVoltageRampRate(DEFAULT_RAMP_RATE);
 			break;
 		case TICK_VEL:
 			actualLeftSpeed = 0;
@@ -145,19 +145,19 @@ public class DriveTrain implements Module {
 		motorMap.get(MotorType.RIGHT_MOTOR).setVoltageRampRate(rate);
 	}
 
-	public int getLeftPosition() {
+	public double getLeftPosition() {
 		return motorMap.get(MotorType.LEFT_MOTOR).getEncPosition();
 	}
 
-	public int getRightPosition() {
+	public double getRightPosition() {
 		return motorMap.get(MotorType.RIGHT_MOTOR).getEncPosition();
 	}
 
-	public int getLeftEncoderVelocity() {
+	public double getLeftEncoderVelocity() {
 		return motorMap.get(MotorType.LEFT_MOTOR).getEncVelocity();
 	}
 
-	public int getRightEncoderVelocity() {
+	public double getRightEncoderVelocity() {
 		return motorMap.get(MotorType.RIGHT_MOTOR).getEncVelocity();
 	}
 

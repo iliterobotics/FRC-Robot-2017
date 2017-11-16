@@ -15,10 +15,10 @@ public class DriveStraightVision extends Command{
 	
 	private final DriveTrain driveTrain;
 	private final NavX navx;
-	private final int distanceToTravel;
+	private final double distanceToTravel;
 	
-	private int initialLeftPosition;
-	private int initialRightPosition;
+	private double initialLeftPosition;
+	private double initialRightPosition;
 	
 	private double initialYaw;
 	
@@ -66,7 +66,7 @@ public class DriveStraightVision extends Command{
 		return false;
 	}
 	
-	private int getAverageDistanceTravel(){
+	private double getAverageDistanceTravel(){
 		return (Math.abs(driveTrain.getLeftPosition() - initialLeftPosition) + 
 			   Math.abs(driveTrain.getRightPosition() - initialRightPosition))/2;
 	}
