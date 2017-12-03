@@ -53,6 +53,7 @@ project(':robotcode') {
        // compile talonSrx()
        compile files('res/navx_frc.jar')
 	   compile files('res/ctrlib/CTRLib.jar')
+	   compile files('res/Pathfinder-Java.jar')
 	   nativeLib files('res/ctrlib/libCTRLibDriver.so')
        compile group: 'com.google.guava', name: 'guava', version: '19.0'
 //       compile group: 'org.json', name: 'json', version: '20090211'

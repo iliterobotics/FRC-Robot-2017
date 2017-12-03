@@ -18,11 +18,23 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class DriveTrain implements Module {
 
 	public static final double WHEEL_DIAMETER = 3.98;
-	public static final int SHIFT_SOLENOID_ID = 2;
-	public static final int CASTER_SOLENOID_ID = 7;
+	public static final int ENC_TICKS_PER_TURN = 1024;
+	public static final double EFFECTIVE_WHEELBASE = 0;
+	
+	public static final double fP_ANGLE_ERROR = 0;
+	
+	public static final double kP_VELOCITY = 1;
+	public static final double kI_VELOCITY = 0;
+	public static final double kD_VELOCITY = 0;
+	public static final double kV = 0;
+	public static final double kA = 0;
+	
 	// Voltage proportion control variables
 	private static final double DEFAULT_RAMP_RATE = 72.0; // in V/sec
 	private static final double HIGH_GEAR_RAMP_RATE = 120.0; // in V/sec
+	
+	public static final int SHIFT_SOLENOID_ID = 2;
+	public static final int CASTER_SOLENOID_ID = 7;
 
 	private double desiredLeftPower;
 	private double desiredRightPower;
