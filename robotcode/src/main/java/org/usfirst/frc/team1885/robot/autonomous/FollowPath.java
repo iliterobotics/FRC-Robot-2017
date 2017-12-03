@@ -11,7 +11,7 @@ import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.followers.EncoderFollower;
 import jaci.pathfinder.modifiers.TankModifier;
 
-public class FollowPath implements Command {
+public class FollowPath extends Command {
 	
 	public static final FitMethod FIT_METHOD = FitMethod.HERMITE_QUINTIC;
 	public static final int SAMPLES = 0;
@@ -27,6 +27,9 @@ public class FollowPath implements Command {
 	private TankModifier tankModifier;
 	private Trajectory trajectory;
 	private EncoderFollower leftFollower, rightFollower;
+	
+	double actualHeading, desiredHeading, headingError;
+	double leftProfileOutput, rightProfileOutput, turn;
 	
 	public FollowPath(DriveTrain drivetrain, NavX navx) {
 		this.drivetrain = drivetrain;
@@ -52,7 +55,19 @@ public class FollowPath implements Command {
 	}
 	
 	public boolean update() {
+		if(leftFollower.isFinished() && rightFollower.isFinished()) return true;
 		
+		leftProfileOutput = leftFollower.calculate(drivetrain.getLeftPosition());
+		rightProfileOutput = rightFollower.calculate(drivetrain.getRightPosition());
+		
+		actualHeading = navx.getAngle();
+		desiredHeading = Pathfinder.r2d(leftFollower.getHeading()); //Only need to use 1 side because both sides are parallel
+		headingError = Pathfinder.boundHalfDegrees(desiredHeading - actualHeading);
+		turn = DriveTrain.kP_ANGLE_ERROR * headingError;
+		
+		drivetrain.setSpeed(leftProfileOutput + turn, rightProfileOutput - turn);
+		
+		return false;
 	}
 	
 	private Waypoint[] getWaypoints() {
